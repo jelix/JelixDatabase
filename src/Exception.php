@@ -11,7 +11,6 @@
 
 namespace Jelix\Database;
 
-
-class Exception extends \Exception {
-
+class Exception extends \Exception
+{
 }
