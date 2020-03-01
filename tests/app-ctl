@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+COMMAND="$1"
+shift
+
+if [ "$COMMAND" == "" ]; then
+    echo "Error: command is missing"
+    echo "Possible commands: reset, composer_install,"
+    echo "composer_update, unittests, shell, shellroot"
+    exit 1;
+fi
+
+case $COMMAND in
+    reset)
+        docker exec -t -i jdb_test_php appctl.sh reset;;
+    composer-install)
+        docker exec -t -i jdb_test_php appctl.sh composer-install;;
+    composer-update)
+        docker exec -t -i jdb_test_php appctl.sh composer-update;;
+    unit-tests)
+        docker exec -t -i jdb_test_php appctl.sh unit-tests;;
+    shell)
+       docker exec -it --user usertest jdb_test_php  /bin/bash -l;;
+    shellroot)
+       docker exec -it jdb_test_php  /bin/bash  -l;;
+    *)
+        echo "wrong command"
+        exit 2
+        ;;
+esac
+

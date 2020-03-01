@@ -1,0 +1,39 @@
+version: '3'
+services:
+  pgsql:
+    image: mdillon/postgis:11
+    container_name: jdb_test_pgsql
+    restart: always
+    environment:
+      POSTGRES_DB: jelixtests
+      POSTGRES_USER: jelix
+      POSTGRES_PASSWORD: jelixpass
+    volumes:
+      - jdb_pg_data:/var/lib/postgresql
+    ports:
+      - "8521:5432"
+  mysql:
+    image: mysql
+    container_name: jdb_test_mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: mysqlpass
+      MYSQL_DATABASE: jelixtests
+      MYSQL_USER: jelix
+      MYSQL_PASSWORD: jelixpass
+    volumes:
+      - jdb_mysql_data:/var/lib/mysql
+    ports:
+      - "8522:3306"
+  php:
+    build: ./docker-conf/php
+    container_name: jdb_test_php
+    volumes:
+      - "../:/srv/tests/"
+    depends_on:
+      - pgsql
+      - mysql
+volumes:
+  jdb_pg_data: {}
+  jdb_mysql_data: {}
