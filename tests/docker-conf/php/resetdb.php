@@ -132,7 +132,7 @@ $sqlite->exec("CREATE TABLE products (
     name varchar(150) not null,
     price float default 0
 )");
-$sqlite->exec("CREATE TABLE labels_tests (
+$sqlite->exec("CREATE TABLE labels_test (
     \"key\" INTEGER PRIMARY KEY,
     keyalias varchar( 10 ) NULL,
     lang varchar(5) NOT NULL,

@@ -17,7 +17,7 @@ class Connection
     /**
      * @param array $profile trusted parameters, given by AccessParameters
      * @param LoggerInterface|null $logger
-     * @return AbstractConnection
+     * @return ConnectionInterface
      * @throws Exception
      */
     public static function create($profile, LoggerInterface $logger = null)

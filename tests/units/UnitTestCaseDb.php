@@ -66,8 +66,8 @@ abstract class UnitTestCaseDb extends TestCase
     public function assertTableIsEmpty($table, $message="%s")
     {
         $db = $this->getConnection();
-        ;
-        $rs = $db->query('SELECT count(*) as N FROM '.$db->encloseName($table));
+
+        $rs = $db->query('SELECT count(*) as '.$db->encloseName('N').' FROM '.$db->encloseName($table));
         if ($r=$rs->fetch()) {
             $message = sprintf($message, $table. " table should be empty");
             if ($r->N == 0) {
@@ -89,7 +89,7 @@ abstract class UnitTestCaseDb extends TestCase
     public function assertTableIsNotEmpty($table, $message="%s")
     {
         $db = $this->getConnection();
-        $rs = $db->query('SELECT count(*) as N FROM '.$db->encloseName($table));
+        $rs = $db->query('SELECT count(*) as '.$db->encloseName('N').'  FROM '.$db->encloseName($table));
         if ($r=$rs->fetch()) {
             $message = sprintf($message, $table. " table shouldn't be empty");
             if ($r->N > 0) {
@@ -111,7 +111,7 @@ abstract class UnitTestCaseDb extends TestCase
     public function assertTableHasNRecords($table, $n, $message="%s")
     {
         $db = $this->getConnection();
-        $rs = $db->query('SELECT count(*) as N FROM '.$db->encloseName($table));
+        $rs = $db->query('SELECT count(*) as '.$db->encloseName('N').'  FROM '.$db->encloseName($table));
         if ($r=$rs->fetch()) {
             $message = sprintf($message, $table. " table should contains ".$n." records");
             if ($r->N == $n) {

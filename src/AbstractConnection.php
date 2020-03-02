@@ -20,7 +20,7 @@ use Jelix\Database\Log\QueryMessage;
 
 /**
  */
-abstract class AbstractConnection
+abstract class AbstractConnection implements ConnectionInterface
 {
     const FETCH_OBJ = 5;
     const FETCH_CLASS = 8;
@@ -119,14 +119,6 @@ abstract class AbstractConnection
         return null;
     }
 
-
-    public function disconnect()
-    {
-        if ($this->_connection !== null) {
-            $this->_disconnect();
-        }
-    }
-
     public function getProfileName()
     {
         return $this->_profile['_name'];
@@ -153,7 +145,7 @@ abstract class AbstractConnection
      * @param array         $ctoargs     arguments for the constructor if FETCH_CLASS
      * @param null|mixed    $arg1
      *
-     * @return bool|AbstractResultSet false if the query has failed
+     * @return bool|ResultSetInterface false if the query has failed
      */
     public function query($queryString, $fetchmode = self::FETCH_OBJ, $arg1 = null, $ctoargs = null)
     {
@@ -180,7 +172,7 @@ abstract class AbstractConnection
      * @param int    $limitOffset the offset of the first row to return
      * @param int    $limitCount  the maximum of number of rows to return
      *
-     * @return bool|AbstractResultSet SQL Select. False if the query has failed.
+     * @return bool|ResultSetInterface SQL Select. False if the query has failed.
      */
     public function limitQuery($queryString, $limitOffset, $limitCount)
     {
@@ -357,7 +349,7 @@ abstract class AbstractConnection
      *
      * @param string $query a sql query with parameters
      *
-     * @return AbstractResultSet a statement with which you can bind values or variables to
+     * @return ResultSetInterface a statement with which you can bind values or variables to
      *                      named parameters, and execute the statement
      */
     abstract public function prepare($query);
@@ -443,7 +435,7 @@ abstract class AbstractConnection
      *
      * @param mixed $queryString
      *
-     * @return AbstractResultSet|boolean
+     * @return ResultSetInterface|boolean
      */
     abstract protected function _doQuery($queryString);
 
@@ -452,7 +444,7 @@ abstract class AbstractConnection
      *
      * @param mixed $queryString
      *
-     * @return AbstractResultSet|boolean
+     * @return ResultSetInterface|boolean
      */
     abstract protected function _doExec($queryString);
 
@@ -463,7 +455,7 @@ abstract class AbstractConnection
      * @param mixed $offset
      * @param mixed $number
      *
-     * @return AbstractResultSet|boolean
+     * @return ResultSetInterface|boolean
      */
     abstract protected function _doLimitQuery($queryString, $offset, $number);
 

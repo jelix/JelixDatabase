@@ -60,10 +60,7 @@ abstract class queriesTestAbstract extends \Jelix\UnitTests\UnitTestCaseDb
         $db = $this->getConnection();
         $resultSet = $db->query('SELECT id,name,price FROM product_test');
         $this->assertNotNull($resultSet, 'a query return null !');
-        //if($this->needPDO)
-        //    $this->assertTrue($resultSet instanceof jDbPDOResultSet, 'resultset is not a jDbPDOResultSet');
-        //else
-        $this->assertTrue($resultSet instanceof AbstractResultSet, 'resultset is not a jDbResultSet');
+        $this->assertTrue($resultSet instanceof \Jelix\Database\ResultSetInterface, 'resultset is not a ResultSetInterface');
 
         $list = array();
         //foreach($resultSet as $res){
@@ -106,10 +103,7 @@ abstract class queriesTestAbstract extends \Jelix\UnitTests\UnitTestCaseDb
         $db = $this->getConnection();
         $resultSet = $db->query('SELECT id, name,price FROM product_test');
         $this->assertNotNull($resultSet, 'a query return null !');
-        //if($this->needPDO)
-        //    $this->assertTrue($resultSet instanceof jDbPDOResultSet, 'resultset is not a jDbPDOResultSet');
-        //else
-        $this->assertTrue($resultSet instanceof AbstractResultSet, 'resultset is not a jDbResultSet');
+        $this->assertTrue($resultSet instanceof \Jelix\Database\ResultSetInterface, 'resultset is not a ResultSetInterface');
 
         $resultSet->addModifier(array($this, '_callbackTest'));
 
@@ -145,10 +139,7 @@ abstract class queriesTestAbstract extends \Jelix\UnitTests\UnitTestCaseDb
         $db = $this->getConnection();
         $resultSet = $db->query('SELECT id,name,price FROM product_test');
         $this->assertNotNull($resultSet, 'a query return null !');
-        //if($this->needPDO)
-        //    $this->assertTrue($resultSet instanceof jDbPDOResultSet, 'resultset is not a jDbPDOResultSet');
-        //else
-        $this->assertTrue($resultSet instanceof AbstractResultSet, 'resultset is not a jDbResultSet');
+        $this->assertTrue($resultSet instanceof \Jelix\Database\ResultSetInterface, 'resultset is not a ResultSetInterface');
 
         $resultSet->setFetchMode(8, 'MyProductContainer');
 
@@ -184,10 +175,7 @@ abstract class queriesTestAbstract extends \Jelix\UnitTests\UnitTestCaseDb
         $db = $this->getConnection();
         $resultSet = $db->query('SELECT id,name,price FROM product_test');
         $this->assertNotNull($resultSet, 'a query return null !');
-        //if($this->needPDO)
-        //    $this->assertTrue($resultSet instanceof jDbPDOResultSet, 'resultset is not a jDbPDOResultSet');
-        //else
-        $this->assertTrue($resultSet instanceof AbstractResultSet, 'resultset is not a jDbResultSet');
+        $this->assertTrue($resultSet instanceof \Jelix\Database\ResultSetInterface, 'resultset is not a ResultSetInterface');
 
         $obj = new MyProductContainer();
         $t = $obj->token = time();
@@ -220,7 +208,7 @@ abstract class queriesTestAbstract extends \Jelix\UnitTests\UnitTestCaseDb
     }
 
     /**
-     * depends testFetchInto
+     * depends testPreparedQueries
      */
     /*function testTools(){
 
