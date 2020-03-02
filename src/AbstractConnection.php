@@ -238,8 +238,6 @@ abstract class AbstractConnection implements ConnectionInterface
      * @param bool   $binary    set to true if $text contains a binary string
      *
      * @return string escaped string
-     *
-     * @since 1.2
      */
     public function quote2($text, $checknull = true, $binary = false)
     {
@@ -256,8 +254,6 @@ abstract class AbstractConnection implements ConnectionInterface
      * @param string $fieldName the field name
      *
      * @return string the enclosed field name
-     *
-     * @since 1.1.1
      */
     public function encloseName($fieldName)
     {
@@ -274,8 +270,6 @@ abstract class AbstractConnection implements ConnectionInterface
      * @return string the prefixed table's name
      *
      * @author Julien Issler
-     *
-     * @since 1.0
      */
     public function prefixTable($table_name)
     {
@@ -288,8 +282,6 @@ abstract class AbstractConnection implements ConnectionInterface
      * @param string $tableName
      *
      * @return string the table name unprefixed
-     *
-     * @since 1.6.16
      */
     public function unprefixTable($tableName)
     {
