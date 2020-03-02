@@ -4,5 +4,8 @@
     <testsuite name="queries">
       <directory>queries/</directory>
     </testsuite>
+    <testsuite name="Miscelaneous">
+      <directory>misc/</directory>
+    </testsuite>
   </testsuites>
 </phpunit>

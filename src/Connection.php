@@ -34,7 +34,7 @@ class Connection
             case 'oci':
                 return new Connector\OCI\Connection($profile, $logger);*/
         }
-        throw new Exception('Unknow connector: '.$profile['driver']);
+        throw new Exception('Unknown connector: '.$profile['driver']);
     }
 
 
