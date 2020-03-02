@@ -140,7 +140,7 @@ class ResultSet extends AbstractResultSet
         if (!$this->_stmt) {
             throw new Exception('Not a prepared statement');
         }
-        $this->_stmt->bindParam($parameter, $variable, $this->getSqliteType($data_type));
+        return $this->_stmt->bindParam($parameter, $variable, $this->getSqliteType($data_type));
     }
 
     public function bindValue($parameter, $value, $data_type = \PDO::PARAM_STR)
@@ -148,7 +148,7 @@ class ResultSet extends AbstractResultSet
         if (!$this->_stmt) {
             throw new Exception('Not a prepared statement');
         }
-        $this->_stmt->bindValue($parameter, $value, $this->getSqliteType($data_type));
+        return $this->_stmt->bindValue($parameter, $value, $this->getSqliteType($data_type));
     }
 
     public function columnCount()
@@ -173,6 +173,6 @@ class ResultSet extends AbstractResultSet
         }
         $this->_idResult = $this->_stmt->execute();
 
-        return true;
+        return ($this->_idResult !== false);
     }
 }

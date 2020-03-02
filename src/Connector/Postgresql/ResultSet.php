@@ -31,6 +31,14 @@ class ResultSet extends AbstractResultSet
         $this->parameterNames = $parameterNames;
     }
 
+    public function __destruct()
+    {
+        if ($this->_idResult) {
+            pg_free_result($this->_idResult);
+        }
+    }
+
+
     public function fetch()
     {
         if ($this->_fetchMode == AbstractConnection::FETCH_CLASS) {
@@ -136,7 +144,7 @@ class ResultSet extends AbstractResultSet
 
         $this->_idResult = pg_execute($this->_cnt, $this->_stmtId, $params);
 
-        return true;
+        return ($this->_idResult !== false);
     }
 
     public function unescapeBin($text)

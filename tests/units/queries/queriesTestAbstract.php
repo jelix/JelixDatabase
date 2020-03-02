@@ -14,6 +14,7 @@ abstract class queriesTestAbstract extends \Jelix\UnitTests\UnitTestCaseDb
     use assertComplexTrait;
 
     protected $connectionInstanceName =  '';
+    protected $recordSetClassName = '';
 
     public function testConnection()
     {
@@ -208,6 +209,110 @@ abstract class queriesTestAbstract extends \Jelix\UnitTests\UnitTestCaseDb
     }
 
     /**
+     * depends testFetchInto
+     */
+    public function testTransaction()
+    {
+        //labels_test is an InnoDb table so transaction are supported
+
+        $cnx = $this->getConnection();
+        $cnx->exec('DELETE FROM labels_test');
+
+        $this->assertTableIsEmpty('labels_test');
+        $cnx->beginTransaction();
+
+        $cnx->exec('INSERT into '.$cnx->encloseName('labels_test')
+            .' ('.$cnx->encloseName('key').','
+            .$cnx->encloseName('lang').','
+            .$cnx->encloseName('label').") values ( 12, 'fr', 'test1')");
+
+        $this->assertTableIsNotEmpty('labels_test');
+
+        $cnx->rollback();
+        $this->assertTableIsEmpty('labels_test');
+
+        $cnx->beginTransaction();
+
+        $cnx->exec('INSERT into '.$cnx->encloseName('labels_test')
+            .' ('.$cnx->encloseName('key').','
+            .$cnx->encloseName('lang').','
+            .$cnx->encloseName('label').") values ( 15, 'en', 'test2')");
+
+        $cnx->commit();
+        $this->assertTableIsNotEmpty('labels_test');
+    }
+
+
+    /**
+     * depends testTransaction
+     */
+    public function testPreparedQueries()
+    {
+        $cnx = $this->getConnection();
+        $cnx->exec('DELETE FROM labels_test');
+        //INSERT
+        $stmt = $cnx->prepare('INSERT INTO '.$cnx->encloseName('labels_test')
+            .' ('.$cnx->encloseName('key').','
+            .$cnx->encloseName('lang').','
+            .$cnx->encloseName('label').') VALUES (:k, :lg, :lb)');
+        $this->assertInstanceOf($this->recordSetClassName, $stmt);
+
+        $key = 11;
+        $lang = 'fr';
+        $label = "France";
+
+        if (get_class($this) == "mysqlQueriesTest") {
+            // we want to test deprecated values for types used by the mysql connector
+            $bind = $stmt->bindParam('lg', $lang, 's');
+            $bind = $stmt->bindParam('k', $key, 'i');
+            $bind = $stmt->bindParam('lb', $label, 's');
+        } else {
+            $bind = $stmt->bindParam('lg', $lang, \PDO::PARAM_STR);
+            $bind = $stmt->bindParam('k', $key, \PDO::PARAM_INT);
+            $bind = $stmt->bindParam('lb', $label, \PDO::PARAM_STR);
+        }
+        $stmt->execute();
+
+        $key = 15;
+        $lang = 'fr';
+        $label = "test";
+        $bind = $stmt->bindParam('lb', $label, \PDO::PARAM_STR);
+        $bind = $stmt->bindParam('k', $key, \PDO::PARAM_INT);
+        $bind = $stmt->bindParam('lg', $lang, \PDO::PARAM_STR);
+        $this->assertTrue($stmt->execute());
+
+        $bind = $stmt->bindValue('k', 22, \PDO::PARAM_INT);
+        $bind = $stmt->bindValue('lg', 'en', \PDO::PARAM_STR);
+        $bind = $stmt->bindValue('lb', 'test2', \PDO::PARAM_STR);
+        $this->assertTrue($stmt->execute());
+
+        $this->assertTableHasNRecords('labels_test', 3);
+        $stmt = null;
+
+        //SELECT
+        $stmt2 = $cnx->prepare('SELECT '.$cnx->encloseName('key').','
+            .$cnx->encloseName('lang').','
+            .$cnx->encloseName('label').' FROM '.$cnx->encloseName('labels_test')
+            .' WHERE lang = :la ORDER BY '.$cnx->encloseName('key').' asc');
+        $this->assertInstanceOf($this->recordSetClassName, $stmt2);
+
+        $lang = 'fr';
+        $bind = $stmt2->bindParam('la', $lang, \PDO::PARAM_STR);
+        $this->assertTrue($bind);
+
+        $this->assertTrue($stmt2->execute());
+        //$this->assertEquals(2, $stmt2->rowCount());
+
+        $result = $stmt2->fetch();
+        $this->assertNotFalse($result);
+        $this->assertNotNull($result);
+        $this->assertEquals('11', $result->key);
+        $this->assertEquals('fr', $result->lang);
+        $this->assertEquals('France', $result->label);
+    }
+
+
+    /**
      * depends testPreparedQueries
      */
     /*function testTools(){
@@ -258,6 +363,8 @@ abstract class queriesTestAbstract extends \Jelix\UnitTests\UnitTestCaseDb
 </array>';
         $this->assertComplexIdenticalStr($fields, $structure, 'bad results');
     }*/
+
+
 }
 
 

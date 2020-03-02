@@ -15,6 +15,7 @@ use \Jelix\Database\Connector\Postgresql\ResultSet;
 class pgsqlQueriesTest extends queriesTestAbstract {
 
     protected $connectionInstanceName =  '\\Jelix\\Database\\Connector\\Postgresql\\Connection';
+    protected $recordSetClassName = '\\Jelix\\Database\\Connector\\Postgresql\\ResultSet';
 
     protected static $connectionPgsql = null;
 

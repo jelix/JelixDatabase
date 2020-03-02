@@ -79,7 +79,7 @@ class Connection extends AbstractConnection
     public function prepare($query)
     {
         list($newQuery, $parameterNames) = $this->findParameters($query, '$%');
-        $id = (string) time();
+        $id =  microtime();
         $res = pg_prepare($this->_connection, $id, $newQuery);
         if ($res) {
             $rs = new ResultSet($res, $id, $this->_connection, $parameterNames);

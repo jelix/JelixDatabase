@@ -13,6 +13,7 @@ use \Jelix\Database\Connection;
 class sqlite3QueriesTest extends queriesTestAbstract
 {
     protected $connectionInstanceName =  '\\Jelix\\Database\\Connector\\SQLite3\\Connection';
+    protected $recordSetClassName = '\\Jelix\\Database\\Connector\\SQLite3\\ResultSet';
 
     protected static $connectionSqlite = null;
 

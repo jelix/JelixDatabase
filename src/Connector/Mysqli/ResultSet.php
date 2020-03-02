@@ -120,9 +120,10 @@ class ResultSet extends AbstractResultSet
             } else {
                 $dataType = 's';
             }
-        } else {
+        } else if ($dataType != 'i'  && $dataType != 's' && $dataType != 'b' ) {
             $dataType = 's';
         }
+
         $this->boundParameterTypes[$parameter] = $dataType;
     }
 
@@ -169,18 +170,21 @@ class ResultSet extends AbstractResultSet
             throw new Exception('Execute: number of parameters should equals number of parameters declared in the query');
         }
 
-        $allParams = array(implode('', $types));
+        $allParams = array('');
         foreach ($this->parameterNames as $k => $name) {
             if (!isset($parameters[$name])) {
                 throw new Exception("Execute: parameter '${name}' is missing from parameters");
             }
+            $allParams[0] .= $types[$name];
             $allParams[] = &$parameters[$name];
         }
 
         $method = new \ReflectionMethod('mysqli_stmt', 'bind_param');
         $method->invokeArgs($this->_stmt, $allParams);
 
-        $this->_stmt->execute();
+        if (!$this->_stmt->execute()) {
+            return false;
+        }
 
         $this->boundParameters = array();
         $this->boundParameterTypes = array();
@@ -194,14 +198,15 @@ class ResultSet extends AbstractResultSet
                 throw new Exception('invalid query ('.$this->_stmt->errno.')', 403);
             }
         } else {
-            if ($this->_stmt->affected_rows > 0) {
+            /*if ($this->_stmt->affected_rows > 0) {
                 return $this->_stmt->affected_rows;
-            }
+            }*/
             if ($this->_stmt->affected_rows === null) {
                 throw new Exception('An invalid argument was supplied to the query', 413);
             }
-
-            throw new Exception('invalid query ('.$this->_stmt->errno.')', 403);
+            if ($this->_stmt->affected_rows <= 0) {
+                throw new Exception('invalid query (' . $this->_stmt->errno . ')', 403);
+            }
         }
 
         return true;
