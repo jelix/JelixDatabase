@@ -3,6 +3,7 @@ TAGS
 vendor/
 composer.lock
 tests/units/.phpunit.result.cache
+tests/units/tests.sqlite3
 tests/temp/*
 !tests/temp/.dummy
 .idea

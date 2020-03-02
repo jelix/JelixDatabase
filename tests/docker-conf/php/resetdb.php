@@ -107,3 +107,37 @@ UNIQUE (`keyalias`)
 }
 
 echo "  tables restored\n";
+
+
+
+echo "Delete and restore all tables from the Sqlite3 database\n";
+
+$SQLITE_FILE = '/src/tests/tests/units/tests.sqlite3';
+
+if (file_exists($SQLITE_FILE)) {
+    unlink($SQLITE_FILE);
+}
+
+$sqlite = new Sqlite3($SQLITE_FILE);
+$sqlite->exec("CREATE TABLE product_test (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR( 150 ) NOT NULL ,
+    price FLOAT NOT NULL,
+    create_date datetime default NULL,
+    promo BOOL NOT NULL default 0,
+    dummy varchar(10) DEFAULT NULL
+)");
+$sqlite->exec("CREATE TABLE products (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name varchar(150) not null,
+    price float default 0
+)");
+$sqlite->exec("CREATE TABLE labels_tests (
+    \"key\" INTEGER PRIMARY KEY,
+    keyalias varchar( 10 ) NULL,
+    lang varchar(5) NOT NULL,
+    label varchar(50) NOT NULL
+)");
+
+echo "  tables restored\n";
+

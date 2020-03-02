@@ -52,8 +52,8 @@ class AccessParameters
      *                                 optional keys: dsn, host, username, password, database,....
      * @param array $options  some options:
      *      'charset': the charset code to use for the connection
-     *      'filePathParser': a parser of file path (path to a sqlite database for example), in case
-     *          the file path may content some protocole path to access to the real file
+     *      'filePathParser': a parser (callable) of file path (path to a sqlite database for example), in case
+     *          the file path may content some protocole path to access to the real file.
      */
     public function __construct($profileParameters, $options = [])
     {
@@ -83,6 +83,7 @@ class AccessParameters
         $this->parameters['pdooptions'] = implode(',', $pdooptions);
 
         $this->parameters['charset'] = isset($options['charset']) ? $options['charset']: 'UTF-8';
+        $this->parameters['filePathParser'] = isset($options['filePathParser']) ? $options['filePathParser']: '';
     }
 
     public function getParameters()

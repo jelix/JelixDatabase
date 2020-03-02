@@ -30,6 +30,7 @@ function launchUnitTests() {
 
 function reset() {
     php $ROOTDIR/tests/docker-conf/php/resetdb.php
+    chown $APP_USER:$APP_GROUP $ROOTDIR/tests/units/tests.sqlite3
 }
 
 

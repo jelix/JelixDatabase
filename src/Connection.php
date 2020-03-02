@@ -27,9 +27,9 @@ class Connection
                 return new Connector\Mysqli\Connection($profile, $logger);
             case 'pgsql':
                 return new Connector\Postgresql\Connection($profile, $logger);
-            /*case 'sqlite3':
-                return new Connector\Sqlite3\Connection($profile, $logger);
-            case 'sqlsrv':
+            case 'sqlite3':
+                return new Connector\SQLite3\Connection($profile, $logger);
+            /*case 'sqlsrv':
                 return new Connector\SqlServer\Connection($profile, $logger);
             case 'oci':
                 return new Connector\OCI\Connection($profile, $logger);*/

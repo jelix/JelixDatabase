@@ -52,7 +52,7 @@ You can execute some commands into the php container, by using this command:
 
 Available commands:
 
-* `reset`: to reinitialize the application (with lizmap data stored into Postgresql) 
+* `reset`: to reinitialize database contents. Use it before to launch unit tests the first time. 
 * `composer-update` and `composer-install`: to update PHP packages 
 * `shell` and `shellroot` : to enter into the php container
 
