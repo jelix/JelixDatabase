@@ -16,9 +16,11 @@ class mysqlQueriesTest extends queriesTestAbstract
 {
     protected $connectionInstanceName =  '\\Jelix\\Database\\Connector\\Mysqli\\Connection';
 
+    protected static $connectionMysql = null;
+
     protected function getConnection()
     {
-        if (self::$connection === null) {
+        if (self::$connectionMysql === null) {
             $parameters = new \Jelix\Database\AccessParameters(array(
                 'driver'=>'mysqli',
                 'host'=>'mysql',
@@ -28,9 +30,9 @@ class mysqlQueriesTest extends queriesTestAbstract
             ), array('charset'=>'UTF-8'));
 
 
-            self::$connection = Connection::create($parameters->getParameters());
+            self::$connectionMysql = Connection::create($parameters->getParameters());
         }
-        return self::$connection;
+        return self::$connectionMysql;
     }
 
     public function testTransaction()

@@ -13,7 +13,7 @@ abstract class queriesTestAbstract extends \Jelix\UnitTests\UnitTestCaseDb
 {
     use assertComplexTrait;
 
-    protected $connectionInstanceName =  '\\Jelix\\Database\\Connector\\Mysqli\\Connection';
+    protected $connectionInstanceName =  '';
 
     public function testConnection()
     {
@@ -29,7 +29,7 @@ abstract class queriesTestAbstract extends \Jelix\UnitTests\UnitTestCaseDb
         $db = $this->getConnection();
         $db->exec('DELETE FROM product_test');
 
-        $rs = $db->query('SELECT count(*) as N FROM product_test');
+        $rs = $db->query('SELECT count(*) as '.$db->encloseName('N').' FROM product_test');
         if ($r=$rs->fetch()) {
             $this->assertEquals(0, $r->N, "After a DELETE, product_test table should be empty !!");
         } else {

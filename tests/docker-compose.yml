@@ -30,7 +30,7 @@ services:
     build: ./docker-conf/php
     container_name: jdb_test_php
     volumes:
-      - "../:/srv/tests/"
+      - "../:/src/tests/"
     depends_on:
       - pgsql
       - mysql

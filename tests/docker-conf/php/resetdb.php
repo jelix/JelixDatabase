@@ -1,6 +1,6 @@
 <?php
-/*
-echo "Delete all tables from the postgresql database\n";
+
+echo "Delete and restore all tables from the postgresql database\n";
 $tryAgain = true;
 
 while($tryAgain) {
@@ -11,16 +11,55 @@ while($tryAgain) {
         continue;
     }
     $tryAgain = false;
-    $cnx->query('drop table if exists products');
-    $cnx->query('drop table if exists product_test');
-    $cnx->query('drop table if exists labels_test');
+    pg_query($cnx, "drop table if exists products");
+    pg_query($cnx, "drop table if exists product_test");
+    pg_query($cnx, "drop table if exists labels_test");
+
+    pg_query($cnx, "CREATE TABLE product_test (
+        id serial NOT NULL,
+        name character varying(150) NOT NULL,
+        price real NOT NULL,
+        create_date time with time zone,
+        promo boolean NOT NULL  default 'f',
+        dummy character varying (10) NULL CONSTRAINT dummy_check CHECK (dummy IN ('created','started','stopped'))
+    )");
+
+    pg_query($cnx, "SELECT pg_catalog.setval(pg_catalog.pg_get_serial_sequence('product_test', 'id'), 1, false)");
+
+    pg_query($cnx, "CREATE TABLE labels_test (
+    \"key\" integer NOT NULL,
+    keyalias VARCHAR( 10 ) NULL,
+    lang character varying(5) NOT NULL,
+    label character varying(50) NOT NULL
+)");
+
+    pg_query($cnx, "CREATE TABLE products (
+    id serial NOT NULL,
+    name character varying(150) NOT NULL,
+    price real DEFAULT 0,
+    promo boolean NOT NULL
+)");
+
+    pg_query($cnx, "SELECT pg_catalog.setval(pg_catalog.pg_get_serial_sequence('products', 'id'), 1, false)");
+
+    pg_query($cnx, "ALTER TABLE ONLY labels_test ADD CONSTRAINT labels_test_pkey PRIMARY KEY (\"key\", lang)");
+
+
+    pg_query($cnx, "ALTER TABLE ONLY labels_test ADD CONSTRAINT labels_test_keyalias UNIQUE (\"keyalias\")");
+
+
+    pg_query($cnx, "ALTER TABLE ONLY product_test ADD CONSTRAINT product_test_pkey PRIMARY KEY (id)");
+
+
+    pg_query($cnx, "ALTER TABLE ONLY products ADD CONSTRAINT products_pkey PRIMARY KEY (id)");
+
     pg_close($cnx);
 }
 
-echo "  tables deleted\n";
-*/
+echo "  tables restored\n";
 
-echo "Delete all tables from the mysql database\n";
+
+echo "Delete and restore all tables from the mysql database\n";
 $tryAgain = true;
 
 while ($tryAgain) {
@@ -67,4 +106,4 @@ UNIQUE (`keyalias`)
     $cnx->close();
 }
 
-echo "  tables deleted\n";
+echo "  tables restored\n";

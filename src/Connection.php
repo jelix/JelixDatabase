@@ -25,9 +25,9 @@ class Connection
         switch ($profile['driver']) {
             case 'mysqli':
                 return new Connector\Mysqli\Connection($profile, $logger);
-            /*case 'pgsql':
-                return new Connector\Postgres\Connection($profile, $logger);
-            case 'sqlite3':
+            case 'pgsql':
+                return new Connector\Postgresql\Connection($profile, $logger);
+            /*case 'sqlite3':
                 return new Connector\Sqlite3\Connection($profile, $logger);
             case 'sqlsrv':
                 return new Connector\SqlServer\Connection($profile, $logger);

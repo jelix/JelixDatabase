@@ -1,5 +1,5 @@
 #!/bin/bash
-ROOTDIR="/srv/tests"
+ROOTDIR="/src/tests"
 APP_USER=usertest
 APP_GROUP=grouptest
 
