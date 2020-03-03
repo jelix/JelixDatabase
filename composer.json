@@ -1,9 +1,9 @@
 {
     "name": "jelix/database",
     "type": "library",
-    "description": "Api implementing access to SQL databases",
-    "keywords": ["database", "sql"],
-    "homepage": "http://jelix.org",
+    "description": "Lightweight PHP abstraction layer to access and query SQL databases, with an API to inspect and modify databases schema.",
+    "keywords": ["database", "sql", "abstract layer", "schema", "postgresql", "mysql", "sqlserver", "oci"],
+    "homepage": "https://jelix.org",
     "license": "LGPL-2.1",
     "authors": [
         {
@@ -13,7 +13,6 @@
     ],
     "require": {
         "php": ">=7.2",
-        "jelix/profiles": "^1.0.0",
         "psr/log": "^1.1.2"
     },
     "require-dev" : {
