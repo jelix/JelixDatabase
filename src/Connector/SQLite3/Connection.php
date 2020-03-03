@@ -53,7 +53,7 @@ class Connection extends AbstractConnection
     /**
      * @param mixed $query
      */
-    public function prepare($query)
+    public function prepare($query, $driverOptions = [])
     {
         $res = $this->_connection->prepare($query);
         if ($res) {

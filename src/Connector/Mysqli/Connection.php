@@ -75,7 +75,7 @@ class Connection extends AbstractConnection
     /**
      * @param mixed $query
      */
-    public function prepare($query)
+    public function prepare($query, $driverOptions = [])
     {
         list($newQuery, $parameterNames) = $this->findParameters($query, '?');
         $res = $this->_connection->prepare($newQuery);

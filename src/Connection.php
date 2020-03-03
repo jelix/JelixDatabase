@@ -22,6 +22,11 @@ class Connection
      */
     public static function create($profile, LoggerInterface $logger = null)
     {
+
+        if ($profile['driver'] == 'pdo' || $profile['usepdo']) {
+            return new Connector\PDO\Connection($profile, $logger);
+        }
+
         switch ($profile['driver']) {
             case 'mysqli':
                 return new Connector\Mysqli\Connection($profile, $logger);

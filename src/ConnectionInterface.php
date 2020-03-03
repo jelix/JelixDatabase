@@ -152,7 +152,7 @@ interface ConnectionInterface
      * @return ResultSetInterface a statement with which you can bind values or variables to
      *                      named parameters, and execute the statement
      */
-    public function prepare($query);
+    public function prepare($query, $driverOptions = []);
 
     /**
      * @return string the last error description

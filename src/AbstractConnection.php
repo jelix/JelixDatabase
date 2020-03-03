@@ -344,7 +344,7 @@ abstract class AbstractConnection implements ConnectionInterface
      * @return ResultSetInterface a statement with which you can bind values or variables to
      *                      named parameters, and execute the statement
      */
-    abstract public function prepare($query);
+    abstract public function prepare($query, $driverOptions = []);
 
     /**
      * @return string the last error description

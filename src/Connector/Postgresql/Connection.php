@@ -76,7 +76,7 @@ class Connection extends AbstractConnection
         return $this->_doExec('ROLLBACK');
     }
 
-    public function prepare($query)
+    public function prepare($query, $driverOptions = [])
     {
         list($newQuery, $parameterNames) = $this->findParameters($query, '$%');
         $id =  microtime();
