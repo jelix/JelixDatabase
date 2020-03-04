@@ -312,8 +312,93 @@ abstract class queriesTestAbstract extends \Jelix\UnitTests\UnitTestCaseDb
     }
 
 
+    protected $dataLabel = array(
+        [ 'key' => 1, 'label'=> 'label1', 'lang'=> ''],
+        [ 'key' => 2, 'label'=> 'label2', 'lang'=> ''],
+        [ 'key' => 3, 'label'=> 'label3', 'lang'=> ''],
+        [ 'key' => 4, 'label'=> 'label4', 'lang'=> ''],
+        [ 'key' => 5, 'label'=> 'label5', 'lang'=> ''],
+        [ 'key' => 6, 'label'=> 'label6', 'lang'=> ''],
+        [ 'key' => 7, 'label'=> 'label7', 'lang'=> ''],
+        [ 'key' => 8, 'label'=> 'label8', 'lang'=> ''],
+        [ 'key' => 9, 'label'=> 'label9', 'lang'=> ''],
+        [ 'key' => 10, 'label'=> 'label10', 'lang'=> ''],
+    );
+
+    protected function fillLabelTest() {
+        $cnx = $this->getConnection();
+        $cnx->exec('DELETE FROM labels_test');
+
+        $this->assertTableIsEmpty('labels_test');
+
+        $stmt = $cnx->prepare('INSERT INTO '.$cnx->encloseName('labels_test')
+            .' ('.$cnx->encloseName('key').','
+            .$cnx->encloseName('lang').','
+            .$cnx->encloseName('label').') VALUES (:k, :lg, :lb)');
+
+        foreach ($this->dataLabel as $rec) {
+            $bind = $stmt->bindValue('k', $rec['key'], \PDO::PARAM_INT);
+            $bind = $stmt->bindValue('lg', $rec['lang'], \PDO::PARAM_STR);
+            $bind = $stmt->bindValue('lb', $rec['label'], \PDO::PARAM_STR);
+            $this->assertTrue($stmt->execute());
+        }
+        $this->assertTableHasNRecords('labels_test', 10);
+    }
+
+
+
     /**
      * depends testPreparedQueries
+     */
+    public function testLimitQuery()
+    {
+        $this->fillLabelTest();
+
+        $cnx = $this->getConnection();
+        $sql = 'SELECT '.$cnx->encloseName('key').','.$cnx->encloseName('label')
+            .' FROM '.$cnx->encloseName('labels_test')
+            .' ORDER BY '.$cnx->encloseName('key').' asc';
+
+        $rs = $cnx->limitQuery($sql, 0, 5);
+        $list = $rs->fetchAll();
+        $this->assertEquals(5, count($list));
+        $this->assertEquals(1, $list[0]->key);
+        $this->assertEquals('label1', $list[0]->label);
+        $this->assertEquals(2, $list[1]->key);
+        $this->assertEquals('label2', $list[1]->label);
+        $this->assertEquals(3, $list[2]->key);
+        $this->assertEquals('label3', $list[2]->label);
+        $this->assertEquals(4, $list[3]->key);
+        $this->assertEquals('label4', $list[3]->label);
+        $this->assertEquals(5, $list[4]->key);
+        $this->assertEquals('label5', $list[4]->label);
+
+        $rs = $cnx->limitQuery($sql, 4, 3);
+        $list = $rs->fetchAll();
+        $this->assertEquals(3, count($list));
+        $this->assertEquals(5, $list[0]->key);
+        $this->assertEquals('label5', $list[0]->label);
+        $this->assertEquals(6, $list[1]->key);
+        $this->assertEquals('label6', $list[1]->label);
+        $this->assertEquals(7, $list[2]->key);
+        $this->assertEquals('label7', $list[2]->label);
+
+        $rs = $cnx->limitQuery($sql, 8, 6);
+        $list = $rs->fetchAll();
+        $this->assertEquals(2, count($list));
+        $this->assertEquals(9, $list[0]->key);
+        $this->assertEquals('label9', $list[0]->label);
+        $this->assertEquals(10, $list[1]->key);
+        $this->assertEquals('label10', $list[1]->label);
+
+        $rs = $cnx->limitQuery($sql, 5, 0);
+        $list = $rs->fetchAll();
+        $this->assertEquals(0, count($list));
+    }
+
+
+    /**
+     * depends testLimitQuery
      */
     /*function testTools(){
 

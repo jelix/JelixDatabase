@@ -263,18 +263,16 @@ class Connection extends \PDO implements \Jelix\Database\ConnectionInterface
             $log = new QueryMessage($queryString);
         }
 
-        if ($limitOffset != null && $limitCount != null) {
-            if ($this->_dbms == 'mysql' || $this->_dbms == 'sqlite') {
-                $queryString .= ' LIMIT '.intval($limitOffset).','.intval($limitCount);
-            } elseif ($this->_dbms == 'pgsql') {
-                $queryString .= ' LIMIT '.intval($limitCount).' OFFSET '.intval($limitOffset);
-            } elseif ($this->_dbms == 'oci') {
-                $limitOffset = $limitOffset + 1; // rnum begins at 1
-                $queryString = 'SELECT * FROM ( SELECT ocilimit.*, rownum rnum FROM ('.$queryString.') ocilimit WHERE
-                    rownum<'.(intval($limitOffset) + intval($limitCount)).'  ) WHERE rnum >='.intval($limitOffset);
-            } elseif ($this->_dbms == 'sqlsrv') {
-                $queryString = $this->limitQuerySqlsrv($queryString, $limitOffset, $limitCount);
-            }
+        if ($this->_dbms == 'mysql' || $this->_dbms == 'sqlite') {
+            $queryString .= ' LIMIT '.intval($limitOffset).','.intval($limitCount);
+        } elseif ($this->_dbms == 'pgsql') {
+            $queryString .= ' LIMIT '.intval($limitCount).' OFFSET '.intval($limitOffset);
+        } elseif ($this->_dbms == 'oci') {
+            $limitOffset = $limitOffset + 1; // rnum begins at 1
+            $queryString = 'SELECT * FROM ( SELECT ocilimit.*, rownum rnum FROM ('.$queryString.') ocilimit WHERE
+                rownum<'.(intval($limitOffset) + intval($limitCount)).'  ) WHERE rnum >='.intval($limitOffset);
+        } elseif ($this->_dbms == 'sqlsrv') {
+            $queryString = $this->limitQuerySqlsrv($queryString, $limitOffset, $limitCount);
         }
 
         $result = $this->query($queryString);

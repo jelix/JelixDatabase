@@ -1,4 +1,4 @@
-Lightweight PHP abstraction layer to access and query SQL databases.. 
+Lightweight PHP abstraction layer to access and query SQL databases. 
 
 It supports Mysql, Postgresql, Sqlite. Support of Sql Server and OCI are coming.
 
