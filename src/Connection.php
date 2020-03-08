@@ -51,26 +51,27 @@ class Connection
 
     public static function getTools($dbType, $connection = null)
     {
-        throw new Exception("not implemented");
-        /*switch($dbType) {
+
+        switch($dbType) {
             case self::DB_TYPE_MYSQL:
-                $tools = new Tools\MysqlTools($connection);
+                $tools = new Schema\Mysql\SQLTools($connection);
                 break;
             case self::DB_TYPE_SQLITE:
-                $tools = new Tools\SqliteTools($connection);
+                $tools = new Schema\Sqlite\SQLTools($connection);
                 break;
             case self::DB_TYPE_PGSQL:
-                $tools = new Tools\PgsqlTools($connection);
+                $tools = new Schema\Postgresql\SQLTools($connection);
                 break;
-            case self::DB_TYPE_SQLSERVER:
+            /*case self::DB_TYPE_SQLSERVER:
                 $tools = new Tools\SqlsrvTools($connection);
                 break;
             case self::DB_TYPE_ORACLE:
                 $tools = new Tools\OciTools($connection);
-                break;
+                break;*/
             default:
                 $tools = null;
+                throw new Exception("not implemented");
         }
-        return $tools;*/
+        return $tools;
     }
 }

@@ -4,6 +4,9 @@
     <testsuite name="queries">
       <directory>queries/</directory>
     </testsuite>
+    <testsuite name="schema">
+      <directory>schema/</directory>
+    </testsuite>
     <testsuite name="Miscelaneous">
       <directory>misc/</directory>
     </testsuite>
