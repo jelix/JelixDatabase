@@ -12,8 +12,12 @@ namespace Jelix\Database\Connector\PDO;
 
 use Jelix\Database\Log\QueryMessage;
 use Jelix\Database\ResultSetInterface;
+use Jelix\Database\Schema\AbstractSchema;
+use Jelix\Database\Schema\AbstractSqlTools;
 use Psr\Log\LoggerInterface;
 use Jelix\Database\Exception;
+
+use \Jelix\Database\Connection as ConnectionFactory;
 
 
 /**
@@ -491,15 +495,12 @@ class Connection extends \PDO implements \Jelix\Database\ConnectionInterface
         return 0;
     }
 
-
-
-
     /**
-     * @return AbstractTools
+     * @return AbstractSqlTools
      */
     public function tools()
     {
-        throw new Exception("Not implemented");
+        return ConnectionFactory::getTools($this->_profile['dbtype'], $this);
     }
 
     /**
@@ -507,7 +508,27 @@ class Connection extends \PDO implements \Jelix\Database\ConnectionInterface
      */
     public function schema()
     {
-        throw new Exception("Not implemented");
+        switch($this->_profile['dbtype']) {
+            case ConnectionFactory::DB_TYPE_MYSQL:
+                $schema = new \Jelix\Database\Schema\Mysql\Schema($this);
+                break;
+            /*case ConnectionFactory::DB_TYPE_SQLITE:
+                $schema = new \Jelix\Database\Schema\Sqlite\Schema($this);
+                break;
+            case ConnectionFactory::DB_TYPE_PGSQL:
+                $schema = new \Jelix\Database\Schema\Postgresql\Schema($this);
+                break;
+            case ConnectionFactory::DB_TYPE_SQLSERVER:
+                $schema = new \Jelix\Database\Schema\Sqlserver\Schema($connection);
+                break;
+            case ConnectionFactory::DB_TYPE_ORACLE:
+                $schema = new \Jelix\Database\Schema\Oci\Schema($connection);
+                break;*/
+            default:
+                $schema = null;
+                throw new Exception("not implemented");
+        }
+        return $schema;
     }
 
 

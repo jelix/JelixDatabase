@@ -9,6 +9,8 @@
 
 namespace Jelix\Database;
 
+use Jelix\Database\Schema\AbstractSchema;
+use Jelix\Database\Schema\AbstractSqlTools;
 use Psr\Log\LoggerInterface;
 
 
@@ -36,6 +38,7 @@ interface ConnectionInterface
      * @param null|mixed    $arg1
      *
      * @return bool|ResultSetInterface false if the query has failed
+     * @throws Exception
      */
     public function query($queryString, $fetchmode = self::FETCH_OBJ, $arg1 = null, $ctoargs = null);
 
@@ -202,7 +205,7 @@ interface ConnectionInterface
     public function lastIdInTable($fieldName, $tableName);
 
     /**
-     * @return AbstractTools
+     * @return AbstractSqlTools
      */
     public function tools();
 

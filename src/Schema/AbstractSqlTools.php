@@ -392,10 +392,9 @@ abstract class AbstractSqlTools
      */
     public function getTableList()
     {
-        throw new Exception("Not implemented");
-        /*$list = $this->_conn->schema()->getTables();
+        $list = $this->_conn->schema()->getTables();
 
-        return array_keys($list);*/
+        return array_keys($list);
     }
 
     /**

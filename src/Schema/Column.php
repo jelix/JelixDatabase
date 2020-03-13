@@ -1,0 +1,163 @@
+<?php
+/**
+ * @author     Laurent Jouanneau
+ * @copyright  2010-2020 Laurent Jouanneau
+ *
+ * @see        https://jelix.org
+ * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
+ */
+namespace Jelix\Database\Schema;
+
+class Column
+{
+    /**
+     * native type of the field.
+     *
+     * @var string
+     */
+    public $type;
+
+    /**
+     * internal use.
+     *
+     * @internal
+     */
+    public $nativeType;
+
+    /**
+     * field name.
+     *
+     * @var string
+     */
+    public $name;
+
+    /**
+     * says if the field can be null or not.
+     *
+     * @var bool
+     */
+    public $notNull = false;
+
+    /**
+     * says if the field is auto incremented.
+     *
+     * @var bool
+     */
+    public $autoIncrement = false;
+
+    /**
+     * default value.
+     *
+     * @var string
+     */
+    public $default;
+
+    /**
+     * says if there is a default value.
+     *
+     * @var bool
+     */
+    public $hasDefault = false;
+
+    /**
+     * The length for a string.
+     *
+     * @var int
+     */
+    public $length = 0;
+
+    /**
+     * The precision for a number.
+     *
+     * @var int
+     */
+    public $precision = 0;
+
+    /**
+     * The scale for a number (value after the coma, in the precision).
+     *
+     * @var int
+     */
+    public $scale = 0;
+
+    /**
+     * if there is a sequence.
+     *
+     * @var string
+     */
+    public $sequence = false;
+
+    public $unsigned = false;
+
+    public $minLength;
+
+    public $maxLength;
+
+    public $minValue;
+
+    public $maxValue;
+
+    public $comment = '';
+
+    public function __construct(
+        $name,
+        $type,
+        $length = 0,
+        $hasDefault = false,
+        $default = null,
+        $notNull = false
+    ) {
+        $this->type = $type;
+        $this->name = $name;
+        $this->length = $length;
+        $this->hasDefault = $hasDefault;
+        if ($hasDefault) {
+            $this->default = ($notNull && $default === null ? '' : $default);
+        } else {
+            $this->default = ($notNull ? '' : null);
+        }
+        $this->notNull = $notNull;
+    }
+
+    public function isEqualTo($column)
+    {
+        return
+            $this->name == $column->name &&
+            $this->_isEqualToExceptName($column)
+            ;
+    }
+
+    public function hasOnlyDifferentName($otherColumn)
+    {
+        return
+            $this->name != $otherColumn->name &&
+            $this->_isEqualToExceptName($otherColumn)
+            ;
+    }
+
+    protected function _isEqualToExceptName($column)
+    {
+        if ($column->nativeType && $this->nativeType) {
+            if ($column->nativeType != $this->nativeType) {
+                return false;
+            }
+        } elseif ($this->type != $column->type) {
+            return false;
+        }
+
+        if (($this->sequence || $column->sequence) &&
+            $this->sequence != $column->sequence) {
+            return false;
+        }
+
+        return
+            $this->notNull == $column->notNull &&
+            $this->autoIncrement == $column->autoIncrement &&
+            $this->default == $column->default &&
+            $this->hasDefault == $column->hasDefault &&
+            $this->length == $column->length &&
+            $this->scale == $column->scale &&
+            $this->unsigned == $column->unsigned
+            ;
+    }
+}
