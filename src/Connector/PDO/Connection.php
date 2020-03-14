@@ -515,10 +515,10 @@ class Connection extends \PDO implements \Jelix\Database\ConnectionInterface
             case ConnectionFactory::DB_TYPE_PGSQL:
                 $schema = new \Jelix\Database\Schema\Postgresql\Schema($this);
                 break;
-            /*case ConnectionFactory::DB_TYPE_SQLITE:
+            case ConnectionFactory::DB_TYPE_SQLITE:
                 $schema = new \Jelix\Database\Schema\Sqlite\Schema($this);
                 break;
-            case ConnectionFactory::DB_TYPE_SQLSERVER:
+            /*case ConnectionFactory::DB_TYPE_SQLSERVER:
                 $schema = new \Jelix\Database\Schema\Sqlserver\Schema($connection);
                 break;
             case ConnectionFactory::DB_TYPE_ORACLE:

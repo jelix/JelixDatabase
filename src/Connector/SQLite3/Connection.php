@@ -196,6 +196,6 @@ class Connection extends AbstractConnection
 
     protected function _getSchema()
     {
-        throw new Exception('not implemented');
+        return new \Jelix\Database\Schema\Sqlite\Schema($this);
     }
 }
