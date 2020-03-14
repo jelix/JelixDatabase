@@ -171,7 +171,7 @@ class Connection extends AbstractConnection
 
     protected function _disconnect()
     {
-        return pg_close($this->_connection);
+        return @pg_close($this->_connection);
     }
 
     protected function _doQuery($queryString)
@@ -292,6 +292,6 @@ class Connection extends AbstractConnection
 
     protected function _getSchema()
     {
-        throw new Exception('not implemented');
+        return new \Jelix\Database\Schema\Postgresql\Schema($this);
     }
 }
