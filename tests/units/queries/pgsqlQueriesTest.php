@@ -8,8 +8,8 @@
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 require_once(__DIR__.'/queriesTestAbstract.php');
+
 use \Jelix\Database\Connection;
-use \Jelix\Database\Connector\Postgresql\ResultSet;
 
 
 class pgsqlQueriesTest extends queriesTestAbstract {
@@ -33,5 +33,12 @@ class pgsqlQueriesTest extends queriesTestAbstract {
             self::$connectionPgsql = Connection::create($parameters->getParameters());
         }
         return self::$connectionPgsql;
+    }
+
+    function testVersion() {
+
+        $cnx = $this->getConnection();
+        $version = $cnx->getAttribute($cnx::ATTR_CLIENT_VERSION);
+        $this->assertNotEquals('', $version);
     }
 }

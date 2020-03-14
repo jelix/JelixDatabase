@@ -17,7 +17,7 @@ class testmysqlDbTools extends \Jelix\Database\Schema\Mysql\SQLTools {
     }
 }
 
-class jDbTools_MysqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
+class mysqlToolsTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
 
     protected static $connectionMysql = null;

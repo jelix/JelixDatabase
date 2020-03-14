@@ -38,18 +38,20 @@ class toolsTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $tools = new \Jelix\Database\Schema\Mysql\SQLTools(null);
         $result = $tools->encloseName('foo');
         $this->assertEquals('`foo`',$result);
-/*
-        $tools= new jDbPgsqlTools(null);
+
+        $tools= new \Jelix\Database\Schema\Postgresql\SQLTools(null);
         $result = $tools->encloseName('foo');
         $this->assertEquals('"foo"',$result);
 
-        $tools= new jDbOciTools(null);
+        $tools= new \Jelix\Database\Schema\Sqlite\SQLTools(null);
         $result = $tools->encloseName('foo');
         $this->assertEquals('foo',$result);
 
-        $tools= new jDbSqliteTools(null);
+/*        $tools= new jDbOciTools(null);
         $result = $tools->encloseName('foo');
-        $this->assertEquals('foo',$result);*/
+        $this->assertEquals('foo',$result);
+*/
+
     }
 
     function testFloatToStr() {
