@@ -386,7 +386,7 @@ class pgsqlSchemaTest extends \Jelix\UnitTests\UnitTestCaseDb
         <string property="name" value="promo" />
         <boolean property="notNull" value="true"/>
         <boolean property="autoIncrement" value="false"/>
-        <string property="default" value="" />
+        <boolean property="default" value="false" />
         <boolean property="hasDefault" value="true"/>
         <integer property="length" value="0"/>
         <integer property="precision" value="0"/>

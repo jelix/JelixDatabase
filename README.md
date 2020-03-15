@@ -1,6 +1,8 @@
 Lightweight PHP abstraction layer to access and query SQL databases. 
 
-It supports Mysql, Postgresql, Sqlite. Support of Sql Server and OCI are coming.
+It supports Mysql 5.6+, Postgresql 9.6+, Sqlite 3, SQLServer 2012+.
+
+Support of OCI is coming.
 
 This library has been extracted from the [Jelix](https://jelix.org) framework 1.7,
 and has been modernized.

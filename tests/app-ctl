@@ -5,14 +5,20 @@ shift
 
 if [ "$COMMAND" == "" ]; then
     echo "Error: command is missing"
-    echo "Possible commands: reset, composer_install,"
-    echo "composer_update, unittests, shell, shellroot"
+    echo "Possible commands: "
+    echo "- Into php: reset, composer_install, composer_update, unittests"
+    echo "- To enter into the php container: shell, shellroot"
+    echo "- to enter into a interactive sql shell: pgsql, mysql or sqlsrv"
     exit 1;
 fi
 
 case $COMMAND in
     reset)
-        docker exec -t -i jdb_test_php appctl.sh reset;;
+        docker exec -it jdb_test_sqlsrv /opt/mssql-tools/bin/sqlcmd \
+             -S localhost -U SA -P "JelixPass2020!" \
+             -Q "If(db_id(N'jelixtests') IS NULL) BEGIN CREATE DATABASE jelixtests END;"
+        docker exec -t -i jdb_test_php appctl.sh reset
+      ;;
     composer-install)
         docker exec -t -i jdb_test_php appctl.sh composer-install;;
     composer-update)
@@ -23,6 +29,16 @@ case $COMMAND in
        docker exec -it --user usertest jdb_test_php  /bin/bash -l;;
     shellroot)
        docker exec -it jdb_test_php  /bin/bash  -l;;
+    pgsql)
+      docker exec -it --user postgres -e PGPASSWORD="jelixpass" jdb_test_pgsql psql --username=jelix jelixtests
+      ;;
+    mysql)
+      docker exec -it jdb_test_mysql mysql -u jelix -pjelixpass jelixtests
+      ;;
+    sqlsrv)
+        docker exec -it jdb_test_sqlsrv /opt/mssql-tools/bin/sqlcmd \
+               -S localhost -U SA -P "JelixPass2020!" -d jelixtests
+        ;;
     *)
         echo "wrong command"
         exit 2

@@ -16,6 +16,9 @@ abstract class queriesTestAbstract extends \Jelix\UnitTests\UnitTestCaseDb
     protected $connectionInstanceName =  '';
     protected $recordSetClassName = '';
 
+    protected $returnFloatType = 'string';
+    protected $returnIntType = 'string';
+
     public function testConnection()
     {
         $cnt = $this->getConnection();
@@ -73,15 +76,15 @@ abstract class queriesTestAbstract extends \Jelix\UnitTests\UnitTestCaseDb
         $structure = '<array>
     <object>
         <string property="name" value="camembert" />
-        <string property="price" value="2.31" />
+        <'.$this->returnFloatType.' property="price" value="2.31" />
     </object>
     <object>
         <string property="name" value="yaourt" />
-        <string property="price" value="0.76" />
+        <'.$this->returnFloatType.' property="price" value="0.76" />
     </object>
     <object>
         <string property="name" value="gloubi-boulga" />
-        <string property="price" value="4.9" />
+        <'.$this->returnFloatType.' property="price" value="4.9" />
     </object>
 </array>';
         $this->assertComplexIdenticalStr($list, $structure, 'bad results');
@@ -154,15 +157,15 @@ abstract class queriesTestAbstract extends \Jelix\UnitTests\UnitTestCaseDb
         $structure = '<array>
     <object class="MyProductContainer">
         <string property="name" value="camembert" />
-        <string property="price" value="2.31" />
+        <'.$this->returnFloatType.' property="price" value="2.31" />
     </object>
     <object class="MyProductContainer">
         <string property="name" value="yaourt" />
-        <string property="price" value="0.76" />
+        <'.$this->returnFloatType.' property="price" value="0.76" />
     </object>
     <object class="MyProductContainer">
         <string property="name" value="gloubi-boulga" />
-        <string property="price" value="4.9" />
+        <'.$this->returnFloatType.' property="price" value="4.9" />
     </object>
 </array>';
         $this->assertComplexIdenticalStr($list, $structure, 'bad results');
@@ -185,7 +188,7 @@ abstract class queriesTestAbstract extends \Jelix\UnitTests\UnitTestCaseDb
         $res = $resultSet->fetch();
         $structure = '<object class="MyProductContainer">
         <string property="name" value="camembert" />
-        <string property="price" value="2.31" />
+        <'.$this->returnFloatType.' property="price" value="2.31" />
         <integer property="token" value="'.$t.'" />
     </object>';
         $this->assertComplexIdenticalStr($res, $structure, 'bad result');
@@ -193,7 +196,7 @@ abstract class queriesTestAbstract extends \Jelix\UnitTests\UnitTestCaseDb
         $res = $resultSet->fetch();
         $structure = '<object class="MyProductContainer">
         <string property="name" value="yaourt" />
-        <string property="price" value="0.76" />
+        <'.$this->returnFloatType.' property="price" value="0.76" />
         <integer property="token" value="'.$t.'" />
     </object>';
         $this->assertComplexIdenticalStr($res, $structure, 'bad result');
@@ -201,7 +204,7 @@ abstract class queriesTestAbstract extends \Jelix\UnitTests\UnitTestCaseDb
         $res = $resultSet->fetch();
         $structure = '<object class="MyProductContainer">
         <string property="name" value="gloubi-boulga" />
-        <string property="price" value="4.9" />
+        <'.$this->returnFloatType.' property="price" value="4.9" />
         <integer property="token" value="'.$t.'" />
     </object>';
         $this->assertComplexIdenticalStr($res, $structure, 'bad result');
@@ -253,36 +256,43 @@ abstract class queriesTestAbstract extends \Jelix\UnitTests\UnitTestCaseDb
         //INSERT
         $stmt = $cnx->prepare('INSERT INTO '.$cnx->encloseName('labels_test')
             .' ('.$cnx->encloseName('key').','
+            .$cnx->encloseName('keyalias').','
             .$cnx->encloseName('lang').','
-            .$cnx->encloseName('label').') VALUES (:k, :lg, :lb)');
+            .$cnx->encloseName('label').') VALUES (:k, :ka, :lg, :lb)');
         $this->assertInstanceOf($this->recordSetClassName, $stmt);
 
         $key = 11;
         $lang = 'fr';
+        $keyalias= 'alias11';
         $label = "France";
 
         if (get_class($this) == "mysqlQueriesTest") {
             // we want to test deprecated values for types used by the mysql connector
             $bind = $stmt->bindParam('lg', $lang, 's');
             $bind = $stmt->bindParam('k', $key, 'i');
+            $bind = $stmt->bindParam('ka', $keyalias, 'i');
             $bind = $stmt->bindParam('lb', $label, 's');
         } else {
             $bind = $stmt->bindParam('lg', $lang, \PDO::PARAM_STR);
             $bind = $stmt->bindParam('k', $key, \PDO::PARAM_INT);
+            $bind = $stmt->bindParam('ka', $keyalias, \PDO::PARAM_STR);
             $bind = $stmt->bindParam('lb', $label, \PDO::PARAM_STR);
         }
-        $stmt->execute();
+        $this->assertTrue($stmt->execute());
 
         $key = 15;
         $lang = 'fr';
+        $keyalias= 'alias15';
         $label = "test";
         $bind = $stmt->bindParam('lb', $label, \PDO::PARAM_STR);
         $bind = $stmt->bindParam('k', $key, \PDO::PARAM_INT);
+        $bind = $stmt->bindParam('ka', $keyalias, \PDO::PARAM_STR);
         $bind = $stmt->bindParam('lg', $lang, \PDO::PARAM_STR);
         $this->assertTrue($stmt->execute());
 
         $bind = $stmt->bindValue('k', 22, \PDO::PARAM_INT);
         $bind = $stmt->bindValue('lg', 'en', \PDO::PARAM_STR);
+        $bind = $stmt->bindValue('ka', 'alias22', \PDO::PARAM_STR);
         $bind = $stmt->bindValue('lb', 'test2', \PDO::PARAM_STR);
         $this->assertTrue($stmt->execute());
 
@@ -334,10 +344,12 @@ abstract class queriesTestAbstract extends \Jelix\UnitTests\UnitTestCaseDb
         $stmt = $cnx->prepare('INSERT INTO '.$cnx->encloseName('labels_test')
             .' ('.$cnx->encloseName('key').','
             .$cnx->encloseName('lang').','
-            .$cnx->encloseName('label').') VALUES (:k, :lg, :lb)');
+            .$cnx->encloseName('keyalias').','
+            .$cnx->encloseName('label').') VALUES (:k, :lg, :ka, :lb)');
 
         foreach ($this->dataLabel as $rec) {
             $bind = $stmt->bindValue('k', $rec['key'], \PDO::PARAM_INT);
+            $bind = $stmt->bindValue('ka', 'alias'.$rec['key'], \PDO::PARAM_STR);
             $bind = $stmt->bindValue('lg', $rec['lang'], \PDO::PARAM_STR);
             $bind = $stmt->bindValue('lb', $rec['label'], \PDO::PARAM_STR);
             $this->assertTrue($stmt->execute());
@@ -395,61 +407,6 @@ abstract class queriesTestAbstract extends \Jelix\UnitTests\UnitTestCaseDb
         $list = $rs->fetchAll();
         $this->assertEquals(0, count($list));
     }
-
-
-    /**
-     * depends testLimitQuery
-     */
-    /*function testTools(){
-
-        $tools = $this->getConnection()->tools();
-        $fields = $tools->getFieldList('products');
-        $structure = '<array>
-    <object key="id" class="jDbFieldProperties">
-        <string property="type" value="int" />
-        <string property="name" value="id" />
-        <boolean property="notNull" value="true" />
-        <boolean property="primary" value="true" />
-        <boolean property="autoIncrement" value="true" />
-        <boolean property="hasDefault" value="false" />
-        <null property="default" />
-        <integer property="length" value="0" />
-    </object>
-    <object key="name" class="jDbFieldProperties">
-        <string property="type" value="varchar" />
-        <string property="name" value="name" />
-        <boolean property="notNull" value="true" />
-        <boolean property="primary" value="false" />
-        <boolean property="autoIncrement" value="false" />
-        <boolean property="hasDefault" value="false" />
-        <string property="default" value="" />
-        <integer property="length" value="150" />
-    </object>
-    <object key="price" class="jDbFieldProperties">
-        <string property="type" value="float" />
-        <string property="name" value="price" />
-        <boolean property="notNull" value="false" />
-        <boolean property="primary" value="false" />
-        <boolean property="autoIncrement" value="false" />
-        <boolean property="hasDefault" value="true" />
-        <string property="default" value="0" />
-        <integer property="length" value="0" />
-    </object>
-    <object key="promo" class="jDbFieldProperties">
-        <string property="type" value="tinyint" />
-        <string property="name" value="promo" />
-        <boolean property="notNull" value="true" />
-        <boolean property="primary" value="false" />
-        <boolean property="autoIncrement" value="false" />
-        <boolean property="hasDefault" value="false" />
-        <string property="default" value="" />
-        <integer property="length" value="0" />
-    </object>
-</array>';
-        $this->assertComplexIdenticalStr($fields, $structure, 'bad results');
-    }*/
-
-
 }
 
 

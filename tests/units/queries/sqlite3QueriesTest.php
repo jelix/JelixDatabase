@@ -14,6 +14,8 @@ class sqlite3QueriesTest extends queriesTestAbstract
 {
     protected $connectionInstanceName =  '\\Jelix\\Database\\Connector\\SQLite3\\Connection';
     protected $recordSetClassName = '\\Jelix\\Database\\Connector\\SQLite3\\ResultSet';
+    protected $returnFloatType = 'float';
+    protected $returnIntType = 'int';
 
     protected static $connectionSqlite = null;
 

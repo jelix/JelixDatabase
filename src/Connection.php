@@ -34,9 +34,9 @@ class Connection
                 return new Connector\Postgresql\Connection($profile, $logger);
             case 'sqlite3':
                 return new Connector\SQLite3\Connection($profile, $logger);
-            /*case 'sqlsrv':
-                return new Connector\SqlServer\Connection($profile, $logger);
-            case 'oci':
+            case 'sqlsrv':
+                return new Connector\SQLServer\Connection($profile, $logger);
+            /*case 'oci':
                 return new Connector\OCI\Connection($profile, $logger);*/
         }
         throw new Exception('Unknown connector: '.$profile['driver']);
@@ -62,10 +62,10 @@ class Connection
             case self::DB_TYPE_PGSQL:
                 $tools = new Schema\Postgresql\SQLTools($connection);
                 break;
-            /*case self::DB_TYPE_SQLSERVER:
-                $tools = new Tools\SqlsrvTools($connection);
+            case self::DB_TYPE_SQLSERVER:
+                $tools = new Schema\Sqlserver\SQLTools($connection);
                 break;
-            case self::DB_TYPE_ORACLE:
+            /*case self::DB_TYPE_ORACLE:
                 $tools = new Tools\OciTools($connection);
                 break;*/
             default:

@@ -218,7 +218,7 @@ class AccessParameters
         4 => array('sqlite', 'sqlite',    'pdo_sqlite2', 'sqlite',  'sqlite2'),
         5 => array('oci',    'oci8',      'pdo_oci',     'oci',     'oci'), // experimental  oci:dbname=tnsname  oci://localhost:1521/mydb
         6 => array('mssql',  'mssql',     'pdo_dblib',   'mssql',   'mssql'),     // deprecated since PHP 5.3
-        7 => array('mssql',  'sqlsrv',    'pdo_sqlsrv',  'sqlsrv',  'sqlsrv'), //mssql 2005+ sqlsrv:Server=localhost,port;Database=
+        7 => array('sqlsrv',  'sqlsrv',    'pdo_sqlsrv',  'sqlsrv',  'sqlsrv'), //mssql 2005+ sqlsrv:Server=localhost,port;Database=
         8 => array('sybase', 'sybase',    'pdo_dblib',   'sybase',  'sybase'), // deprecated
         9 => array('sybase', 'sybase_ct', 'pdo_dblib',   'sybase',  'sybase'),
         10 => array('odbc',  'odbc',      'pdo_odbc',    'odbc',    'odbc'), // odbc:DSN

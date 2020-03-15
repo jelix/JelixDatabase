@@ -136,7 +136,7 @@ trait assertComplexTrait
                 return true;
 
             case 'string':
-                $this->assertIsString('string', $value, $name.': not a string'.$errormessage);
+                $this->assertIsString($value, $name.': not a string; '.$errormessage);
                 if (isset($xml['value'])) {
                     $this->assertEquals((string)$xml['value'], $value, $name.': bad value. '.$errormessage);
                 }
@@ -145,21 +145,21 @@ trait assertComplexTrait
             case 'integer':
                 $this->assertTrue(is_integer($value), $name.': not an integer ('.$value.') '.$errormessage);
                 if (isset($xml['value'])) {
-                    $this->assertEquals(intval((string)$xml['value']), $value, $name.': bad value. '.$errormessage);
+                    $this->assertEquals(intval((string)$xml['value']), $value, $name.': bad int value. '.$errormessage);
                 }
                 return true;
             case 'float':
             case 'double':
                 $this->assertIsFloat($value, $name.': not a float ('.$value.') '.$errormessage);
                 if (isset($xml['value'])) {
-                    $this->assertEquals(floatval((string)$xml['value']), $value, $name.': bad value. '.$errormessage);
+                    $this->assertEquals(floatval((string)$xml['value']), $value, $name.': bad float value. '.$errormessage);
                 }
                 return true;
             case 'boolean':
                 $this->assertIsBool($value, $name.': not a boolean ('.$value.') '.$errormessage);
                 if (isset($xml['value'])) {
                     $v = ((string)$xml['value'] == 'true');
-                    $this->assertEquals($v, $value, $name.': bad value. '.$errormessage);
+                    $this->assertEquals($v, $value, $name.': bad bool value. '.$errormessage);
                 }
                 return true;
             case 'null':

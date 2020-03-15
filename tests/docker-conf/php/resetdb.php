@@ -67,11 +67,7 @@ while ($tryAgain) {
     if ($cnx->connect_errno) {
         throw new Exception('Error during the connection on mysql '.$cnx->connect_errno);
     }
-    /*if (!$cnx) {
-        echo "  postgresql is not ready yet\n";
-        sleep(1);
-        continue;
-    }*/
+
     $tryAgain = false;
     $cnx->query('drop table if exists products');
     $cnx->query('drop table if exists product_test');
@@ -140,4 +136,77 @@ $sqlite->exec("CREATE TABLE labels_test (
 )");
 
 echo "  tables restored\n";
+
+
+echo "Delete and restore all tables from the sql server database\n";
+$tryAgain = true;
+$connectOptions = array(
+    'UID' => 'SA',
+    'PWD' => 'JelixPass2020!',
+    'Database' => 'jelixtests',
+    'CharacterSet' => 'UTF-8'
+);
+
+while($tryAgain) {
+    $cnx = sqlsrv_connect('sqlsrv', $connectOptions);
+    if (!$cnx) {
+        var_export(sqlsrv_errors(SQLSRV_ERR_ALL));
+        echo "\n  Sqlserver is not ready yet\n";
+        sleep(1);
+        continue;
+    }
+    $tryAgain = false;
+
+    $stmt = sqlsrv_query($cnx, "drop table if exists products");
+    sqlsrv_free_stmt($stmt);
+    $stmt = sqlsrv_query($cnx, "drop table if exists product_test");
+    sqlsrv_free_stmt($stmt);
+    $stmt = sqlsrv_query($cnx, "drop table if exists labels_test");
+    sqlsrv_free_stmt($stmt);
+
+    $stmt = sqlsrv_query($cnx, "CREATE TABLE product_test (
+        id INT NOT NULL IDENTITY,
+        name VARCHAR(150) NOT NULL,
+        price float NOT NULL,
+        create_date time,
+        promo tinyint NOT NULL  default 0,
+        dummy VARCHAR(10) NULL CONSTRAINT dummy_check CHECK (dummy IN ('created','started','stopped'))
+    )");
+    sqlsrv_free_stmt($stmt);
+
+
+    $stmt = sqlsrv_query($cnx, "CREATE TABLE labels_test (
+    [key] integer NOT NULL,
+    keyalias VARCHAR( 10 ) NULL,
+    lang VARCHAR(5) NOT NULL,
+    label VARCHAR(50) NOT NULL
+)");
+    sqlsrv_free_stmt($stmt);
+
+    $stmt = sqlsrv_query($cnx, "CREATE TABLE products (
+    id INT NOT NULL IDENTITY,
+    name VARCHAR(150) NOT NULL,
+    price real DEFAULT 0,
+    promo tinyint NOT NULL  default 0
+)");
+    sqlsrv_free_stmt($stmt);
+
+    $stmt = sqlsrv_query($cnx, "ALTER TABLE labels_test ADD CONSTRAINT labels_test_pkey PRIMARY KEY ([key], lang)");
+    sqlsrv_free_stmt($stmt);
+
+    $stmt = sqlsrv_query($cnx, "ALTER TABLE labels_test ADD CONSTRAINT labels_test_keyalias UNIQUE (keyalias)");
+    sqlsrv_free_stmt($stmt);
+
+    $stmt = sqlsrv_query($cnx, "ALTER TABLE product_test ADD CONSTRAINT product_test_pkey PRIMARY KEY (id)");
+    sqlsrv_free_stmt($stmt);
+
+    $stmt = sqlsrv_query($cnx, "ALTER TABLE products ADD CONSTRAINT products_pkey PRIMARY KEY (id)");
+    sqlsrv_free_stmt($stmt);
+
+    sqlsrv_close($cnx);
+}
+
+echo "  tables restored\n";
+
+
 

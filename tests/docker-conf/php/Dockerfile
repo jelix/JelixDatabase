@@ -9,7 +9,7 @@ ENV TEST_USER_ID=1000 \
 RUN set -eux; \
     echo 'alias ll="ls -al"' > /etc/profile.d/start; \
 	apt-get update; \
-    apt-get -y install apt-transport-https lsb-release ca-certificates curl wget git unzip; \
+    apt-get -y install apt-transport-https lsb-release ca-certificates curl wget git unzip gnupg2; \
     wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg; \
     sh -c 'echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list'; \
     apt-get update;
@@ -38,6 +38,23 @@ RUN set -eux; \
 
 RUN echo "error_log = /var/log/php_errors.log" >> /etc/php/${PHP_VERSION}/cli/php.ini \
     && touch /var/log/php_errors.log
+
+# Install drivers to access to SQL server
+# see https://docs.microsoft.com/en-us/sql/connect/odbc/linux-mac/installing-the-microsoft-odbc-driver-for-sql-server?view=sql-server-ver15#debian17
+# see https://github.com/microsoft/msphpsql/releases
+RUN  curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -; \
+     curl https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list; \
+     apt-get update; \
+     ACCEPT_EULA=Y apt-get -y install msodbcsql17 libgssapi-krb5-2; \
+     cd /tmp/; \
+     wget -O debsqlsrv.tar https://github.com/microsoft/msphpsql/releases/download/v5.8.0/Debian10-${PHP_VERSION}.tar; \
+     tar xf debsqlsrv.tar; \
+     cp  Debian10-${PHP_VERSION}/*_nts.so /usr/lib/php/20180731/; \
+     printf "; priority=20\nextension=php_sqlsrv_73_nts.so\n" > /etc/php/${PHP_VERSION}/mods-available/sqlsrv.ini; \
+     printf "; priority=30\nextension=php_pdo_sqlsrv_73_nts.so\n" > /etc/php/${PHP_VERSION}/mods-available/pdo_sqlsrv.ini; \
+     phpenmod sqlsrv; \
+     phpenmod pdo_sqlsrv; \
+     rm -rf /tmp/msodbcsql.deb /tmp/debsqlsrv.tar /tmp/Debian10-${PHP_VERSION};
 
 COPY entrypoint.sh /bin/
 COPY appctl.sh /bin/
