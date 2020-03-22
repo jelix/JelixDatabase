@@ -1,14 +1,10 @@
 Lightweight PHP abstraction layer to access and query SQL databases. 
 
-It supports Mysql 5.6+, Postgresql 9.6+, Sqlite 3, SQLServer 2012+.
-
-Support of OCI is coming.
+It supports Mysql 5.6+, Postgresql 9.6+, Sqlite 3.
+It supports partially (Schema API not fully implemented) SQLServer 2012+ and OCI.
 
 This library has been extracted from the [Jelix](https://jelix.org) framework 1.7,
-and has been modernized.
-
-The extraction is a work in progress. Schema introspection and support of
-OCI and Sql server are coming. 
+and has been modernized a bit.
 
 The API of connectors and resultset are almost the same as PDO.
 

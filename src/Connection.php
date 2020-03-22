@@ -36,8 +36,8 @@ class Connection
                 return new Connector\SQLite3\Connection($profile, $logger);
             case 'sqlsrv':
                 return new Connector\SQLServer\Connection($profile, $logger);
-            /*case 'oci':
-                return new Connector\OCI\Connection($profile, $logger);*/
+            case 'oci':
+                return new Connector\Oci\Connection($profile, $logger);
         }
         throw new Exception('Unknown connector: '.$profile['driver']);
     }
@@ -65,9 +65,9 @@ class Connection
             case self::DB_TYPE_SQLSERVER:
                 $tools = new Schema\Sqlserver\SQLTools($connection);
                 break;
-            /*case self::DB_TYPE_ORACLE:
-                $tools = new Tools\OciTools($connection);
-                break;*/
+            case self::DB_TYPE_ORACLE:
+                $tools = new Schema\Oci\SQLTools($connection);
+                break;
             default:
                 $tools = null;
                 throw new Exception("not implemented");
