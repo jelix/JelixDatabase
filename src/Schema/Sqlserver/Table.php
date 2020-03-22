@@ -18,7 +18,6 @@ use Jelix\Database\Schema\Index;
 use Jelix\Database\Schema\UniqueKey;
 use Jelix\Database\Schema\Reference;
 
-
 /**
  */
 class Table extends AbstractTable

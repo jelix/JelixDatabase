@@ -29,7 +29,7 @@ class Utilities
 
             // because of precision issues, we could have 1.239999999456 instead of 1.24
             // or 1.2300000000456 instead of 1.23. Let's convert with a precision number.
-            if ( ($p =strpos($val, '0000')) === false &&
+            if (($p =strpos($val, '0000')) === false &&
                 ($p =strpos($val, '9999')) === false
             ) {
                 return $val;
@@ -38,7 +38,7 @@ class Utilities
             if ($pPoint === false) {
                 if (strlen($val) > 15) {
                     $val = rtrim(rtrim(sprintf('%.20e', $value), '0'), '.');
-                    if ( ($p =strpos($val, '0000')) === false &&
+                    if (($p =strpos($val, '0000')) === false &&
                         ($p =strpos($val, '9999')) === false
                     ) {
                         $val = str_replace('e+', 'E', $val);

@@ -45,8 +45,7 @@ class Connection extends AbstractConnection
         }
         if (isset($this->_charsets[$this->_profile['charset']])) {
             $charset = $this->_charsets[$this->_profile['charset']];
-        }
-        else {
+        } else {
             $charset = 'AL32UTF8';
         }
 

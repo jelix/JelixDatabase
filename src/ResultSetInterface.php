@@ -112,5 +112,4 @@ interface ResultSetInterface
      *  Returns the number of rows affected by the last SQL statement.
      */
     public function rowCount();
-
 }

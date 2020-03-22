@@ -271,7 +271,8 @@ abstract class AbstractSchema
     /**
      * @param Column $col                the column
      */
-    protected function _getAutoIncrementKeyWord($col, $isPrimaryKey, $isSinglePrimaryKey) {
+    protected function _getAutoIncrementKeyWord($col, $isPrimaryKey, $isSinglePrimaryKey)
+    {
         return '';
     }
 

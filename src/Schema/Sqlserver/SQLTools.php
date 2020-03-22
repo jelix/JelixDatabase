@@ -200,7 +200,8 @@ class SQLTools extends \Jelix\Database\Schema\AbstractSqlTools
     /**
      * @inheritdoc
      */
-    public function encloseName ($fieldName) {
+    public function encloseName($fieldName)
+    {
         return '['.$fieldName.']';
     }
 
@@ -245,13 +246,11 @@ class SQLTools extends \Jelix\Database\Schema\AbstractSqlTools
                 if ($field->notNull) {
                     $field->hasDefault = true;
                     $field->default = '';
-                }
-                else {
+                } else {
                     $field->hasDefault = true;
                     $field->default = null;
                 }
-            }
-            else {
+            } else {
                 $field->hasDefault = ($line->COLUMN_DEF !== '');
                 $field->default = str_replace(array('((', '))'), array('',''), $line->COLUMN_DEF);
             }

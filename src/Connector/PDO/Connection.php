@@ -19,7 +19,6 @@ use Jelix\Database\Exception;
 
 use \Jelix\Database\Connection as ConnectionFactory;
 
-
 /**
  * A connection object based on PDO.
  *
@@ -173,7 +172,8 @@ class Connection extends \PDO implements \Jelix\Database\ConnectionInterface
     }
 
 
-    public function getProfileName() {
+    public function getProfileName()
+    {
         return $this->_profile['_name'];
     }
 
@@ -214,14 +214,11 @@ class Connection extends \PDO implements \Jelix\Database\ConnectionInterface
         }
         if ($ctoargs !== null) {
             $result = parent::query($queryString, $fetchmode, $arg1, $ctoargs);
-        }
-        else if ($arg1 !== null) {
+        } elseif ($arg1 !== null) {
             $result =  parent::query($queryString, $fetchmode, $arg1);
-        }
-        else if ($fetchmode != self::FETCH_OBJ) {
+        } elseif ($fetchmode != self::FETCH_OBJ) {
             $result = parent::query($queryString, $fetchmode);
-        }
-        else {
+        } else {
             $result = parent::query($queryString);
             if ($result) {
                 $result->setFetchMode(\PDO::FETCH_OBJ);
@@ -243,8 +240,7 @@ class Connection extends \PDO implements \Jelix\Database\ConnectionInterface
             $result = parent::exec($query);
             $log->endQuery();
             $this->logger->debug($log);
-        }
-        else {
+        } else {
             $result = parent::exec($query);
         }
 
@@ -354,7 +350,8 @@ class Connection extends \PDO implements \Jelix\Database\ConnectionInterface
     }
 
 
-    public function prepare($query, $driverOptions = []) {
+    public function prepare($query, $driverOptions = [])
+    {
         $result = parent::prepare($query, $driverOptions);
         if ($result) {
             $result->setFetchMode(\PDO::FETCH_OBJ);
@@ -508,7 +505,7 @@ class Connection extends \PDO implements \Jelix\Database\ConnectionInterface
      */
     public function schema()
     {
-        switch($this->_profile['dbtype']) {
+        switch ($this->_profile['dbtype']) {
             case ConnectionFactory::DB_TYPE_MYSQL:
                 $schema = new \Jelix\Database\Schema\Mysql\Schema($this);
                 break;
@@ -530,6 +527,4 @@ class Connection extends \PDO implements \Jelix\Database\ConnectionInterface
         }
         return $schema;
     }
-
-
 }

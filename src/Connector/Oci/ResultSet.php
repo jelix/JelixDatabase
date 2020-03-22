@@ -10,11 +10,9 @@
  */
 namespace Jelix\Database\Connector\Oci;
 
-
 use Jelix\Database\AbstractConnection;
 use Jelix\Database\AbstractResultSet;
 use Jelix\Database\Exception;
-
 
 /**
  */

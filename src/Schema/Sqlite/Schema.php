@@ -237,7 +237,8 @@ class Schema extends AbstractSchema
     /**
      * @param Column $col the column
      */
-    protected function _getAutoIncrementKeyWord($col, $isPrimaryKey, $isSinglePrimaryKey) {
+    protected function _getAutoIncrementKeyWord($col, $isPrimaryKey, $isSinglePrimaryKey)
+    {
         if ($col->autoIncrement && $col->nativeType == 'integer') {
             if ($isPrimaryKey && $isSinglePrimaryKey) {
                 return ' AUTOINCREMENT';

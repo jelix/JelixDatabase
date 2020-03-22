@@ -22,7 +22,6 @@ class Connection
      */
     public static function create($profile, LoggerInterface $logger = null)
     {
-
         if ($profile['driver'] == 'pdo' || $profile['usepdo']) {
             return new Connector\PDO\Connection($profile, $logger);
         }
@@ -51,8 +50,7 @@ class Connection
 
     public static function getTools($dbType, $connection = null)
     {
-
-        switch($dbType) {
+        switch ($dbType) {
             case self::DB_TYPE_MYSQL:
                 $tools = new Schema\Mysql\SQLTools($connection);
                 break;

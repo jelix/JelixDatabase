@@ -137,8 +137,7 @@ class Connection extends AbstractConnection
     {
         if (preg_match('/^\s*EXEC\s+/i', $query)) {
             $stmt = sqlsrv_query($this->_connection, $query);
-        }
-        else {
+        } else {
             $stmt = sqlsrv_query($this->_connection, $query, null, array('Scrollable' => SQLSRV_CURSOR_STATIC));
         }
 
@@ -164,10 +163,11 @@ class Connection extends AbstractConnection
         throw new Exception('invalid query: '.$this->_getErrorMsg().'('.$query.')', 403);
     }
 
-    protected function _getErrorMsg() {
+    protected function _getErrorMsg()
+    {
         $errors = sqlsrv_errors();
         $msg = '';
-        foreach($errors as $error) {
+        foreach ($errors as $error) {
             $msg .= '['.$error[ 'SQLSTATE'].'] '.$error[ 'code'].': '.$error[ 'message']."\n";
         }
         return $msg;

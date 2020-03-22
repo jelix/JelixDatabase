@@ -120,7 +120,7 @@ class ResultSet extends AbstractResultSet
             } else {
                 $dataType = 's';
             }
-        } else if ($dataType != 'i'  && $dataType != 's' && $dataType != 'b' ) {
+        } elseif ($dataType != 'i'  && $dataType != 's' && $dataType != 'b') {
             $dataType = 's';
         }
 

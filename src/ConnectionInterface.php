@@ -13,7 +13,6 @@ use Jelix\Database\Schema\AbstractSchema;
 use Jelix\Database\Schema\AbstractSqlTools;
 use Psr\Log\LoggerInterface;
 
-
 interface ConnectionInterface
 {
 
@@ -128,7 +127,7 @@ interface ConnectionInterface
      *
      * @param bool $state the status of autocommit
      */
-    function setAutoCommit($state = true);
+    public function setAutoCommit($state = true);
 
     /**
      * begin a transaction. Call it before query, limitQuery, exec
