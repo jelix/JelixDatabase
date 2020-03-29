@@ -1,4 +1,4 @@
-version: '3'
+version: '3.4'
 services:
   pgsql:
     image: postgres:11
@@ -10,6 +10,8 @@ services:
       POSTGRES_PASSWORD: jelixpass
     ports:
       - "8521:5432"
+    volumes:
+      - jdb_pg_data:/var/lib/postgresql
   mysql:
     image: mysql
     container_name: jdb_test_mysql
@@ -40,3 +42,6 @@ services:
       - pgsql
       - mysql
       - sqlsrv
+volumes:
+  jdb_pg_data:
+      name: jdb_test_pg_data

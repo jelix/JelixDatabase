@@ -2,8 +2,8 @@
 
 set -e
 
-export LIZMAP_USER_ID=${LIZMAP_USER_ID:-$(id -u)}
-export LIZMAP_GROUP_ID=${LIZMAP_GROUP_ID:-$(id -g)}
+export TEST_USER_ID=${TEST_USER_ID:-$(id -u)}
+export TEST_GROUP_ID=${TEST_GROUP_ID:-$(id -g)}
 
 CMD=$1
 
