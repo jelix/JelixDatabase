@@ -6,7 +6,7 @@ shift
 if [ "$COMMAND" == "" ]; then
     echo "Error: command is missing"
     echo "Possible commands: "
-    echo "- Into php: reset, composer_install, composer_update, unittests"
+    echo "- Into php: reset, composer-install, composer-update, unit-tests"
     echo "- To enter into the php container: shell, shellroot"
     echo "- to enter into a interactive sql shell: pgsql, mysql or sqlsrv"
     exit 1;
