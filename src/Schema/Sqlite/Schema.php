@@ -151,7 +151,7 @@ class Schema extends AbstractSchema
         foreach ($newColumns as $col) {
             $isPk = in_array($col->name, $primaryKeys);
             $isSinglePk = $isPk && count($primaryKeys) == 1;
-            $cols[] = $this->_prepareSqlColumn($col, $isPk, $isSinglePk);
+            $cols[] = $this->prepareSqlColumn($col, $isPk, $isSinglePk);
         }
 
         $sql = 'CREATE TABLE '.$this->conn->encloseName($tmpName);
@@ -197,7 +197,7 @@ class Schema extends AbstractSchema
      *
      * @return string the sql string
      */
-    public function _prepareSqlColumn($col, $isPrimaryKey = false, $isSinglePrimaryKey = false)
+    public function prepareSqlColumn($col, $isPrimaryKey = false, $isSinglePrimaryKey = false)
     {
         $this->normalizeColumn($col);
         $colstr = $this->conn->encloseName($col->name).' '.$col->nativeType;

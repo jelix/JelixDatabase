@@ -47,9 +47,9 @@ class Schema extends AbstractSchema
         return $table;
     }
 
-    public function _prepareSqlColumn($col, $isPrimaryKey = false, $isSinglePrimaryKey = false)
+    public function prepareSqlColumn($col, $isPrimaryKey = false, $isSinglePrimaryKey = false)
     {
-        $colStr = parent::_prepareSqlColumn($col, $isPrimaryKey, $isSinglePrimaryKey);
+        $colStr = parent::prepareSqlColumn($col, $isPrimaryKey, $isSinglePrimaryKey);
         if ($col->comment) {
             $colStr .= ' COMMENT '.$this->conn->quote($col->comment);
         }

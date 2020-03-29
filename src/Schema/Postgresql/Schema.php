@@ -33,13 +33,13 @@ class Schema extends AbstractSchema
         return $table;
     }
 
-    public function _prepareSqlColumn($col, $isPrimaryKey = false, $isSinglePrimaryKey = false)
+    public function prepareSqlColumn($col, $isPrimaryKey = false, $isSinglePrimaryKey = false)
     {
         if ($isSinglePrimaryKey && $col->autoIncrement) {
             $col->type = 'serial';
         }
 
-        return parent::_prepareSqlColumn($col, $isPrimaryKey, $isSinglePrimaryKey);
+        return parent::prepareSqlColumn($col, $isPrimaryKey, $isSinglePrimaryKey);
     }
 
     protected function _getTables()

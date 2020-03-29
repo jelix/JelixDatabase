@@ -179,7 +179,7 @@ class Table extends AbstractTable
     {
         $conn = $this->schema->getConn();
         $sql = 'ALTER TABLE '.$conn->encloseName($this->name).
-            ' ADD COLUMN '.$this->schema->_prepareSqlColumn($new);
+            ' ADD COLUMN '.$this->schema->prepareSqlColumn($new);
         $conn->exec($sql);
     }
 

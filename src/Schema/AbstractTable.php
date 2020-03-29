@@ -8,7 +8,7 @@
  */
 namespace Jelix\Database\Schema;
 
-abstract class AbstractTable
+abstract class AbstractTable implements TableInterface
 {
     /**
      * @var string the name of the table
@@ -47,9 +47,9 @@ abstract class AbstractTable
 
     /**
      * @param string    $name   the table name
-     * @param AbstractSchema $schema
+     * @param SchemaInterface $schema
      */
-    public function __construct($name, AbstractSchema $schema)
+    public function __construct($name, SchemaInterface $schema)
     {
         $this->name = $name;
         $this->schema = $schema;

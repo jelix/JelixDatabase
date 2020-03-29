@@ -40,7 +40,7 @@ abstract class AbstractSchema implements SchemaInterface
      * @param string|string[] $primaryKey the name of the column which contains the primary key
      * @param array           $attributes some table attributes specific to the database
      *
-     * @return AbstractTable the object corresponding to the created table
+     * @return TableInterface the object corresponding to the created table
      */
     public function createTable($name, $columns, $primaryKey, $attributes = array())
     {
@@ -63,7 +63,7 @@ abstract class AbstractSchema implements SchemaInterface
      *
      * @param string $name the unprefixed table name
      *
-     * @return AbstractTable ready to make change
+     * @return TableInterface ready to make change
      */
     public function getTable($name)
     {
@@ -79,12 +79,12 @@ abstract class AbstractSchema implements SchemaInterface
     }
 
     /**
-     * @var null|AbstractTable[] key of the array are unprefixed name of tables
+     * @var null|TableInterface[] key of the array are unprefixed name of tables
      */
     protected $tables;
 
     /**
-     * @return AbstractTable[]
+     * @return TableInterface[]
      */
     public function getTables()
     {
@@ -96,7 +96,7 @@ abstract class AbstractSchema implements SchemaInterface
     }
 
     /**
-     * @param AbstractTable|string $table the table object or the unprefixed table name
+     * @param TableInterface|string $table the table object or the unprefixed table name
      */
     public function dropTable($table)
     {
@@ -120,7 +120,7 @@ abstract class AbstractSchema implements SchemaInterface
      * @param string $oldName Unprefixed name of the table to rename
      * @param string $newName The new unprefixed name of the table
      *
-     * @return null|AbstractTable
+     * @return null|TableInterface
      */
     public function renameTable($oldName, $newName)
     {
@@ -155,7 +155,7 @@ abstract class AbstractSchema implements SchemaInterface
      * @param array|string $primaryKey the name of the column which contains the primary key
      * @param array        $attributes
      *
-     * @return AbstractTable the object corresponding to the created table
+     * @return TableInterface the object corresponding to the created table
      */
     abstract protected function _createTable($name, $columns, $primaryKey, $attributes = array());
 
@@ -172,7 +172,7 @@ abstract class AbstractSchema implements SchemaInterface
         foreach ($columns as $col) {
             $isPk = (in_array($col->name, $primaryKey));
             $isSinglePk = $isPk && (count($primaryKey) == 1);
-            $cols[] = $this->_prepareSqlColumn($col, $isPk, $isSinglePk);
+            $cols[] = $this->prepareSqlColumn($col, $isPk, $isSinglePk);
             if ($col->autoIncrement && !$isPk) {
                 // we should declare it as unique key
                 $autoIncrementUniqueKey = $col;
@@ -223,7 +223,6 @@ abstract class AbstractSchema implements SchemaInterface
 
     /**
      * return the SQL string corresponding to the given column.
-     * private method, should be used only by a AbstractTable object.
      *
      * @param Column $col                the column
      * @param mixed     $isPrimaryKey
@@ -231,7 +230,7 @@ abstract class AbstractSchema implements SchemaInterface
      *
      * @return string the sql string
      */
-    public function _prepareSqlColumn($col, $isPrimaryKey = false, $isSinglePrimaryKey = false)
+    public function prepareSqlColumn($col, $isPrimaryKey = false, $isSinglePrimaryKey = false)
     {
         $this->normalizeColumn($col);
         $colstr = $this->conn->encloseName($col->name).' '.$col->nativeType;

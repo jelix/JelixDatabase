@@ -96,7 +96,7 @@ class Table extends AbstractTable
 
         $sql = 'ALTER TABLE '.$conn->encloseName($this->name)
             .' CHANGE COLUMN '.$conn->encloseName($old->name)
-            .' '.$this->schema->_prepareSqlColumn($new, $isPk, $isSinglePk);
+            .' '.$this->schema->prepareSqlColumn($new, $isPk, $isSinglePk);
         $conn->exec($sql);
     }
 
@@ -108,7 +108,7 @@ class Table extends AbstractTable
         $isSinglePk = $isPk && count($pk->columns) == 1;
 
         $sql = 'ALTER TABLE '.$conn->encloseName($this->name)
-            .' ADD COLUMN '.$this->schema->_prepareSqlColumn($new, $isPk, $isSinglePk);
+            .' ADD COLUMN '.$this->schema->prepareSqlColumn($new, $isPk, $isSinglePk);
         $conn->exec($sql);
     }
 

@@ -265,7 +265,7 @@ class Table extends AbstractTable
         $isPk = ($pk && in_array($new->name, $pk->columns));
         $isSinglePk = $isPk && count($pk->columns) == 1;
         $sql = 'ALTER TABLE '.$conn->encloseName($this->name)
-            .' ADD COLUMN '.$this->schema->_prepareSqlColumn($new, $isPk, $isSinglePk);
+            .' ADD COLUMN '.$this->schema->prepareSqlColumn($new, $isPk, $isSinglePk);
         $conn->exec($sql);
     }
 

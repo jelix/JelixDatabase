@@ -30,7 +30,7 @@ interface SchemaInterface
      * @param string|string[] $primaryKey the name of the column which contains the primary key
      * @param array           $attributes some table attributes specific to the database
      *
-     * @return AbstractTable the object corresponding to the created table
+     * @return TableInterface the object corresponding to the created table
      */
     public function createTable($name, $columns, $primaryKey, $attributes = array());
 
@@ -39,17 +39,17 @@ interface SchemaInterface
      *
      * @param string $name the unprefixed table name
      *
-     * @return AbstractTable ready to make change
+     * @return TableInterface ready to make change
      */
     public function getTable($name);
 
     /**
-     * @return AbstractTable[]
+     * @return TableInterface[]
      */
     public function getTables();
 
     /**
-     * @param AbstractTable|string $table the table object or the unprefixed table name
+     * @param TableInterface|string $table the table object or the unprefixed table name
      */
     public function dropTable($table);
 
@@ -57,7 +57,7 @@ interface SchemaInterface
      * @param string $oldName Unprefixed name of the table to rename
      * @param string $newName The new unprefixed name of the table
      *
-     * @return null|AbstractTable
+     * @return null|TableInterface
      */
     public function renameTable($oldName, $newName);
 
@@ -68,5 +68,16 @@ interface SchemaInterface
      * @param Column $col
      */
     public function normalizeColumn($col);
+
+    /**
+     * return the SQL string corresponding to the given column.
+     *
+     * @param Column $col                the column
+     * @param mixed     $isPrimaryKey
+     * @param mixed     $isSinglePrimaryKey
+     *
+     * @return string the sql string
+     */
+    public function prepareSqlColumn($col, $isPrimaryKey = false, $isSinglePrimaryKey = false);
 
 }
