@@ -103,7 +103,7 @@ class Table extends AbstractTable
 
             if ($isPrimary) {
                 if (!$this->primaryKey) {
-                    $this->primaryKey = new PrimaryKey([], $name);
+                    $this->primaryKey = new PrimaryKey($name);
                 } else {
                     $this->primaryKey->columns[] = $name;
                 }
