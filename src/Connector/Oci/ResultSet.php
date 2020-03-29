@@ -10,8 +10,8 @@
  */
 namespace Jelix\Database\Connector\Oci;
 
-use Jelix\Database\AbstractConnection;
 use Jelix\Database\AbstractResultSet;
+use Jelix\Database\ConnectionInterface;
 use Jelix\Database\Exception;
 
 /**
@@ -41,7 +41,7 @@ class ResultSet extends AbstractResultSet
 
     public function fetch()
     {
-        if ($this->_fetchMode == AbstractConnection::FETCH_CLASS || $this->_fetchMode == AbstractConnection::FETCH_INTO) {
+        if ($this->_fetchMode == ConnectionInterface::FETCH_CLASS || $this->_fetchMode == ConnectionInterface::FETCH_INTO) {
             $res = oci_fetch_object($this->_idResult);
             if ($res) {
                 $values = get_object_vars($res);

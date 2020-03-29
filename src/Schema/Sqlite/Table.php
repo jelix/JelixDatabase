@@ -10,7 +10,7 @@
  */
 namespace Jelix\Database\Schema\Sqlite;
 
-use Jelix\Database\AbstractConnection;
+use Jelix\Database\ConnectionInterface;
 use Jelix\Database\Schema\AbstractConstraint;
 use Jelix\Database\Schema\AbstractTable;
 use Jelix\Database\Schema\Column;
@@ -569,7 +569,7 @@ class Table extends AbstractTable
     }
 
     /**
-     * @param AbstractConnection $conn
+     * @param ConnectionInterface $conn
      * @param array         $columns
      */
     protected function _getSqlColumnsList($conn, &$columns)

@@ -10,8 +10,8 @@
  */
 namespace Jelix\Database\Connector\Postgresql;
 
-use Jelix\Database\AbstractConnection;
 use Jelix\Database\AbstractResultSet;
+use Jelix\Database\ConnectionInterface;
 use Jelix\Database\Exception;
 
 /**
@@ -41,13 +41,13 @@ class ResultSet extends AbstractResultSet
 
     public function fetch()
     {
-        if ($this->_fetchMode == AbstractConnection::FETCH_CLASS) {
+        if ($this->_fetchMode == ConnectionInterface::FETCH_CLASS) {
             if ($this->_fetchModeCtoArgs) {
                 $res = pg_fetch_object($this->_idResult, null, $this->_fetchModeParam, $this->_fetchModeCtoArgs);
             } else {
                 $res = pg_fetch_object($this->_idResult, null, $this->_fetchModeParam);
             }
-        } elseif ($this->_fetchMode == AbstractConnection::FETCH_INTO) {
+        } elseif ($this->_fetchMode == ConnectionInterface::FETCH_INTO) {
             $res = pg_fetch_object($this->_idResult);
             if ($res) {
                 $values = get_object_vars($res);

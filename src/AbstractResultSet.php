@@ -91,13 +91,13 @@ abstract class AbstractResultSet implements ResultSetInterface, \Iterator
             return $result;
         }
 
-        if ($this->_fetchMode == AbstractConnection::FETCH_OBJ) {
+        if ($this->_fetchMode == ConnectionInterface::FETCH_OBJ) {
             $this->applyModifiers($result);
 
             return $result;
         }
 
-        if ($this->_fetchMode == AbstractConnection::FETCH_CLASS) {
+        if ($this->_fetchMode == ConnectionInterface::FETCH_CLASS) {
             if ($result instanceof $this->_fetchModeParam) {
                 $this->applyModifiers($result);
 
@@ -109,7 +109,7 @@ abstract class AbstractResultSet implements ResultSetInterface, \Iterator
             foreach ($values as $k => $value) {
                 $result->{$k} = $value;
             }
-        } elseif ($this->_fetchMode == AbstractConnection::FETCH_INTO) {
+        } elseif ($this->_fetchMode == ConnectionInterface::FETCH_INTO) {
             $values = get_object_vars($result);
             $result = $this->_fetchModeParam;
             foreach ($values as $k => $value) {

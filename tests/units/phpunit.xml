@@ -7,7 +7,7 @@
     <testsuite name="schema">
       <directory>schema/</directory>
     </testsuite>
-    <testsuite name="Miscelaneous">
+    <testsuite name="Miscellaneous">
       <directory>misc/</directory>
     </testsuite>
   </testsuites>

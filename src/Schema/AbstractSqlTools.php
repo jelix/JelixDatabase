@@ -9,7 +9,7 @@
  */
 namespace Jelix\Database\Schema;
 
-use Jelix\Database\AbstractConnection;
+use Jelix\Database\ConnectionInterface;
 use Jelix\Database\Utilities;
 use Jelix\IniFile\Util;
 
@@ -25,14 +25,14 @@ abstract class AbstractSqlTools
     /**
      * the database connector.
      *
-     * @var AbstractConnection
+     * @var ConnectionInterface
      */
     protected $_conn;
 
     /**
-     * @param AbstractConnection $connector the connection to a database
+     * @param ConnectionInterface $connector the connection to a database
      */
-    public function __construct($connector = null)
+    public function __construct(ConnectionInterface $connector = null)
     {
         $this->_conn = $connector;
     }

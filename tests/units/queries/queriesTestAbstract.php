@@ -5,9 +5,6 @@
  * @link        https://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
-use \PHPUnit\Framework\TestCase;
-use \Jelix\Database\AbstractConnection;
-use Jelix\Database\AbstractResultSet;
 
 abstract class queriesTestAbstract extends \Jelix\UnitTests\UnitTestCaseDb
 {
@@ -183,7 +180,7 @@ abstract class queriesTestAbstract extends \Jelix\UnitTests\UnitTestCaseDb
 
         $obj = new MyProductContainer();
         $t = $obj->token = time();
-        $resultSet->setFetchMode(AbstractConnection::FETCH_INTO, $obj);
+        $resultSet->setFetchMode(\Jelix\Database\ConnectionInterface::FETCH_INTO, $obj);
 
         $res = $resultSet->fetch();
         $structure = '<object class="MyProductContainer">

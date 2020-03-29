@@ -15,6 +15,24 @@ use Psr\Log\LoggerInterface;
 
 interface ConnectionInterface
 {
+    const FETCH_OBJ = 5;
+    const FETCH_CLASS = 8;
+    const FETCH_INTO = 9;
+    const ATTR_AUTOCOMMIT = 0;
+    const ATTR_PREFETCH = 1;
+    const ATTR_TIMEOUT = 2;
+    const ATTR_ERRMODE = 3;
+    const ATTR_SERVER_VERSION = 4;
+    const ATTR_SERVER_INFO = 6;
+    const ATTR_CLIENT_VERSION = 5;
+    const ATTR_CONNECTION_STATUS = 7;
+    const ATTR_CASE = 8;
+    const ATTR_CURSOR = 10;
+    const ATTR_ORACLE_NULLS = 11;
+    const ATTR_PERSISTENT = 12;
+    const ATTR_DRIVER_NAME = 16;
+    const CURSOR_FWDONLY = 0;
+    const CURSOR_SCROLL = 1;
 
     /**
      * do a connection to the database, using properties of the given profile.

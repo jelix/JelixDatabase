@@ -7,15 +7,15 @@
 */
 namespace Jelix\UnitTests;
 
+use Jelix\Database\ConnectionInterface;
 use \PHPUnit\Framework\TestCase;
-use \Jelix\Database\AbstractConnection;
 
 abstract class UnitTestCaseDb extends TestCase
 {
     protected static $connection = null;
 
     /**
-     * @return  AbstractConnection
+     * @return  ConnectionInterface
      */
     abstract protected function getConnection();
 
