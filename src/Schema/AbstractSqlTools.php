@@ -558,12 +558,6 @@ abstract class AbstractSqlTools implements SqlToolsInterface
         return $result;
     }
 
-    const IBD_NO_CHECK = 0;
-    const IBD_EMPTY_TABLE_BEFORE = 1;
-    const IBD_INSERT_ONLY_IF_TABLE_IS_EMPTY = 2;
-    const IBD_IGNORE_IF_EXIST = 3;
-    const IBD_UPDATE_IF_EXIST = 4;
-
     /**
      * Insert several records into a table.
      *

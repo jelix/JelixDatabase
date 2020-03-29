@@ -1,4 +1,7 @@
 <?php
+
+use Jelix\Database\ConnectionConstInterface;
+
 /**
  * @author      Laurent Jouanneau
  * @copyright   2007-2020 Laurent Jouanneau
@@ -180,7 +183,7 @@ abstract class queriesTestAbstract extends \Jelix\UnitTests\UnitTestCaseDb
 
         $obj = new MyProductContainer();
         $t = $obj->token = time();
-        $resultSet->setFetchMode(\Jelix\Database\ConnectionInterface::FETCH_INTO, $obj);
+        $resultSet->setFetchMode(\Jelix\Database\ConnectionConstInterface::FETCH_INTO, $obj);
 
         $res = $resultSet->fetch();
         $structure = '<object class="MyProductContainer">

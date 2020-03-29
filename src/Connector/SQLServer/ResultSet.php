@@ -11,7 +11,7 @@
 namespace Jelix\Database\Connector\SQLServer;
 
 use Jelix\Database\AbstractResultSet;
-use Jelix\Database\ConnectionInterface;
+use Jelix\Database\ConnectionConstInterface;
 use Jelix\Database\Exception;
 
 /**
@@ -43,13 +43,13 @@ class ResultSet extends AbstractResultSet
         if (! $this->_idResult) {
             return false;
         }
-        if ($this->_fetchMode == ConnectionInterface::FETCH_CLASS) {
+        if ($this->_fetchMode == ConnectionConstInterface::FETCH_CLASS) {
             if ($this->_fetchModeCtoArgs) {
                 $res = sqlsrv_fetch_object($this->_idResult, $this->_fetchModeParam, $this->_fetchModeCtoArgs, $this->nextFetchRow);
             } else {
                 $res = sqlsrv_fetch_object($this->_idResult, $this->_fetchModeParam, array(), $this->nextFetchRow);
             }
-        } elseif ($this->_fetchMode == ConnectionInterface::FETCH_INTO) {
+        } elseif ($this->_fetchMode == ConnectionConstInterface::FETCH_INTO) {
             $res = sqlsrv_fetch_object($this->_idResult, null, array(), $this->nextFetchRow);
             if ($res) {
                 $values = get_object_vars($res);

@@ -13,7 +13,7 @@
 namespace Jelix\Database\Connector\Mysqli;
 
 use Jelix\Database\AbstractResultSet;
-use Jelix\Database\ConnectionInterface;
+use Jelix\Database\ConnectionConstInterface;
 use Jelix\Database\Exception;
 
 /**
@@ -44,7 +44,7 @@ class ResultSet extends AbstractResultSet
 
     protected function _fetch()
     {
-        if ($this->_fetchMode == ConnectionInterface::FETCH_CLASS) {
+        if ($this->_fetchMode == ConnectionConstInterface::FETCH_CLASS) {
             if ($this->_fetchModeCtoArgs) {
                 $ret = $this->_idResult->fetch_object($this->_fetchModeParam, $this->_fetchModeCtoArgs);
             } else {

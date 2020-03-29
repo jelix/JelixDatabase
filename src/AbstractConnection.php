@@ -28,7 +28,7 @@ use Jelix\Database\Log\QueryMessage;
  * @property $lastQuery  deprecated
  *
  */
-abstract class AbstractConnection implements ConnectionInterface
+abstract class AbstractConnection implements ConnectionInterface, ConnectionConstInterface
 {
     /**
      * profile properties used by the connector.
