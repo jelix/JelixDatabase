@@ -16,7 +16,7 @@ use Jelix\IniFile\Util;
 /**
  * Provides utilities methods for SQL
  */
-abstract class AbstractSqlTools
+abstract class AbstractSqlTools implements SqlToolsInterface
 {
     public $trueValue = '1';
 

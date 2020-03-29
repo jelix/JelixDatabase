@@ -13,7 +13,7 @@ namespace Jelix\Database\Connector\PDO;
 use Jelix\Database\Log\QueryMessage;
 use Jelix\Database\ResultSetInterface;
 use Jelix\Database\Schema\AbstractSchema;
-use Jelix\Database\Schema\AbstractSqlTools;
+use Jelix\Database\Schema\SqlToolsInterface;
 use Psr\Log\LoggerInterface;
 use Jelix\Database\Exception;
 
@@ -493,7 +493,7 @@ class Connection extends \PDO implements \Jelix\Database\ConnectionInterface
     }
 
     /**
-     * @return AbstractSqlTools
+     * @return SqlToolsInterface
      */
     public function tools()
     {

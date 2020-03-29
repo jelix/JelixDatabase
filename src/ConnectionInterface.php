@@ -10,7 +10,7 @@
 namespace Jelix\Database;
 
 use Jelix\Database\Schema\AbstractSchema;
-use Jelix\Database\Schema\AbstractSqlTools;
+use Jelix\Database\Schema\SqlToolsInterface;
 use Psr\Log\LoggerInterface;
 
 interface ConnectionInterface
@@ -222,7 +222,7 @@ interface ConnectionInterface
     public function lastIdInTable($fieldName, $tableName);
 
     /**
-     * @return AbstractSqlTools
+     * @return SqlToolsInterface
      */
     public function tools();
 

@@ -16,7 +16,7 @@
 namespace Jelix\Database;
 
 use Jelix\Database\Schema\AbstractSchema;
-use Jelix\Database\Schema\AbstractSqlTools;
+use Jelix\Database\Schema\SqlToolsInterface;
 use Psr\Log\LoggerInterface;
 use Jelix\Database\Log\QueryMessage;
 
@@ -455,7 +455,7 @@ abstract class AbstractConnection implements ConnectionInterface
     }
 
     /**
-     * @return AbstractSqlTools
+     * @return SqlToolsInterface
      */
     public function tools()
     {
