@@ -9,7 +9,7 @@
 
 namespace Jelix\Database;
 
-use Jelix\Database\Schema\AbstractSchema;
+use Jelix\Database\Schema\SchemaInterface;
 use Jelix\Database\Schema\SqlToolsInterface;
 use Psr\Log\LoggerInterface;
 
@@ -227,7 +227,7 @@ interface ConnectionInterface
     public function tools();
 
     /**
-     * @return AbstractSchema
+     * @return SchemaInterface
      */
     public function schema();
 }

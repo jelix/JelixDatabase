@@ -15,7 +15,7 @@
  */
 namespace Jelix\Database;
 
-use Jelix\Database\Schema\AbstractSchema;
+use Jelix\Database\Schema\SchemaInterface;
 use Jelix\Database\Schema\SqlToolsInterface;
 use Psr\Log\LoggerInterface;
 use Jelix\Database\Log\QueryMessage;
@@ -463,12 +463,12 @@ abstract class AbstractConnection implements ConnectionInterface
     }
 
     /**
-     * @var AbstractSchema
+     * @var SchemaInterface
      */
     protected $_schema;
 
     /**
-     * @return AbstractSchema
+     * @return SchemaInterface
      */
     public function schema()
     {
@@ -480,7 +480,7 @@ abstract class AbstractConnection implements ConnectionInterface
     }
 
     /**
-     * @return AbstractSchema
+     * @return SchemaInterface
      */
     abstract protected function _getSchema();
 

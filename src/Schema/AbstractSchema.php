@@ -12,7 +12,7 @@ namespace Jelix\Database\Schema;
 
 use Jelix\Database\ConnectionInterface;
 
-abstract class AbstractSchema
+abstract class AbstractSchema implements SchemaInterface
 {
     /**
      * @var ConnectionInterface
