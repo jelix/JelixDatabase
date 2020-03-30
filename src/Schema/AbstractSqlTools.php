@@ -37,6 +37,13 @@ abstract class AbstractSqlTools implements SqlToolsInterface
         $this->_conn = $connector;
     }
 
+    /**
+     * @return ConnectionInterface
+     */
+    public function getConnection() {
+        return $this->_conn;
+    }
+
     protected $unifiedToPhp = array(
         'boolean' => 'boolean',
         'integer' => 'integer',
@@ -67,7 +74,7 @@ abstract class AbstractSqlTools implements SqlToolsInterface
      *               array ( 'nativetype', 'corresponding unifiedtype', minvalue, maxvalue, minlength, maxlength, autoincrement)
      *               minvalue, maxvalue, minlength, maxlength can be null
      *
-*/
+     */
     public function getTypeInfo($nativeType)
     {
         $nativeType = strtolower($nativeType);

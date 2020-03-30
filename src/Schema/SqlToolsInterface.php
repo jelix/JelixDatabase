@@ -22,6 +22,11 @@ interface SqlToolsInterface
     public function __construct(ConnectionInterface $connector = null);
 
     /**
+     * @return ConnectionInterface
+     */
+    public function getConnection();
+
+    /**
      * Get informations about the given SQL type.
      *
      * @param string $nativeType the SQL type
