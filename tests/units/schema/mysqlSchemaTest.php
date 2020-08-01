@@ -436,6 +436,8 @@ class mysqlSchemaTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $this->assertEquals(array(), $table->getIndexes());
         $this->assertEquals(array(), $table->getUniqueKeys());
         $this->assertEquals(array(), $table->getReferences());
+        $this->assertTrue($table->getColumn('id')->isAutoincrementedColumn());
+        $this->assertFalse($table->getColumn('name')->isAutoincrementedColumn());
     }
 
     function testCreateTable() {
@@ -705,6 +707,12 @@ class mysqlSchemaTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $this->assertEquals(array('country_id'), $pk->columns);
         $pk = $city->getPrimaryKey();
         $this->assertEquals(array('city_id'), $pk->columns);
+
+        $this->assertTrue($country->getColumn('country_id')->isAutoincrementedColumn());
+        $this->assertFalse($country->getColumn('name')->isAutoincrementedColumn());
+        $this->assertTrue($city->getColumn('city_id')->isAutoincrementedColumn());
+        $this->assertFalse($city->getColumn('country_id')->isAutoincrementedColumn());
+        $this->assertFalse($city->getColumn('name')->isAutoincrementedColumn());
 
         $columns='<array>'.$this->countryColumns ['country_id'].
             $this->countryColumns ['name']. '</array>';

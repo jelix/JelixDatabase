@@ -23,6 +23,11 @@ interface TableInterface
      */
     public function getColumns();
 
+    /**
+     * @param string $name
+     * @param bool $forChange
+     * @return Column|null
+     */
     public function getColumn($name, $forChange = false);
 
     /**

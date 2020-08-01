@@ -137,15 +137,24 @@ class Column
 
     protected function _isEqualToExceptName($column)
     {
+        $isAutoIncremented = false;
         if ($column->nativeType && $this->nativeType) {
             if ($column->nativeType != $this->nativeType) {
-                return false;
+                $isAutoIncremented =  ($this->isAutoincrementedColumn() && $column->isAutoincrementedColumn()) ||
+                    ($this->isBigAutoincrementedColumn() && $column->isBigAutoincrementedColumn());
+                if (!$isAutoIncremented) {
+                    return false;
+                }
             }
         } elseif ($this->type != $column->type) {
-            return false;
+            $isAutoIncremented =  ($this->isAutoincrementedColumn() && $column->isAutoincrementedColumn()) ||
+                ($this->isBigAutoincrementedColumn() && $column->isBigAutoincrementedColumn());
+            if (!$isAutoIncremented) {
+                return false;
+            }
         }
 
-        if (($this->sequence || $column->sequence) &&
+        if (!$isAutoIncremented && ($this->sequence || $column->sequence) &&
             $this->sequence != $column->sequence) {
             return false;
         }
@@ -159,5 +168,56 @@ class Column
             $this->scale == $column->scale &&
             $this->unsigned == $column->unsigned
             ;
+    }
+
+    public function isAutoincrementedColumn()
+    {
+        if ($this->nativeType) {
+            return (
+                ($this->autoIncrement && (
+                        $this->nativeType == 'integer' ||
+                        $this->nativeType == 'int')
+                ) ||
+                $this->nativeType == 'serial'
+            );
+        }
+
+        if (
+            ($this->autoIncrement && (
+                    $this->type == 'integer' ||
+                    $this->type == 'int' )
+            ) ||
+            $this->type == 'serial' ||
+            $this->type == 'autoincrement'
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isBigAutoincrementedColumn()
+    {
+        if ($this->nativeType) {
+            return (
+                ($this->autoIncrement && (
+                        $this->nativeType == 'bigint' ||
+                        $this->nativeType == 'numeric')
+                ) ||
+                $this->nativeType == 'bigserial'
+            );
+        }
+
+        if (
+            ($this->autoIncrement && (
+                    $this->type == 'bigint' )
+            ) ||
+            $this->type == 'bigserial'  ||
+            $this->type == 'bigautoincrement'
+        ) {
+            return true;
+        }
+
+        return false;
     }
 }
