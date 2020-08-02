@@ -27,7 +27,7 @@ class sqlite3QueriesTest extends queriesTestAbstract
                 "database"=>"/src/tests/tests/units/tests.sqlite3"
             ), array('charset'=>'UTF-8'));
 
-            self::$connectionSqlite = Connection::create($parameters->getParameters());
+            self::$connectionSqlite = Connection::create($parameters);
         }
         return self::$connectionSqlite;
     }

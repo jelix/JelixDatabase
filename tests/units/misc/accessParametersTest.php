@@ -28,7 +28,7 @@ class accessParametersTest extends \PHPUnit\Framework\TestCase
             "database"=>"jelix"
             );
         $param = new AccessParameters($profile);
-        $result = $param->getParameters();
+        $result = $param->getNormalizedParameters();
         $this->assertEquals("mysql", $result['dbtype']);
         $this->assertEquals("mysqli", $result['phpext']);
         $this->assertEquals("mysqli", $result['driver']);
@@ -48,7 +48,7 @@ class accessParametersTest extends \PHPUnit\Framework\TestCase
             "bar"=>"bbb"
             );
         $param = new AccessParameters($profile);
-        $result = $param->getParameters();
+        $result = $param->getNormalizedParameters();
         $this->assertEquals("mysql", $result['dbtype']);
         $this->assertEquals("mysqli", $result['phpext']);
         $this->assertEquals("mysqli", $result['driver']);
@@ -68,7 +68,7 @@ class accessParametersTest extends \PHPUnit\Framework\TestCase
             "usepdo"=>true
             );
         $param = new AccessParameters($profile);
-        $result = $param->getParameters();
+        $result = $param->getNormalizedParameters();
         $this->assertEquals("mysql", $result['dbtype']);
         $this->assertEquals("mysql", $result['phpext']);
         $this->assertEquals("mysql", $result['driver']);
@@ -101,7 +101,7 @@ class accessParametersTest extends \PHPUnit\Framework\TestCase
             "dsn"=>"mysql:host=localhost;dbname=jelix",
         );
         $param = new AccessParameters($profile);
-        $result = $param->getParameters();
+        $result = $param->getNormalizedParameters();
         $this->assertEquals("mysql", $result['dbtype']);
         $this->assertEquals("mysqli", $result['phpext']);
         $this->assertEquals("mysqli", $result['driver']);
@@ -118,7 +118,7 @@ class accessParametersTest extends \PHPUnit\Framework\TestCase
             "dsn"=>"mysql:host=localhost;dbname=jelix",
         );
         $param = new AccessParameters($profile);
-        $result = $param->getParameters();
+        $result = $param->getNormalizedParameters();
         $this->assertEquals("mysql", $result['dbtype']);
         $this->assertEquals("mysqli", $result['phpext']);
         $this->assertEquals("mysqli", $result['driver']);

@@ -1,7 +1,8 @@
 Lightweight PHP abstraction layer to access and query SQL databases. 
 
-It supports Mysql 5.6+, Postgresql 9.6+, Sqlite 3.
-It supports partially (Schema API not fully implemented) SQLServer 2012+ and OCI.
+It supports Mysql 5.6+, Postgresql 9.6+, Sqlite 3. It supports partially 
+(Schema API not fully implemented) SQLServer 2012+ and OCI. There is a connector
+using PDO, so you can use other databases (except with the Schema API).
 
 This library has been extracted from the [Jelix](https://jelix.org) framework 1.7,
 and has been modernized a bit.
@@ -32,14 +33,9 @@ $parameters = array(
 
 // verify content of parameters and prepare them for the Connection object.
 $accessParameters = new AccessParameters($parameters, array('charset'=>'UTF-8'));
-$trustedParameters = $accessParameters->getParameters();
-
-// optionally, you can store the content of $trustedParameters in a secured// 
-// cache manager , so it is not needed to use AccessParameter at each
-// HTTP requests.
 
 // then you can retrieve a connector
-$db = Connection::create($trustedParameters);
+$db = Connection::create($accessParameters);
 
 
 // let's insert some values

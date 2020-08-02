@@ -31,7 +31,7 @@ class mysqlQueriesTest extends queriesTestAbstract
             ), array('charset'=>'UTF-8'));
 
 
-            self::$connectionMysql = Connection::create($parameters->getParameters());
+            self::$connectionMysql = Connection::create($parameters);
         }
         return self::$connectionMysql;
     }

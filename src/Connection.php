@@ -15,12 +15,23 @@ class Connection
 {
 
     /**
-     * @param array $profile trusted parameters, given by AccessParameters
+     * @param AccessParameters $profile trusted parameters, given by AccessParameters
      * @param LoggerInterface|null $logger
      * @return ConnectionInterface
      * @throws Exception
      */
-    public static function create($profile, LoggerInterface $logger = null)
+    public static function create(AccessParameters $parameters, LoggerInterface $logger = null)
+    {
+        return self::createWithNormalizedParameters($parameters->getNormalizedParameters(), $logger);
+    }
+
+    /**
+     * @param array $profile normalized parameters, given by AccessParameters
+     * @param LoggerInterface|null $logger
+     * @return ConnectionInterface
+     * @throws Exception
+     */
+    public static function createWithNormalizedParameters(array $profile, LoggerInterface $logger = null)
     {
         if ($profile['driver'] == 'pdo' || $profile['usepdo']) {
             return new Connector\PDO\Connection($profile, $logger);

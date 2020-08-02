@@ -27,7 +27,7 @@ class pdoSqliteQueriesTest extends queriesTestAbstract
             ), array('charset'=>'UTF-8'));
 
 
-            self::$connectionPDOSqlite = Connection::create($parameters->getParameters());
+            self::$connectionPDOSqlite = Connection::create($parameters);
         }
         return self::$connectionPDOSqlite;
     }

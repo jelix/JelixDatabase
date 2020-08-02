@@ -30,7 +30,7 @@ class pgsqlQueriesTest extends queriesTestAbstract {
                 "database"=>"jelixtests"
             ), array('charset'=>'UTF-8'));
 
-            self::$connectionPgsql = Connection::create($parameters->getParameters());
+            self::$connectionPgsql = Connection::create($parameters);
         }
         return self::$connectionPgsql;
     }

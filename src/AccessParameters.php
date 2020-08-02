@@ -53,7 +53,7 @@ class AccessParameters
      * @param array $options  some options:
      *      'charset': the charset code to use for the connection
      *      'filePathParser': a parser (callable) of file path (path to a sqlite database for example), in case
-     *          the file path may content some protocole path to access to the real file.
+     *      the file path may content some protocole path to access to the real file.
      */
     public function __construct($profileParameters, $options = [])
     {
@@ -86,7 +86,11 @@ class AccessParameters
         $this->parameters['filePathParser'] = isset($options['filePathParser']) ? $options['filePathParser']: '';
     }
 
-    public function getParameters()
+    /**
+     * Return normalized parameters ready to be used with the Connection object
+     * @return array list of normalized parameters
+     */
+    public function getNormalizedParameters()
     {
         return $this->parameters;
     }

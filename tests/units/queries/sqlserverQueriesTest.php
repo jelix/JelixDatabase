@@ -32,7 +32,7 @@ class sqlserverQueriesTest extends queriesTestAbstract {
                 "database"=>"jelixtests"
             ), array('charset'=>'UTF-8'));
 
-            self::$connectionSqlserver = Connection::create($parameters->getParameters());
+            self::$connectionSqlserver = Connection::create($parameters);
         }
         return self::$connectionSqlserver;
     }

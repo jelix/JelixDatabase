@@ -23,7 +23,7 @@ class sqlserverToolsTest extends \Jelix\UnitTests\UnitTestCaseDb
                 "database"=>"jelixtests"
             ), array('charset'=>'UTF-8'));
 
-            self::$connectionSqlsrv = Connection::create($parameters->getParameters());
+            self::$connectionSqlsrv = Connection::create($parameters);
         }
         return self::$connectionSqlsrv;
     }

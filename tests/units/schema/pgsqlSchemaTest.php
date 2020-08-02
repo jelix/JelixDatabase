@@ -33,7 +33,7 @@ class pgsqlSchemaTest extends \Jelix\UnitTests\UnitTestCaseDb
                 "database"=>"jelixtests"
             ), array('charset'=>'UTF-8'));
 
-            self::$connectionPgsql = Connection::create($parameters->getParameters());
+            self::$connectionPgsql = Connection::create($parameters);
         }
         return self::$connectionPgsql;
     }

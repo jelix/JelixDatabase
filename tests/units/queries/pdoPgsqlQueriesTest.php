@@ -30,7 +30,7 @@ class pdoPgsqlQueriesTest extends queriesTestAbstract
             ), array('charset'=>'UTF-8'));
 
 
-            self::$connectionPDOPgsql = Connection::create($parameters->getParameters());
+            self::$connectionPDOPgsql = Connection::create($parameters);
         }
         return self::$connectionPDOPgsql;
     }

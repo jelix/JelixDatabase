@@ -25,7 +25,7 @@ class toolsTest extends \Jelix\UnitTests\UnitTestCaseDb {
             ), array('charset'=>'UTF-8'));
 
 
-            self::$connectionMysql = Connection::create($parameters->getParameters());
+            self::$connectionMysql = Connection::create($parameters);
         }
         return self::$connectionMysql;
     }

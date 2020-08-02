@@ -30,7 +30,7 @@ class pdoMysqlQueriesTest extends queriesTestAbstract
             ), array('charset'=>'UTF-8'));
 
 
-            self::$connectionPDOMysql = Connection::create($parameters->getParameters());
+            self::$connectionPDOMysql = Connection::create($parameters);
         }
         return self::$connectionPDOMysql;
     }
