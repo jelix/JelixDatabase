@@ -66,3 +66,5 @@ foreach ($resultSet as $record) {
 }
 
 ```
+
+Full documentation : see the [docs](docs/en/index.md) directory.
