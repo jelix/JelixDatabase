@@ -1,13 +1,15 @@
 Lightweight PHP abstraction layer to access and query SQL databases. 
 
+It uses the dedicated PHP API for each database type it supports, not PDO.
+The API of connectors and result sets are almost the same as in PDO. There is
+an API to manipulate schemas.
+
 It supports Mysql 5.6+, Postgresql 9.6+, Sqlite 3. It supports partially 
 (Schema API not fully implemented) SQLServer 2012+ and OCI. There is a connector
 using PDO, so you can use other databases (except with the Schema API).
 
 This library has been extracted from the [Jelix](https://jelix.org) framework 1.7,
 and has been modernized a bit.
-
-The API of connectors and resultset are almost the same as PDO.
 
 # installation
 
