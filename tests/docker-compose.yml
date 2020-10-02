@@ -3,7 +3,6 @@ services:
   pgsql:
     image: postgres:11
     container_name: jdb_test_pgsql
-    restart: always
     environment:
       POSTGRES_DB: jelixtests
       POSTGRES_USER: jelix
@@ -16,7 +15,6 @@ services:
     image: mysql
     container_name: jdb_test_mysql
     command: --default-authentication-plugin=mysql_native_password
-    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: mysqlpass
       MYSQL_DATABASE: jelixtests
@@ -27,7 +25,6 @@ services:
   sqlsrv:
      image: mcr.microsoft.com/mssql/server:2017-latest
      container_name: jdb_test_sqlsrv
-     restart: always
      environment:
        ACCEPT_EULA: Y
        SA_PASSWORD: JelixPass2020!
