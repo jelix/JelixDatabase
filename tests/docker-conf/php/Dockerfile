@@ -1,10 +1,11 @@
 FROM debian:buster-slim
 
 ARG composer_version=1.9.3
+ARG test_user_id=1000
+ARG test_group_id=1000
+ARG php_version=7.4
 
-ENV TEST_USER_ID=1000 \
-    TEST_GROUP_ID=1000 \
-    PHP_VERSION=7.3
+ENV PHP_VERSION=${php_version}
 
 RUN set -eux; \
     echo 'alias ll="ls -al"' > /etc/profile.d/start; \
@@ -18,13 +19,15 @@ RUN apt-get -y install \
     php${PHP_VERSION}-cli \
     php${PHP_VERSION}-curl \
     php${PHP_VERSION}-intl \
-    php${PHP_VERSION}-json \
     php${PHP_VERSION}-mbstring \
     php${PHP_VERSION}-pgsql \
     php${PHP_VERSION}-sqlite3 \
     php${PHP_VERSION}-mysql \
     php${PHP_VERSION}-xml \
     php${PHP_VERSION}-zip \
+    ;  if [ "$PHP_VERSION" != "8.0" ]; then apt-get -y install \
+      php${PHP_VERSION}-json \
+    ; fi \
     ; apt-get clean
 
 ## Install Composer
@@ -33,8 +36,8 @@ RUN wget -O /bin/composer https://getcomposer.org/download/$composer_version/com
 
 RUN set -eux; \
     sed -i "/^display_errors =/c\display_errors = On" /etc/php/${PHP_VERSION}/cli/php.ini; \
-    addgroup --gid $TEST_GROUP_ID grouptest; \
-    useradd --uid $TEST_USER_ID --gid $TEST_GROUP_ID usertest;
+    addgroup --gid $test_group_id grouptest; \
+    useradd --uid $test_user_id --gid $test_group_id usertest;
 
 RUN echo "error_log = /var/log/php_errors.log" >> /etc/php/${PHP_VERSION}/cli/php.ini \
     && touch /var/log/php_errors.log
@@ -47,11 +50,13 @@ RUN  curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -; \
      apt-get update; \
      ACCEPT_EULA=Y apt-get -y install msodbcsql17 libgssapi-krb5-2; \
      cd /tmp/; \
-     wget -O debsqlsrv.tar https://github.com/microsoft/msphpsql/releases/download/v5.8.0/Debian10-${PHP_VERSION}.tar; \
+     wget -O debsqlsrv.tar https://github.com/microsoft/msphpsql/releases/download/v5.9.0/Debian10-${PHP_VERSION}.tar; \
      tar xf debsqlsrv.tar; \
-     cp  Debian10-${PHP_VERSION}/*_nts.so /usr/lib/php/20180731/; \
-     printf "; priority=20\nextension=php_sqlsrv_73_nts.so\n" > /etc/php/${PHP_VERSION}/mods-available/sqlsrv.ini; \
-     printf "; priority=30\nextension=php_pdo_sqlsrv_73_nts.so\n" > /etc/php/${PHP_VERSION}/mods-available/pdo_sqlsrv.ini; \
+     phpextdir=$(php -i | grep "PHP Extension =" | cut -d "=" -f 2 | sed 's/[> ]//g'); \
+     cp  Debian10-${PHP_VERSION}/*_nts.so /usr/lib/php/$phpextdir/; \
+     shrinkphpversion=$(echo $PHP_VERSION | sed 's/\.//g'); \
+     printf "; priority=20\nextension=php_sqlsrv_${shrinkphpversion}_nts.so\n" > /etc/php/${PHP_VERSION}/mods-available/sqlsrv.ini; \
+     printf "; priority=30\nextension=php_pdo_sqlsrv_${shrinkphpversion}_nts.so\n" > /etc/php/${PHP_VERSION}/mods-available/pdo_sqlsrv.ini; \
      phpenmod sqlsrv; \
      phpenmod pdo_sqlsrv; \
      rm -rf /tmp/msodbcsql.deb /tmp/debsqlsrv.tar /tmp/Debian10-${PHP_VERSION};

@@ -137,7 +137,7 @@ $sqlite->exec("CREATE TABLE labels_test (
 
 echo "  tables restored\n";
 
-
+/*
 echo "Delete and restore all tables from the sql server database\n";
 $tryAgain = true;
 $connectOptions = array(
@@ -205,7 +205,7 @@ while($tryAgain) {
 
     sqlsrv_close($cnx);
 }
-
+*/
 echo "  tables restored\n";
 
 

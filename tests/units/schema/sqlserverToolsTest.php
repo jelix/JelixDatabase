@@ -6,7 +6,7 @@
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 use \Jelix\Database\Connection;
-
+/*
 class sqlserverToolsTest extends \Jelix\UnitTests\UnitTestCaseDb
 {
     use assertComplexTrait;
@@ -29,9 +29,9 @@ class sqlserverToolsTest extends \Jelix\UnitTests\UnitTestCaseDb
     }
 
 
-    function testGetFieldList(){
+    function testGetFieldList(){*/
         /** @var \Jelix\Database\Schema\Sqlserver\SQLTools $tools */
-        $tools = $this->getConnection()->tools();
+       /* $tools = $this->getConnection()->tools();
 
         $fields = $tools->getFieldList('products');
 
@@ -81,3 +81,4 @@ class sqlserverToolsTest extends \Jelix\UnitTests\UnitTestCaseDb
     }
 
 }
+*/

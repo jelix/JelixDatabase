@@ -11,7 +11,7 @@ require_once(__DIR__.'/queriesTestAbstract.php');
 
 use \Jelix\Database\Connection;
 
-
+/*
 class sqlserverQueriesTest extends queriesTestAbstract {
 
     protected $connectionInstanceName =  '\\Jelix\\Database\\Connector\\SQLServer\\Connection';
@@ -37,3 +37,4 @@ class sqlserverQueriesTest extends queriesTestAbstract {
         return self::$connectionSqlserver;
     }
 }
+*/

@@ -4,11 +4,20 @@ set -e
 
 export TEST_USER_ID=${TEST_USER_ID:-$(id -u)}
 export TEST_GROUP_ID=${TEST_GROUP_ID:-$(id -g)}
+export PHP_VERSION=${PHP_VERSION:-7.4}
 
 CMD=$1
 
 if [ "$CMD" == "" ]; then
     CMD="up -d"
+fi
+
+if [ "$CMD" == "reset" ]; then
+    # Stop/Remove containers
+    docker-compose -p jdb-tests rm -sf || true
+    # Clean postgres volume
+    docker volume rm "jdb_test_pg_data" || true
+    exit 0
 fi
 
 docker-compose -p jdb-tests $CMD
