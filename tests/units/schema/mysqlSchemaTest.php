@@ -465,8 +465,16 @@ class mysqlSchemaTest extends \Jelix\UnitTests\UnitTestCaseDb {
             $list[$l->Field] = $l;
         }
 
+        $mysqlVersion = $db->getAttribute(\PDO::ATTR_SERVER_VERSION);
+        if ($mysqlVersion[0] == '5') {
+            $intType = 'int(11)';
+        }
+        else {
+            $intType = 'int';
+        }
+
         $obj = '<object>
-        <string property="Type" value="int" />
+        <string property="Type" value="'.$intType.'" />
         <string property="Field" value="id" />
         <string property="Null" value="NO" />
         <string property="Extra"  value="auto_increment" />
@@ -506,7 +514,7 @@ class mysqlSchemaTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $this->assertComplexIdenticalStr($list['promo'], $obj);
 
         $obj = '<object>
-        <string property="Type" value="int" />
+        <string property="Type" value="'.$intType.'" />
         <string property="Field" value="product_id" />
         <string property="Null" value="NO" />
         <string property="Extra"  value="" />

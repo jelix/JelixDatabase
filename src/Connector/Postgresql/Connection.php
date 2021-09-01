@@ -7,7 +7,7 @@
  * @contributor Julien Issler
  * @contributor Alexandre Zanelli
  *
- * @copyright  2001-2005 CopixTeam, 2005-2020 Laurent Jouanneau, 2007-2008 Laurent Raufaste, 2009 Julien Issler
+ * @copyright  2001-2005 CopixTeam, 2005-2021 Laurent Jouanneau, 2007-2008 Laurent Raufaste, 2009 Julien Issler
  *
  * @see      https://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -177,7 +177,13 @@ class Connection extends AbstractConnection
 
     protected function _disconnect()
     {
-        return @pg_close($this->_connection);
+        try {
+            @pg_close($this->_connection);
+        }
+        catch(\Error $e)
+        {
+
+        }
     }
 
     protected function _doQuery($queryString)

@@ -3,7 +3,7 @@
  * @author     Yann Lecommandoux
  * @contributor Laurent Jouanneau, Louis S.
  *
- * @copyright  2008 Yann Lecommandoux, 2011-2020 Laurent Jouanneau, Louis S.
+ * @copyright  2008 Yann Lecommandoux, 2011-2021 Laurent Jouanneau, Louis S.
  *
  * @see     https://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -125,7 +125,7 @@ class Connection extends AbstractConnection
      */
     protected function _disconnect()
     {
-        return sqlsrv_close($this->_connection);
+        sqlsrv_close($this->_connection);
     }
 
     /**

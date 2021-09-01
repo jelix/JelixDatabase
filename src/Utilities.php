@@ -52,6 +52,7 @@ class Utilities
             $precision = $p - $pPoint -1;
             return rtrim(rtrim(sprintf('%.'.$precision.'F', $value), '0'), '.'); // %F to not format with the local decimal separator
         }
+
         if (is_integer($value)) {
             return sprintf('%d', $value);
         }

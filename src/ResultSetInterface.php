@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2020 Laurent Jouanneau
+ * @copyright   2020-2021 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -55,7 +55,7 @@ interface ResultSetInterface
      *
      * @param int $attr
      */
-    public function getAttribute($attr);
+    public function getAttribute(int $attr);
 
     /**
      * Set a statement attribute.

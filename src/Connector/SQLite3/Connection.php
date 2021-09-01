@@ -3,7 +3,7 @@
  * @author     Loic Mathaud
  * @contributor Laurent Jouanneau
  *
- * @copyright  2006 Loic Mathaud, 2007-2020 Laurent Jouanneau
+ * @copyright  2006 Loic Mathaud, 2007-2021 Laurent Jouanneau
  *
  * @see      https://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -109,7 +109,7 @@ class Connection extends AbstractConnection
 
     protected function _disconnect()
     {
-        return $this->_connection->close();
+        $this->_connection->close();
     }
 
     protected function _doQuery($query)

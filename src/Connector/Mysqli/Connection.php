@@ -6,7 +6,7 @@
  * @contributor Sylvain de Vathaire, Julien Issler
  * @contributor Florian Lonqueu-Brochard
  *
- * @copyright  2001-2005 CopixTeam, 2005-2020 Laurent Jouanneau, 2009 Julien Issler, 2012 Florian Lonqueu-Brochard
+ * @copyright  2001-2005 CopixTeam, 2005-2021 Laurent Jouanneau, 2009 Julien Issler, 2012 Florian Lonqueu-Brochard
  *
  * @see      https://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -141,7 +141,7 @@ class Connection extends AbstractConnection
 
     protected function _disconnect()
     {
-        return $this->_connection->close();
+        $this->_connection->close();
     }
 
     protected function _doQuery($query)

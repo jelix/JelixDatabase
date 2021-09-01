@@ -2,7 +2,7 @@
 /**
  * @author     Philippe Villiers
  * @contributor Laurent Jouanneau
- * @copyright  2013 Philippe Villiers, 2017-2020 Laurent Jouanneau
+ * @copyright  2013 Philippe Villiers, 2017-2021 Laurent Jouanneau
  *
  * @see        https://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -60,7 +60,7 @@ class Connection extends AbstractConnection
 
     protected function _disconnect()
     {
-        return oci_close($this->_connection);
+        oci_close($this->_connection);
     }
 
     protected function _doQuery($queryString)

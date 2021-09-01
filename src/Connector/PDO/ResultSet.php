@@ -3,7 +3,7 @@
  * @author     Laurent Jouanneau
  * @contributor Gwendal Jouannic, Thomas, Julien Issler
  *
- * @copyright  2005-2020 Laurent Jouanneau
+ * @copyright  2005-2021 Laurent Jouanneau
  * @copyright  2008 Gwendal Jouannic, 2009 Thomas
  * @copyright  2009 Julien Issler
  *
@@ -12,126 +12,147 @@
  */
 namespace Jelix\Database\Connector\PDO;
 
-use Jelix\Database\ResultSetInterface;
+use Jelix\Database\AbstractResultSet;
 
 /**
- * a resultset based on PDOStatement.
+ * A resultset based on PDOStatement
  *
  * @package  jelix
  * @subpackage db
  */
-class ResultSet extends \PDOStatement implements ResultSetInterface
+class ResultSet  extends AbstractResultSet
 {
-    protected $_fetchMode = 0;
+    /**
+     * @var \PDOStatement
+     */
+    protected $_idResult;
 
-    public function fetch($fetch_style = null, $cursor_orientation = \PDO::FETCH_ORI_NEXT, $cursor_offset = 0)
+    /**
+     * @var bool true if the next call to fetch should fetch the first record
+     */
+    protected $doRewind = false;
+
+    /**
+     * @inheritDoc
+     */
+    public function setFetchMode($fetchmode, $param = null, $ctoargs = null)
     {
-        // we take a shortcut: unused parameters are ignored by parent::fetch
-        // let the parent::setFetchMode override as needed, and PHP use its default
-        if ($fetch_style) {
-            $rec = parent::fetch($fetch_style, $cursor_orientation, $cursor_offset);
-        } else {
-            $rec = parent::fetch();
-        }
+        parent::setFetchMode($fetchmode, $param, $ctoargs);
 
+        // depending the mode, original setFetchMode throw an error if wrong arguments
+        // are given, even if there are null
+        if ($param === null && $ctoargs === null) {
+            $this->_idResult->setFetchMode($fetchmode);
+        }
+        else if ($ctoargs === null) {
+            $this->_idResult->setFetchMode($fetchmode, $param);
+        }
+        else {
+            $this->_idResult->setFetchMode($fetchmode, $param, $ctoargs);
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function fetch()
+    {
+        $rec = $this->_fetch();
         if ($rec) {
             $this->applyModifiers($rec);
         }
-
         return $rec;
     }
 
     /**
-     * return all results from the statement.
-     *
-     * @param int   $fetch_style
-     * @param int   $fetch_argument
-     * @param array $ctor_arg
-     *
-     * @return object[] list of object which contain all rows
+     * @inheritDoc
      */
-    public function fetchAll($fetch_style = null, $fetch_argument = null, $ctor_arg = null)
+    public function getAttribute($attr)
     {
-        // if the user requested to override the style set with setFetchMode, use it
-        $final_style = ($fetch_style ?: $this->_fetchMode);
-
-        // Check how many arguments, if available should be given
-        if (!$final_style) {
-            $records = parent::fetchAll(\PDO::FETCH_OBJ);
-        } elseif ($ctor_arg) {
-            $records = parent::fetchAll($final_style, $fetch_argument, $ctor_arg);
-        } elseif ($fetch_argument) {
-            $records = parent::fetchAll($final_style, $fetch_argument);
-        } else {
-            $records = parent::fetchAll($final_style);
-        }
-
-        if (count($this->modifier)) {
-            foreach ($records as $rec) {
-                $this->applyModifiers($rec);
-            }
-        }
-
-        return $records;
-    }
-
-    protected function applyModifiers($result)
-    {
-        if (count($this->modifier)) {
-            foreach ($this->modifier as $m) {
-                call_user_func_array($m, array($result, $this));
-            }
-        }
+        return $this->_idResult->getAttribute($attr);
     }
 
     /**
-     * Set the fetch mode.
-     *
-     * @param int   $mode the mode, a \PDO::FETCH_* constant
-     * @param mixed $arg1 a parameter for the given mode
-     * @param mixed $arg2 a parameter for the given mode
-     *
-     * @return bool true if the fetch mode is ok
+     * @inheritDoc
      */
-    public function setFetchMode($mode, $arg1 = null, $arg2 = null)
+    public function setAttribute($attr, $value)
     {
-        $this->_fetchMode = $mode;
-        // depending the mode, original setFetchMode throw an error if wrong arguments
-        // are given, even if there are null
-        if ($arg1 === null) {
-            return parent::setFetchMode($mode);
-        }
-        if ($arg2 === null) {
-            return parent::setFetchMode($mode, $arg1);
-        }
-
-        return parent::setFetchMode($mode, $arg1, $arg2);
+        $this->_idResult->setAttribute($attr, $value);
     }
 
     /**
-     * @param string $text a binary string to unescape
-     *
-     * @return string the unescaped string
+     * @inheritDoc
      */
-    public function unescapeBin($text)
+    public function bindColumn($column, &$param, $type = null)
     {
-        return $text;
+        return $this->_idResult->bindColumn($column, $param, $type);
     }
 
     /**
-     * a callback function which will modify on the fly record's value.
-     *
-     * @var callable[]
+     * @inheritDoc
      */
-    protected $modifier = array();
+    public function bindParam($parameterName, &$variable, $data_type = \PDO::PARAM_STR, $length = null, $driver_options = null)
+    {
+        return $this->_idResult->bindParam($parameterName, $variable, $data_type, $length, $driver_options);
+    }
 
     /**
-     * @param callable $function a callback function
-     *                           the function should accept in parameter the record,
-     *                           and the resulset object
+     * @inheritDoc
      */
-    public function addModifier($function)
+    public function bindValue($parameterName, $value, $data_type = \PDO::PARAM_STR)
     {
-        $this->modifier[] = $function;
+        return $this->_idResult->bindValue($parameterName, $value, $data_type);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function columnCount()
+    {
+        return $this->_idResult->columnCount();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function execute($parameters = null)
+    {
+        return $this->_idResult->execute($parameters);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function rowCount()
+    {
+        return $this->_idResult->rowCount();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function _free()
+    {
+        $this->_idResult->closeCursor();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function _fetch()
+    {
+        if ($this->doRewind) {
+            $this->doRewind = false;
+            return $this->_idResult->fetch($this->_fetchMode, \PDO::FETCH_ORI_ABS, 0);
+        }
+        return $this->_idResult->fetch();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function _rewind()
+    {
+        $this->doRewind = true;
     }
 }
