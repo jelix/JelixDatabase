@@ -99,6 +99,8 @@ class Column
 
     public $comment = '';
 
+    public $arrayDims = 0;
+
     public function __construct(
         $name,
         $type,
@@ -219,5 +221,10 @@ class Column
         }
 
         return false;
+    }
+
+    public function isArray()
+    {
+        return $this->arrayDims > 0;
     }
 }

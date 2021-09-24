@@ -14,6 +14,7 @@ while($tryAgain) {
     pg_query($cnx, "drop table if exists products");
     pg_query($cnx, "drop table if exists product_test");
     pg_query($cnx, "drop table if exists labels_test");
+    pg_query($cnx, "drop table if exists item_array_text");
 
     pg_query($cnx, "CREATE TABLE product_test (
         id serial NOT NULL,
@@ -40,6 +41,15 @@ while($tryAgain) {
     promo boolean NOT NULL
 )");
 
+    pg_query($cnx, "CREATE TABLE item_array_text (
+    id serial NOT NULL,
+    mytext text[] NOT NULL,
+    mytext2 text ARRAY NOT NULL,
+    myintegers int[] NOT NULL,
+    myintegers2 int ARRAY[4] NOT NULL,
+    myintegers3 integer[3][2] NOT NULL
+)");
+
     pg_query($cnx, "SELECT pg_catalog.setval(pg_catalog.pg_get_serial_sequence('products', 'id'), 1, false)");
 
     pg_query($cnx, "ALTER TABLE ONLY labels_test ADD CONSTRAINT labels_test_pkey PRIMARY KEY (\"key\", lang)");
@@ -52,6 +62,8 @@ while($tryAgain) {
 
 
     pg_query($cnx, "ALTER TABLE ONLY products ADD CONSTRAINT products_pkey PRIMARY KEY (id)");
+
+    pg_query($cnx, "ALTER TABLE ONLY item_array_text ADD CONSTRAINT item_array_text_pkey PRIMARY KEY (id)");
 
     pg_close($cnx);
 }

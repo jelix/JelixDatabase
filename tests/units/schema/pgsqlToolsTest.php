@@ -17,6 +17,7 @@ use \Jelix\Database\Schema\Postgresql\Schema as pgsqlSchema;
 class pgsqlToolsTest extends \Jelix\UnitTests\UnitTestCaseDb
 {
     use assertComplexTrait;
+
     protected static $connectionPgsql = null;
 
     protected function getConnection()
@@ -36,7 +37,8 @@ class pgsqlToolsTest extends \Jelix\UnitTests\UnitTestCaseDb
     }
 
 
-    function testGetFieldList(){
+    function testGetFieldList()
+    {
         /** @var \Jelix\Database\Schema\Postgresql\SQLTools $tools */
         $tools = $this->getConnection()->tools();
 
@@ -86,4 +88,68 @@ class pgsqlToolsTest extends \Jelix\UnitTests\UnitTestCaseDb
         $this->assertComplexIdenticalStr($fields, $structure, 'bad results');
     }
 
+
+    function getArrayValuesToParse()
+    {
+        return array(
+            array('{}',  array()),
+            array('{0}',  array(0)),
+            array('{0}',  array(0)),
+            array('{0,1,2}',  array(0, 1, 2)),
+            array('{{0,1,2},{4,5}}',  array(array(0, 1, 2), array(4, 5))),
+            array('{abc}', array('abc')),
+            array('{"abc"}',  array('abc')),
+            array('{"abc",cdfe}',  array('abc', 'cdfe')),
+            array('{"a\"bc",cdfe}',  array('a"bc', 'cdfe')),
+            array('{"ab{c","c,",dfe}',  array('ab{c', 'c,', 'dfe')),
+        );
+    }
+
+    /**
+     * @dataProvider getArrayValuesToParse
+     * @param $value
+     * @param $type
+     * @param $expectedArray
+     */
+    function testParseArrayValue($value, $expectedArray)
+    {
+        /** @var \Jelix\Database\Schema\Postgresql\SQLTools $tools */
+        $tools = $this->getConnection()->tools();
+        $result = $tools->decodeArrayValue($value);
+        $this->assertEquals($expectedArray, $result);
+    }
+
+
+
+    function getArrayValuesToSerialize()
+    {
+        return array(
+            array('{}', 'int', array()),
+            array('{0}', 'int', array(0)),
+            array('{0}', 'int', array(0)),
+            array('{0,1,2}', 'int', array(0, 1, 2)),
+            array('{0,0,2}', 'int', array(0, "abc", 2)),
+            array('{"0","1","2"}', 'text', array(0, 1, 2)),
+            array('{{0,1,2},{4,5}}', 'int', array(array(0, 1, 2), array(4, 5))),
+            array('{abc}', 'text', array('abc')),
+            array('{abc}', 'text', array('abc')),
+            array('{abc,cdfe}', 'text', array('abc', 'cdfe')),
+            array('{"a\"bc",cdfe}', 'text', array('a"bc', 'cdfe')),
+            array('{"ab{c","c,",dfe}', 'text', array('ab{c', 'c,', 'dfe')),
+        );
+    }
+
+    /**
+     * @dataProvider getArrayValuesToSerialize
+     * @param $expectedString
+     * @param $type
+     * @param $value
+     */
+    function testSerializeArrayValue($expectedString, $type, $value)
+    {
+        /** @var \Jelix\Database\Schema\Postgresql\SQLTools $tools */
+        $tools = $this->getConnection()->tools();
+        $result = $tools->encodeArrayValue($value, $type);
+        $this->assertEquals($expectedString, $result);
+    }
 }

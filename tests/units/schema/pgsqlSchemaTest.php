@@ -279,6 +279,7 @@ class pgsqlSchemaTest extends \Jelix\UnitTests\UnitTestCaseDb
         $schema = $db->schema();
 
         $goodList = array(
+            'item_array_text',
             'labels_test',
             'product_test',
             'products',
@@ -414,6 +415,163 @@ class pgsqlSchemaTest extends \Jelix\UnitTests\UnitTestCaseDb
         $this->assertEquals(array(), $table->getReferences());
         $this->assertTrue($table->getColumn('id')->isAutoincrementedColumn());
         $this->assertFalse($table->getColumn('name')->isAutoincrementedColumn());
+    }
+    function testTableArray() {
+        $db = $this->getConnection();
+        $schema = $db->schema();
+
+        $this->assertEquals(
+            [ 'text', 0, 0, 0, '[]'],
+            $db->tools()->parseSQLType('text[]'));
+
+
+        $table = $schema->getTable('item_array_text');
+
+        $this->assertNotNull($table);
+
+        $this->assertEquals('item_array_text', $table->getName());
+
+        $pk = $table->getPrimaryKey();
+        $this->assertEquals(array('id'), $pk->columns);
+
+        $is64bits = ( PHP_INT_SIZE*8 == 64 );
+
+        $verif='<array>
+    <object class="\\Jelix\\Database\\Schema\\Column" key="id">
+        <string property="type" value="integer" />
+        <string property="name" value="id" />
+        <boolean property="notNull" value="true"/>
+        <boolean property="autoIncrement" value="true"/>
+        <string property="default" value="" />
+        <boolean property="hasDefault" value="true"/>
+        <integer property="length" value="0"/>
+        <integer property="precision" value="0"/>
+        <integer property="scale" value="0"/>
+        <string property="sequence" value="item_array_text_id_seq" />
+        <boolean property="unsigned" value="false" />
+        <integer property="arrayDims" value="0" />
+        <null property="minLength"/>
+        <null property="maxLength"/>'.
+            ($is64bits ?
+                '<integer property="minValue" value="-2147483648"/>' :
+                '<double property="minValue" value="-2147483648"/>').
+            '<integer property="maxValue" value="2147483647"/>
+    </object>
+    <object class="\\Jelix\\Database\\Schema\\Column" key="mytext">
+        <string property="type" value="text" />
+        <string property="name" value="mytext" />
+        <boolean property="notNull" value="true"/>
+        <boolean property="autoIncrement" value="false"/>
+        <string property="default" value="" />
+        <boolean property="hasDefault" value="false"/>
+        <integer property="length" value="0"/>
+        <integer property="precision" value="0"/>
+        <integer property="scale" value="0"/>
+        <boolean property="sequence" value="false" />
+        <boolean property="unsigned" value="false" />
+        <integer property="minLength" value="0"/>
+        <integer property="maxLength" value="0"/>
+        <null property="minValue"/>
+        <null property="maxValue"/>
+        <integer property="arrayDims" value="1" />
+    </object>
+    <object class="\\Jelix\\Database\\Schema\\Column" key="mytext2">
+        <string property="type" value="text" />
+        <string property="name" value="mytext2" />
+        <boolean property="notNull" value="true"/>
+        <boolean property="autoIncrement" value="false"/>
+        <string property="default" value="" />
+        <boolean property="hasDefault" value="false"/>
+        <integer property="length" value="0"/>
+        <integer property="precision" value="0"/>
+        <integer property="scale" value="0"/>
+        <boolean property="sequence" value="false" />
+        <boolean property="unsigned" value="false" />
+        <integer property="minLength" value="0"/>
+        <integer property="maxLength" value="0"/>
+        <null property="minValue"/>
+        <null property="maxValue"/>
+        <integer property="arrayDims" value="1" />
+    </object>
+<object class="\\Jelix\\Database\\Schema\\Column" key="myintegers">
+        <string property="type" value="integer" />
+        <string property="name" value="myintegers" />
+        <boolean property="notNull" value="true"/>
+        <boolean property="autoIncrement" value="false"/>
+        <string property="default" value="" />
+        <boolean property="hasDefault" value="false"/>
+        <integer property="length" value="0"/>
+        <integer property="precision" value="0"/>
+        <integer property="scale" value="0"/>
+        <boolean property="sequence" value="false" />
+        <boolean property="unsigned" value="false" />'.
+               ($is64bits ?
+                   '<integer property="minValue" value="-2147483648"/>' :
+                   '<double property="minValue" value="-2147483648"/>').
+               '<integer property="maxValue" value="2147483647"/>
+        <null property="minLength"/>
+        <null property="maxLength"/>
+        <integer property="arrayDims" value="1" />
+    </object>
+<object class="\\Jelix\\Database\\Schema\\Column" key="myintegers2">
+        <string property="type" value="integer" />
+        <string property="name" value="myintegers2" />
+        <boolean property="notNull" value="true"/>
+        <boolean property="autoIncrement" value="false"/>
+        <string property="default" value="" />
+        <boolean property="hasDefault" value="false"/>
+        <integer property="length" value="0"/>
+        <integer property="precision" value="0"/>
+        <integer property="scale" value="0"/>
+        <boolean property="sequence" value="false" />
+        <boolean property="unsigned" value="false" />'.
+               ($is64bits ?
+                   '<integer property="minValue" value="-2147483648"/>' :
+                   '<double property="minValue" value="-2147483648"/>').
+               '<integer property="maxValue" value="2147483647"/>
+        <null property="minLength"/>
+        <null property="maxLength"/>
+        <integer property="arrayDims" value="1" />
+    </object>
+
+<object class="\\Jelix\\Database\\Schema\\Column" key="myintegers3">
+        <string property="type" value="integer" />
+        <string property="name" value="myintegers3" />
+        <boolean property="notNull" value="true"/>
+        <boolean property="autoIncrement" value="false"/>
+        <string property="default" value="" />
+        <boolean property="hasDefault" value="false"/>
+        <integer property="length" value="0"/>
+        <integer property="precision" value="0"/>
+        <integer property="scale" value="0"/>
+        <boolean property="sequence" value="false" />
+        <boolean property="unsigned" value="false" />'.
+               ($is64bits ?
+                   '<integer property="minValue" value="-2147483648"/>' :
+                   '<double property="minValue" value="-2147483648"/>').
+               '<integer property="maxValue" value="2147483647"/>
+        <null property="minLength"/>
+        <null property="maxLength"/>
+        <integer property="arrayDims" value="2" />
+    </object>
+
+    
+</array>';
+
+        $this->assertComplexIdenticalStr($table->getColumns(), $verif);
+
+        $verif = '<object class="\\Jelix\\Database\\Schema\\PrimaryKey">
+                <string property="name" value="item_array_text_pkey" />
+                <array property="columns">
+                    <string value="id"/>
+                </array>
+         </object>';
+        $this->assertComplexIdenticalStr($table->getPrimaryKey(), $verif);
+        $this->assertEquals(array(), $table->getIndexes());
+        $this->assertEquals(array(), $table->getUniqueKeys());
+        $this->assertEquals(array(), $table->getReferences());
+        $this->assertTrue($table->getColumn('id')->isAutoincrementedColumn());
+        $this->assertFalse($table->getColumn('myintegers2')->isAutoincrementedColumn());
     }
 
     function testCreateTable()
@@ -628,6 +786,7 @@ class pgsqlSchemaTest extends \Jelix\UnitTests\UnitTestCaseDb
         $goodList = array(
             'country',
             'bigcity',
+            'item_array_text',
             'labels_test',
             'product_test',
             'products',
@@ -801,7 +960,8 @@ class pgsqlSchemaTest extends \Jelix\UnitTests\UnitTestCaseDb
             'labels_test',
             'product_test',
             'products',
-            'test_prod'
+            'test_prod',
+            'item_array_text',
         );
 
         $list = $schema->getTables();

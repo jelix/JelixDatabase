@@ -4,6 +4,7 @@ APP_USER=usertest
 APP_GROUP=grouptest
 
 COMMAND="$1"
+shift
 
 if [ "$COMMAND" == "" ]; then
     echo "Error: command is missing"
@@ -25,7 +26,8 @@ function composerUpdate() {
 }
 
 function launchUnitTests() {
-    su $APP_USER -c "cd $ROOTDIR/tests/units/ && ../../vendor/bin/phpunit"
+    UTCMD="cd $ROOTDIR/tests/units/ && ../../vendor/bin/phpunit $@"
+    su $APP_USER -c "$UTCMD"
 }
 
 function reset() {
@@ -43,7 +45,7 @@ case $COMMAND in
     composer-update)
         composerUpdate;;
     unit-tests)
-        launchUnitTests;;
+        launchUnitTests $@;;
     *)
         echo "appctl.sh: wrong command"
         exit 2

@@ -192,4 +192,5 @@ interface SqlToolsInterface
      * @return int number of records inserted/updated
      */
     public function insertBulkData($tableName, $columns, $data, $primaryKey = null, $options = 0);
+
 }
