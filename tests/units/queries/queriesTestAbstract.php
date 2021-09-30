@@ -52,16 +52,36 @@ abstract class queriesTestAbstract extends \Jelix\UnitTests\UnitTestCaseDb
         $this->assertEquals(1, $nb, 'exec insert 1 should return 1');
         $nb = $db->exec("INSERT INTO product_test( name, price) VALUES('yaourt',0.76) ");
         $this->assertEquals(1, $nb, 'exec insert 2 should return 1');
-        $nb = $db->exec("INSERT INTO product_test( name, price) VALUES('gloubi-boulga',4.9)");
-        $this->assertEquals(1, $nb, 'exec insert 3 should return 1');
     }
 
     /**
      * @depends testInsert
      */
+    public function testInsertWithLogger()
+    {
+        $queryLogger = new \Jelix\Database\Log\QueryLogger();
+
+        $db = $this->getConnection();
+        $db->setQueryLogger($queryLogger);
+        $query = "INSERT INTO product_test( name, price) VALUES('gloubi-boulga',4.9)";
+        $nb = $db->exec($query);
+        $this->assertEquals(1, $nb, 'exec insert 3 should return 1');
+
+        $this->assertNotEquals(0, $queryLogger->getTime());
+        $this->assertEquals($query, $queryLogger->getOriginalQuery());
+        $this->assertEquals($query, $queryLogger->getExecutedQuery());
+        $this->assertNotEquals(0, count($queryLogger->getTrace()));
+        $this->assertTrue(strpos($queryLogger->getFormatedMessage(), $query) !== false);
+        $db->unsetQueryLogger();
+    }
+
+    /**
+     * @depends testInsertWithLogger
+     */
     public function testSelect()
     {
         $db = $this->getConnection();
+        $db->unsetQueryLogger();
         $resultSet = $db->query('SELECT id,name,price FROM product_test');
         $this->assertNotNull($resultSet, 'a query return null !');
         $this->assertTrue($resultSet instanceof \Jelix\Database\ResultSetInterface, 'resultset is not a ResultSetInterface');

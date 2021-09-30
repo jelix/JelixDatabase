@@ -16,7 +16,6 @@ namespace Jelix\Database\Connector\Postgresql;
 
 use Jelix\Database\AbstractConnection;
 use Jelix\Database\Exception;
-use Psr\Log\LoggerInterface;
 
 /**
  */
@@ -24,12 +23,15 @@ class Connection extends AbstractConnection
 {
     protected $_charsets = array('UTF-8' => 'UNICODE', 'ISO-8859-1' => 'LATIN1');
 
-    public function __construct($profile, LoggerInterface $logger = null)
+    /**
+     * @inheritDoc
+     */
+    public function __construct($profile)
     {
         if (!function_exists('pg_connect')) {
             throw new Exception('Pgsql extension is not installed in PHP', 405);
         }
-        parent::__construct($profile, $logger);
+        parent::__construct($profile);
         if (isset($this->profile['single_transaction']) && ($this->profile['single_transaction'])) {
             $this->beginTransaction();
             $this->setAutoCommit(false);

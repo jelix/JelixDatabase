@@ -15,7 +15,6 @@ namespace Jelix\Database\Connector\Mysqli;
 
 use Jelix\Database\AbstractConnection;
 use Jelix\Database\Exception;
-use Psr\Log\LoggerInterface;
 
 /**
  */
@@ -23,14 +22,17 @@ class Connection extends AbstractConnection
 {
     protected $_charsets = array('UTF-8' => 'utf8', 'ISO-8859-1' => 'latin1');
 
-    public function __construct($profile, LoggerInterface $logger = null)
+    /**
+     * @inheritDoc
+     */
+    public function __construct($profile)
     {
         // Because of the use of '@', we must test the existence of Mysql
         // else we cou
         if (!function_exists('mysqli_connect')) {
             throw new Exception('Mysqli extension is not installed in PHP', 405);
         }
-        parent::__construct($profile, $logger);
+        parent::__construct($profile);
     }
 
     /**

@@ -278,3 +278,30 @@ you execute your queries. Then you can validate the transaction by calling the
     }
 
 ```
+
+# debugging
+
+If you want to log queries into somewhere, you should call `setQueryLogger` on
+the connector. The object should implement the `Jelix\Database\Log\QueryLoggerInterface`.
+
+It may store sql queries somewhere, do statistics etc.
+
+The library provides a such object, `Jelix\Database\Log\QueryLogger`, that can
+use a `Psr\Log\LoggerInterface` object.
+
+```php
+
+// an object implementing the QueryLoggerInterface interface.
+// you can give a Psr\Log\LoggerInterface object to the constructor
+$qd = new \Jelix\Database\Log\QueryLogger();
+
+$conn->setQueryLogger($qd);
+
+$conn->query('...');
+
+echo $qd->getTime()."\n";
+echo $qd->getExecutedQuery()."\n";
+echo $queryLogger->getFormatedMessage()."\n";
+var_export($queryLogger->getTrace());
+
+```

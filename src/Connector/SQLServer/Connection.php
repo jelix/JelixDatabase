@@ -12,7 +12,6 @@ namespace Jelix\Database\Connector\SQLServer;
 
 use Jelix\Database\AbstractConnection;
 use Jelix\Database\Exception;
-use Psr\Log\LoggerInterface;
 
 /**
  *
@@ -20,18 +19,14 @@ use Psr\Log\LoggerInterface;
 class Connection extends AbstractConnection
 {
     /**
-     * Default constructor.
-     *
-     * @param array $profile profile de connexion
-     *
-     * @throws Exception
+     * @inheritDoc
      */
-    public function __construct($profile, LoggerInterface $logger = null)
+    public function __construct($profile)
     {
         if (!function_exists('sqlsrv_connect')) {
             throw new Exception('sqlsrv extension is not installed in PHP', 405);
         }
-        parent::__construct($profile, $logger);
+        parent::__construct($profile);
     }
 
     /**

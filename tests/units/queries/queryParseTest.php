@@ -11,7 +11,7 @@
 
 
 class queryparseConnection extends \Jelix\Database\AbstractConnection {
-    function __construct($profile, \Psr\Log\LoggerInterface $logger = null) { }
+    function __construct($profile) { }
     function parseQuery($sql, $reParam) {
         return $this->findParameters($sql, $reParam);
     }

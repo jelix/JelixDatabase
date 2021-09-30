@@ -11,7 +11,6 @@ namespace Jelix\Database\Connector\Oci;
 
 use Jelix\Database\AbstractConnection;
 use Jelix\Database\Exception;
-use Psr\Log\LoggerInterface;
 
 /**
  */
@@ -20,12 +19,15 @@ class Connection extends AbstractConnection
     // Charsets equivalents
     protected $_charsets = array('UTF-8' => 'AL32UTF8', 'ISO-8859-1' => 'WE8ISO8859P1');
 
-    public function __construct($profile, LoggerInterface $logger = null)
+    /**
+     * @inheritDoc
+     */
+    public function __construct($profile)
     {
         if (!function_exists('oci_connect')) {
             throw new Exception('Oci extension is not installed in PHP', 405);
         }
-        parent::__construct($profile, $logger);
+        parent::__construct($profile);
 
         $this->dbms = 'oci';
     }

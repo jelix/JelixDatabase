@@ -12,7 +12,6 @@ namespace Jelix\Database\Connector\PDO;
 
 use Jelix\Database\AbstractConnection;
 use Jelix\Database\Schema\SchemaInterface;
-use Psr\Log\LoggerInterface;
 use Jelix\Database\Exception;
 
 use \Jelix\Database\Connection as ConnectionFactory;
@@ -36,15 +35,8 @@ class Connection extends AbstractConnection
     private $_pgsqlCharsets = array('UTF-8' => 'UNICODE', 'ISO-8859-1' => 'LATIN1');
 
     /**
-     * Use a profile to do the connection.
-     *
-     * @param array $profile the profile data. Its content must be normalized by AccessParameters
+     * @inheritDoc
      */
-    public function __construct($profile, LoggerInterface $logger = null)
-    {
-        parent::__construct($profile, $logger);
-    }
-
     protected function _connect()
     {
         $user = '';

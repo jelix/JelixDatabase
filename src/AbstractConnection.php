@@ -15,10 +15,9 @@
  */
 namespace Jelix\Database;
 
+use Jelix\Database\Log\QueryLoggerInterface;
 use Jelix\Database\Schema\SchemaInterface;
 use Jelix\Database\Schema\SqlToolsInterface;
-use Psr\Log\LoggerInterface;
-use Jelix\Database\Log\QueryMessage;
 
 /**
  *
@@ -56,10 +55,8 @@ abstract class AbstractConnection implements ConnectionInterface, ConnectionCons
      */
     protected $_connection;
 
-    protected $_debugMode = false;
-
     /**
-     * @var LoggerInterface
+     * @var QueryLoggerInterface
      */
     protected $logger;
 
@@ -68,17 +65,10 @@ abstract class AbstractConnection implements ConnectionInterface, ConnectionCons
      *
      * @param array $profile profile properties. Its content must be normalized by AccessParameters
      */
-    public function __construct($profile, LoggerInterface $logger = null)
+    public function __construct($profile)
     {
         $this->_profile = &$profile;
         $this->_connection = $this->_connect();
-        $this->_debugMode = (isset($profile['debug']) && $profile['debug']);
-        if ($this->_debugMode) {
-            if ($logger === null) {
-                $logger = new \Psr\Log\NullLogger();
-            }
-            $this->logger = $logger;
-        }
     }
 
     public function __destruct()
@@ -126,6 +116,21 @@ abstract class AbstractConnection implements ConnectionInterface, ConnectionCons
     }
 
     /**
+     * set the logger to use to send the query string somewhere to debug
+     * or to log queries.
+     */
+    public function setQueryLogger(QueryLoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
+    public function unsetQueryLogger()
+    {
+        $this->logger = null;
+    }
+
+
+    /**
      * Launch a SQL Query which returns rows (typically, a SELECT statement).
      *
      * @param string        $queryString the SQL query
@@ -139,11 +144,10 @@ abstract class AbstractConnection implements ConnectionInterface, ConnectionCons
     public function query($queryString, $fetchmode = self::FETCH_OBJ, $arg1 = null, $ctoargs = null)
     {
         $this->_lastQuery = $queryString;
-        if ($this->_debugMode) {
-            $log = new QueryMessage($queryString);
+        if ($this->logger) {
+            $this->logger->startQuery($queryString);
             $result = $this->_doQuery($queryString);
-            $log->endQuery();
-            $this->logger->debug($log);
+            $this->logger->endQuery();
         } else {
             $result = $this->_doQuery($queryString);
         }
@@ -166,13 +170,10 @@ abstract class AbstractConnection implements ConnectionInterface, ConnectionCons
     public function limitQuery($queryString, $limitOffset, $limitCount)
     {
         $this->_lastQuery = $queryString;
-        if ($this->_debugMode) {
-            $log = new QueryMessage($queryString);
+        if ($this->logger) {
+            $this->logger->startQuery($queryString);
             $result = $this->_doLimitQuery($queryString, intval($limitOffset), intval($limitCount));
-            $log->endQuery();
-            $log->setRealQuery($this->_lastQuery);
-            $this->logger->debug($log);
-
+            $this->logger->endQuery($this->_lastQuery);
             return $result;
         }
 
@@ -189,12 +190,10 @@ abstract class AbstractConnection implements ConnectionInterface, ConnectionCons
     public function exec($query)
     {
         $this->_lastQuery = $query;
-        if ($this->_debugMode) {
-            $log = new QueryMessage($query);
+        if ($this->logger) {
+            $this->logger->startQuery($query);
             $result = $this->_doExec($query);
-            $log->endQuery();
-            $this->logger->debug($log);
-
+            $this->logger->endQuery();
             return $result;
         }
 

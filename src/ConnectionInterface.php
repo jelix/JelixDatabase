@@ -11,7 +11,6 @@ namespace Jelix\Database;
 
 use Jelix\Database\Schema\SchemaInterface;
 use Jelix\Database\Schema\SqlToolsInterface;
-use Psr\Log\LoggerInterface;
 
 interface ConnectionInterface
 {
@@ -21,11 +20,15 @@ interface ConnectionInterface
      *
      * @param array $profile profile properties. Its content must be normalized by AccessParameters
      */
-    public function __construct($profile, LoggerInterface $logger = null);
+    public function __construct($profile);
 
     public function getProfileName();
 
     public function getSQLType();
+
+    public function setQueryLogger(Log\QueryLoggerInterface $logger);
+
+    public function unsetQueryLogger();
 
     /**
      * Launch a SQL Query which returns rows (typically, a SELECT statement).

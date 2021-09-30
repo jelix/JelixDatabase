@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2020 Laurent Jouanneau
+ * @copyright   2020-2021 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -9,45 +9,41 @@
 
 namespace Jelix\Database;
 
-use Psr\Log\LoggerInterface;
-
 class Connection
 {
 
     /**
      * @param AccessParameters $profile trusted parameters, given by AccessParameters
-     * @param LoggerInterface|null $logger
      * @return ConnectionInterface
      * @throws Exception
      */
-    public static function create(AccessParameters $parameters, LoggerInterface $logger = null)
+    public static function create(AccessParameters $parameters)
     {
-        return self::createWithNormalizedParameters($parameters->getNormalizedParameters(), $logger);
+        return self::createWithNormalizedParameters($parameters->getNormalizedParameters());
     }
 
     /**
      * @param array $profile normalized parameters, given by AccessParameters
-     * @param LoggerInterface|null $logger
      * @return ConnectionInterface
      * @throws Exception
      */
-    public static function createWithNormalizedParameters(array $profile, LoggerInterface $logger = null)
+    public static function createWithNormalizedParameters(array $profile)
     {
         if ($profile['driver'] == 'pdo' || $profile['usepdo']) {
-            return new Connector\PDO\Connection($profile, $logger);
+            return new Connector\PDO\Connection($profile);
         }
 
         switch ($profile['driver']) {
             case 'mysqli':
-                return new Connector\Mysqli\Connection($profile, $logger);
+                return new Connector\Mysqli\Connection($profile);
             case 'pgsql':
-                return new Connector\Postgresql\Connection($profile, $logger);
+                return new Connector\Postgresql\Connection($profile);
             case 'sqlite3':
-                return new Connector\SQLite3\Connection($profile, $logger);
+                return new Connector\SQLite3\Connection($profile);
             case 'sqlsrv':
-                return new Connector\SQLServer\Connection($profile, $logger);
+                return new Connector\SQLServer\Connection($profile);
             case 'oci':
-                return new Connector\Oci\Connection($profile, $logger);
+                return new Connector\Oci\Connection($profile);
         }
         throw new Exception('Unknown connector: '.$profile['driver']);
     }

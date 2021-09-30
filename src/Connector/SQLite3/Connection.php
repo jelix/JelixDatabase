@@ -12,18 +12,20 @@ namespace Jelix\Database\Connector\SQLite3;
 
 use Jelix\Database\AbstractConnection;
 use Jelix\Database\Exception;
-use Psr\Log\LoggerInterface;
 
 /**
  */
 class Connection extends AbstractConnection
 {
-    public function __construct($profile, LoggerInterface $logger = null)
+    /**
+     * @inheritDoc
+     */
+    public function __construct($profile)
     {
         if (!class_exists('SQLite3')) {
             throw new Exception('Sqlite3 extension is not installed in PHP', 405);
         }
-        parent::__construct($profile, $logger);
+        parent::__construct($profile);
     }
 
     /**
