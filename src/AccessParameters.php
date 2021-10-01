@@ -84,6 +84,10 @@ class AccessParameters
 
         $this->parameters['charset'] = isset($options['charset']) ? $options['charset']: 'UTF-8';
         $this->parameters['filePathParser'] = isset($options['filePathParser']) ? $options['filePathParser']: '';
+
+        if (!isset($this->parameters['_name'])) {
+            $this->parameters['_name'] = '';
+        }
     }
 
     /**

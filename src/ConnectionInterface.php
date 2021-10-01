@@ -28,6 +28,11 @@ interface ConnectionInterface
 
     public function getSQLType();
 
+    public function getDriverName();
+
+    public function getLastQuery();
+
+
     public function setQueryLogger(Log\QueryLoggerInterface $logger);
 
     public function unsetQueryLogger();
