@@ -24,6 +24,8 @@ interface ConnectionInterface
 
     public function getProfileName();
 
+    public function getConnectionCharset();
+
     public function getSQLType();
 
     public function setQueryLogger(Log\QueryLoggerInterface $logger);
@@ -42,7 +44,7 @@ interface ConnectionInterface
      * @return bool|ResultSetInterface false if the query has failed
      * @throws Exception
      */
-    public function query($queryString, $fetchmode = self::FETCH_OBJ, $arg1 = null, $ctoargs = null);
+    public function query($queryString, $fetchmode = ConnectionConstInterface::FETCH_OBJ, $arg1 = null, $ctoargs = null);
 
     /**
      * Launch a SQL Query with limit parameter, so it returns only a subset of a result.

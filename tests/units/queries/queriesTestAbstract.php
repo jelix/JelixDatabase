@@ -23,6 +23,8 @@ abstract class queriesTestAbstract extends \Jelix\UnitTests\UnitTestCaseDb
     {
         $cnt = $this->getConnection();
         $this->assertInstanceOf($this->connectionInstanceName, $cnt);
+
+        $this->assertEquals('UTF-8', $cnt->getConnectionCharset());
     }
 
     /**

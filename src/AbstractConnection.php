@@ -115,6 +115,11 @@ abstract class AbstractConnection implements ConnectionInterface, ConnectionCons
         return $this->_profile['dbtype'];
     }
 
+    public function getConnectionCharset()
+    {
+        return $this->_profile['charset'];
+    }
+
     /**
      * set the logger to use to send the query string somewhere to debug
      * or to log queries.
