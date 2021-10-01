@@ -25,6 +25,8 @@ interface ConnectionInterface
 
     public function getProfileName();
 
+    public function getConnectionCharset();
+
     public function getSQLType();
 
     /**
