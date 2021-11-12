@@ -1,6 +1,11 @@
 Changelog
 =========
 
+Version 1.1.1
+-------------
+
+- fix Mysqli\Connection::execMulti(): should not fail silently
+
 Version 1.1.0
 -------------
 
