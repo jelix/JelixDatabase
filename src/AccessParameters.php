@@ -96,6 +96,15 @@ class AccessParameters
     }
 
     /**
+     * @deprecated
+     * @see getNormalizedParameters()
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
+
+    /**
      * indicate if the php extension corresponding to the database configuration is available in
      * the current php configuration.
      */
