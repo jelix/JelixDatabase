@@ -126,6 +126,22 @@ abstract class AbstractConnection implements ConnectionInterface, ConnectionCons
     }
 
     /**
+     * @return string the latest SQL query executed by the connector
+     */
+    public function getLastQuery()
+    {
+        return $this->_lastQuery;
+    }
+
+    /**
+     * @return string the connector name used for the connection
+     */
+    public function getDriverName()
+    {
+        return $this->_profile['driver'];
+    }
+
+    /**
      * Launch a SQL Query which returns rows (typically, a SELECT statement).
      *
      * @param string        $queryString the SQL query
