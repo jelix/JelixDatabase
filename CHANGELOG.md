@@ -1,10 +1,21 @@
 Changelog
 =========
 
+Version 1.2.0
+--------------
+
+- new method `ConnectionInterface::getConnectionCharset()`
+- new methods `ResultSetInterface::fetchAssociative()` and `ResultSetInterface::fetchAllAssociative()`
+- new methods `AbstractConnection::getLastQuery()` and `AbstractConnection::getDriverName()` in replacement of some public properties
+- new method `ResultSetInterface::free()`
+- Add some deprecated methods to be compatible with jDb:
+  - `AccessParameters::getParameters()`
+  - `AbstractSchema::_prepareSqlColumn()`
+
 Version 1.1.1
 -------------
 
-- fix Mysqli\Connection::execMulti(): should not fail silently
+- fix `Mysqli\Connection::execMulti()`: it should not fail silently
 
 Version 1.1.0
 -------------
