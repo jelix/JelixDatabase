@@ -89,6 +89,18 @@ abstract class AbstractConnection implements ConnectionInterface, ConnectionCons
     }
 
     /**
+     * Close the connection.
+     *
+     * Automatically called by the destructor
+     */
+    public function close()
+    {
+        if ($this->_connection !== null) {
+            $this->_disconnect();
+        }
+    }
+
+    /**
      * Support of old previous public properties to keep compatibility with Jelix 1.x
      * @param string $name
      * @deprecated
@@ -116,9 +128,9 @@ abstract class AbstractConnection implements ConnectionInterface, ConnectionCons
     /**
      * The SQL language using by the database.
      * It is not the driver name. Several drivers could connect to the same database
-     * type. This type name is often used to know whish SQL language we should use.
+     * type. This type name is often used to know which SQL language we should use.
      *
-     * @var string
+     * @return string
      */
     public function getSQLType()
     {

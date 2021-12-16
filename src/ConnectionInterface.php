@@ -23,10 +23,24 @@ interface ConnectionInterface
      */
     public function __construct($profile, LoggerInterface $logger = null);
 
+    /**
+     * Close the connection.
+     *
+     * Automatically called by the destructor
+     */
+    public function close();
+
     public function getProfileName();
 
     public function getConnectionCharset();
 
+    /**
+     * The SQL language using by the database.
+     * It is not the driver name. Several drivers could connect to the same database
+     * type. This type name is often used to know which SQL language we should use.
+     *
+     * @return string
+     */
     public function getSQLType();
 
     /**

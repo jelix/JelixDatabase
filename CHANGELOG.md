@@ -1,6 +1,12 @@
 Changelog
 =========
 
+Version 1.2.1
+--------------
+
+- new method `ConnectionInterface::close()`
+
+
 Version 1.2.0
 --------------
 
