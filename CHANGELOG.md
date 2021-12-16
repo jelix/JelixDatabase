@@ -1,6 +1,35 @@
 Changelog
 =========
 
+Version 2.0.0 (not released yet)
+--------------------------------
+
+API CHANGES:
+- new interface `QueryLoggerInterface` to log queries
+
+Connectors and Connection methods do not accept anymore a `Psr\Log\LoggerInterface`.
+Instead a new object interface is provided, `Jelix\Database\Log\QueryLoggerInterface`. It brings more flexibility
+about what to do between and after queries.
+
+An object `Jelix\Database\Log\QueryLogger` is provided, implementing this
+interface, and can use a `Psr\Log\LoggerInterface` object.
+
+
+Version 1.2.0
+--------------
+
+- new method `ConnectionInterface::getConnectionCharset()`
+- new methods `ResultSet::fetchAssociative()` and `ResultSet::fetchAllAssociative()`
+- new methods `AbstractConnection::getLastQuery()` and `AbstractConnection::getDriverName()` in replacement of some public properties
+- Add some deprecated methods to be compatible with jDb:
+  - `AccessParameters::getParameters()`
+  - `AbstractSchema::_prepareSqlColumn()`
+
+Version 1.1.1
+-------------
+
+- fix `Mysqli\Connection::execMulti()`: it should not fail silently
+
 Version 1.1.0
 -------------
 
