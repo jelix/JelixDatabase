@@ -57,6 +57,12 @@ class ResultSet extends AbstractResultSet
         return $ret;
     }
 
+    protected function _fetchAssoc()
+    {
+        $ret = $this->_idResult->fetch_assoc();
+        return $ret;
+    }
+
     protected function _free()
     {
         if ($this->_stmt) {

@@ -71,6 +71,16 @@ class ResultSet extends AbstractResultSet
     {
     }
 
+    public function fetchAssociative()
+    {
+        $res = pg_fetch_assoc($this->_idResult);
+        return $res;
+    }
+
+    protected function _fetchAssoc()
+    {
+    }
+
     protected function _free()
     {
         return pg_free_result($this->_idResult);
