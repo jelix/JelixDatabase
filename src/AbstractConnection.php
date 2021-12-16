@@ -549,7 +549,7 @@ abstract class AbstractConnection implements ConnectionInterface, ConnectionCons
             } elseif ($insideString !== false) {
                 $finalQuery .= $token;
             } else {
-                $finalQuery .= preg_replace_callback('/(\\:)([a-zA-Z0-9_]+)/', array($this, '_replaceParam'), $token);
+                $finalQuery .= preg_replace_callback('/(?<!\\:)(\\:)([a-zA-Z0-9_]+)/', array($this, '_replaceParam'), $token);
             }
         }
 
