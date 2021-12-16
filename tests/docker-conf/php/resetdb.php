@@ -31,7 +31,8 @@ while($tryAgain) {
     \"key\" integer NOT NULL,
     keyalias VARCHAR( 10 ) NULL,
     lang character varying(5) NOT NULL,
-    label character varying(50) NOT NULL
+    label character varying(50) NOT NULL,
+    numb integer null
 )");
 
     pg_query($cnx, "CREATE TABLE products (
@@ -99,6 +100,7 @@ while ($tryAgain) {
 `keyalias` VARCHAR( 10 ) NULL,
 `lang` VARCHAR( 5 ) NOT NULL ,
 `label` VARCHAR( 50 ) NOT NULL ,
+`numb` integer null,
 PRIMARY KEY ( `key` , `lang` ),
 UNIQUE (`keyalias`)
 ) ENGINE=InnoDb");
@@ -144,7 +146,8 @@ $sqlite->exec("CREATE TABLE labels_test (
     \"key\" INTEGER PRIMARY KEY,
     keyalias varchar( 10 ) NULL,
     lang varchar(5) NOT NULL,
-    label varchar(50) NOT NULL
+    label varchar(50) NOT NULL,
+    numb integer null
 )");
 
 echo "  tables restored\n";
@@ -191,7 +194,8 @@ while($tryAgain) {
     [key] integer NOT NULL,
     keyalias VARCHAR( 10 ) NULL,
     lang VARCHAR(5) NOT NULL,
-    label VARCHAR(50) NOT NULL
+    label VARCHAR(50) NOT NULL,
+    numb integer null
 )");
     sqlsrv_free_stmt($stmt);
 

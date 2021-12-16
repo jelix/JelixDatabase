@@ -5,7 +5,7 @@ Version 1.2.1
 --------------
 
 - new method `ConnectionInterface::close()`
-
+- Fix the support of query parameters given to the `execute` method of mysql and postgresql connectors
 
 Version 1.2.0
 --------------

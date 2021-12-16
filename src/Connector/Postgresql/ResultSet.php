@@ -145,8 +145,17 @@ class ResultSet extends AbstractResultSet
 
         $params = array();
         foreach ($this->parameterNames as $name) {
-            if (isset($parameters[$name])) {
-                $params[] = &$parameters[$name];
+            if (array_key_exists($name, $parameters)) {
+                if (is_null($parameters[$name])) {
+                    // pg_execute does not like reference to null values on numerical fields...
+                    $params[] = NULL;
+                }
+                else if (is_bool($parameters[$name])) {
+                    $params[] = ($parameters[$name]?'t': 'f');
+                }
+                else {
+                    $params[] = &$parameters[$name];
+                }
             } else {
                 $params[] = '';
             }
