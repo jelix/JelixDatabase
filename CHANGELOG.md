@@ -19,8 +19,9 @@ Version 1.2.0
 --------------
 
 - new method `ConnectionInterface::getConnectionCharset()`
-- new methods `ResultSet::fetchAssociative()` and `ResultSet::fetchAllAssociative()`
+- new methods `ResultSetInterface::fetchAssociative()` and `ResultSetInterface::fetchAllAssociative()`
 - new methods `AbstractConnection::getLastQuery()` and `AbstractConnection::getDriverName()` in replacement of some public properties
+- new method `ResultSetInterface::free()`
 - Add some deprecated methods to be compatible with jDb:
   - `AccessParameters::getParameters()`
   - `AbstractSchema::_prepareSqlColumn()`

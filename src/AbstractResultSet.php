@@ -26,6 +26,11 @@ abstract class AbstractResultSet implements ResultSetInterface, \Iterator
 
     public function __destruct()
     {
+        $this->free();
+    }
+
+    public function free()
+    {
         if ($this->_idResult) {
             $this->_free();
             $this->_idResult = null;

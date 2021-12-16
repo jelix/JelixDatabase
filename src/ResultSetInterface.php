@@ -128,4 +128,11 @@ interface ResultSetInterface
      *  Returns the number of rows affected by the last SQL statement.
      */
     public function rowCount();
+
+    /**
+     * Free resources of the resultset
+     *
+     * Automatically called on the destruction of the resultset object
+     */
+    public function free();
 }
