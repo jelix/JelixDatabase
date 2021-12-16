@@ -151,6 +151,18 @@ class ResultSet  extends AbstractResultSet
     /**
      * @inheritDoc
      */
+    protected function _fetchAssoc()
+    {
+        if ($this->doRewind) {
+            $this->doRewind = false;
+            return $this->_idResult->fetch(\PDO::FETCH_ASSOC, \PDO::FETCH_ORI_ABS, 0);
+        }
+        return $this->_idResult->fetch(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * @inheritDoc
+     */
     protected function _rewind()
     {
         $this->doRewind = true;

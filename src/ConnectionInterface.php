@@ -46,7 +46,7 @@ interface ConnectionInterface
      * @param array         $ctoargs     arguments for the constructor if FETCH_CLASS
      * @param null|mixed    $arg1
      *
-     * @return bool|ResultSetInterface false if the query has failed
+     * @return ResultSetInterface|false false if the query has failed
      * @throws Exception
      */
     public function query($queryString, $fetchmode = ConnectionConstInterface::FETCH_OBJ, $arg1 = null, $ctoargs = null);
@@ -58,7 +58,7 @@ interface ConnectionInterface
      * @param int    $limitOffset the offset of the first row to return
      * @param int    $limitCount  the maximum of number of rows to return
      *
-     * @return bool|ResultSetInterface SQL Select. False if the query has failed.
+     * @return ResultSetInterface|false SQL Select. False if the query has failed.
      */
     public function limitQuery($queryString, $limitOffset, $limitCount);
 

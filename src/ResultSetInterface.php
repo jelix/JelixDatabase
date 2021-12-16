@@ -38,10 +38,17 @@ interface ResultSetInterface
     /**
      * fetch a result. The result is returned as an object.
      *
-     * @return bool|object result object or false if there is no more result
+     * @return object|bool result object or false if there is no more result
      */
     public function fetch();
 
+    /**
+     * fetch a result. The result is returned as an associative array.
+     *
+     * modifiers are not applied on results
+     * @return array|bool result array or false if there is no more result
+     */
+    public function fetchAssociative();
 
     /**
      * Return all results in an array. Each result is an object.
@@ -49,6 +56,15 @@ interface ResultSetInterface
      * @return object[]
      */
     public function fetchAll();
+
+    /**
+     * Return all results in an array. Each result is an associative array.
+     *
+     * modifiers are not applied on results
+     *
+     * @return array[]
+     */
+    public function fetchAllAssociative();
 
     /**
      * Retrieve a statement attribute.

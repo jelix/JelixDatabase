@@ -115,6 +115,40 @@ abstract class queriesTestAbstract extends \Jelix\UnitTests\UnitTestCaseDb
         $this->assertTrue($res === false || $res === null);
     }
 
+    /**
+     * @depends testSelect
+     */
+    public function testSelectAssociative()
+    {
+        $db = $this->getConnection();
+        $resultSet = $db->query('SELECT id,name,price FROM product_test');
+        $this->assertNotNull($resultSet, 'a query return null !');
+        $this->assertTrue($resultSet instanceof \Jelix\Database\ResultSetInterface, 'resultset is not a ResultSetInterface');
+
+        $list = $resultSet->fetchAllAssociative();
+
+        $this->assertEquals(3, count($list), 'query return bad number of results ('.count($list).')');
+
+        $structure = '<array>
+    <array>
+        <string key="name" value="camembert" />
+        <'.$this->returnFloatType.' key="price" value="2.31" />
+    </array>
+    <array>
+        <string key="name" value="yaourt" />
+        <'.$this->returnFloatType.' key="price" value="0.76" />
+    </array>
+    <array>
+        <string key="name" value="gloubi-boulga" />
+        <'.$this->returnFloatType.' key="price" value="4.9" />
+    </array>
+</array>';
+        $this->assertComplexIdenticalStr($list, $structure, 'bad results');
+
+        $res = $resultSet->fetchAssociative();
+        $this->assertTrue($res === false || $res === null);
+    }
+
     public function _callbackTest($record, $rs)
     {
         $record->name.='_suffix';
@@ -122,7 +156,7 @@ abstract class queriesTestAbstract extends \Jelix\UnitTests\UnitTestCaseDb
     }
 
     /**
-     * @depends testSelect
+     * @depends testSelectAssociative
      */
     public function testSelectWithModifier()
     {
@@ -269,7 +303,7 @@ abstract class queriesTestAbstract extends \Jelix\UnitTests\UnitTestCaseDb
 
 
     /**
-     * depends testTransaction
+     * @depends testTransaction
      */
     public function testPreparedQueries()
     {
@@ -341,6 +375,81 @@ abstract class queriesTestAbstract extends \Jelix\UnitTests\UnitTestCaseDb
         $this->assertEquals('11', $result->key);
         $this->assertEquals('fr', $result->lang);
         $this->assertEquals('France', $result->label);
+    }
+
+    /**
+     * @depends testTransaction
+     */
+    public function testPreparedQueriesAssociative()
+    {
+        $cnx = $this->getConnection();
+        $cnx->exec('DELETE FROM labels_test');
+        //INSERT
+        $stmt = $cnx->prepare('INSERT INTO '.$cnx->encloseName('labels_test')
+            .' ('.$cnx->encloseName('key').','
+            .$cnx->encloseName('keyalias').','
+            .$cnx->encloseName('lang').','
+            .$cnx->encloseName('label').') VALUES (:k, :ka, :lg, :lb)');
+        $this->assertInstanceOf($this->recordSetClassName, $stmt);
+
+        $key = 11;
+        $lang = 'fr';
+        $keyalias= 'alias11';
+        $label = "France";
+
+        if (get_class($this) == "mysqlQueriesTest") {
+            // we want to test deprecated values for types used by the mysql connector
+            $bind = $stmt->bindParam('lg', $lang, 's');
+            $bind = $stmt->bindParam('k', $key, 'i');
+            $bind = $stmt->bindParam('ka', $keyalias, 'i');
+            $bind = $stmt->bindParam('lb', $label, 's');
+        } else {
+            $bind = $stmt->bindParam('lg', $lang, \PDO::PARAM_STR);
+            $bind = $stmt->bindParam('k', $key, \PDO::PARAM_INT);
+            $bind = $stmt->bindParam('ka', $keyalias, \PDO::PARAM_STR);
+            $bind = $stmt->bindParam('lb', $label, \PDO::PARAM_STR);
+        }
+        $this->assertTrue($stmt->execute());
+
+        $key = 15;
+        $lang = 'fr';
+        $keyalias= 'alias15';
+        $label = "test";
+        $bind = $stmt->bindParam('lb', $label, \PDO::PARAM_STR);
+        $bind = $stmt->bindParam('k', $key, \PDO::PARAM_INT);
+        $bind = $stmt->bindParam('ka', $keyalias, \PDO::PARAM_STR);
+        $bind = $stmt->bindParam('lg', $lang, \PDO::PARAM_STR);
+        $this->assertTrue($stmt->execute());
+
+        $bind = $stmt->bindValue('k', 22, \PDO::PARAM_INT);
+        $bind = $stmt->bindValue('lg', 'en', \PDO::PARAM_STR);
+        $bind = $stmt->bindValue('ka', 'alias22', \PDO::PARAM_STR);
+        $bind = $stmt->bindValue('lb', 'test2', \PDO::PARAM_STR);
+        $this->assertTrue($stmt->execute());
+
+        $this->assertTableHasNRecords('labels_test', 3);
+        $stmt = null;
+
+        //SELECT
+        $stmt2 = $cnx->prepare('SELECT '.$cnx->encloseName('key').','
+            .$cnx->encloseName('lang').','
+            .$cnx->encloseName('label').' FROM '.$cnx->encloseName('labels_test')
+            .' WHERE lang = :la ORDER BY '.$cnx->encloseName('key').' asc');
+        $this->assertInstanceOf($this->recordSetClassName, $stmt2);
+
+        $lang = 'fr';
+        $bind = $stmt2->bindParam('la', $lang, \PDO::PARAM_STR);
+        $this->assertTrue($bind);
+
+        $this->assertTrue($stmt2->execute());
+        //$this->assertEquals(2, $stmt2->rowCount());
+
+        $result = $stmt2->fetchAssociative();
+        $this->assertNotFalse($result);
+        $this->assertNotNull($result);
+        $this->assertEquals('11', $result['key']);
+        $this->assertEquals('fr', $result['lang']);
+        $this->assertEquals('France', $result['label']);
     }
 
 
