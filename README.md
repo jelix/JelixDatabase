@@ -9,7 +9,7 @@ It supports Mysql 5.6+, Postgresql 9.6+, Sqlite 3. It supports partially
 using PDO, so you can use other databases (except with the Schema API).
 
 This library has been extracted from the [Jelix](https://jelix.org) framework 1.7,
-and has been modernized a bit.
+and has been modernized.
 
 # installation
 
