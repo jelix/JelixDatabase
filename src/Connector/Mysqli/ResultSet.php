@@ -167,7 +167,10 @@ class ResultSet extends AbstractResultSet
         }
         $types = $this->boundParameterTypes;
         if ($parameters !== null) {
-            $types = array_fill(0, count($parameters), 's');
+            $types = array_combine(
+                    array_keys($parameters),
+                    array_fill(0, count($parameters), 's')
+            );
         } elseif (count($this->boundParameters)) {
             $parameters = &$this->boundParameters;
         }
@@ -178,7 +181,7 @@ class ResultSet extends AbstractResultSet
 
         $allParams = array('');
         foreach ($this->parameterNames as $k => $name) {
-            if (!isset($parameters[$name])) {
+            if (!array_key_exists($name, $parameters)) {
                 throw new Exception("Execute: parameter '${name}' is missing from parameters");
             }
             $allParams[0] .= $types[$name];

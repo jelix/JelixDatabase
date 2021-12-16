@@ -355,9 +355,27 @@ abstract class queriesTestAbstract extends \Jelix\UnitTests\UnitTestCaseDb
         $this->assertTableHasNRecords('labels_test', 3);
         $stmt = null;
 
+        $stmt = $cnx->prepare('INSERT INTO '.$cnx->encloseName('labels_test')
+            .' ('.$cnx->encloseName('key').','
+            .$cnx->encloseName('label').','
+            .$cnx->encloseName('lang').','
+            .$cnx->encloseName('keyalias').','
+            .$cnx->encloseName('numb').
+            ') VALUES (:k, :lb, :lg, :ka, :n)');
+        $this->assertInstanceOf($this->recordSetClassName, $stmt);
+        $this->assertTrue($stmt->execute(array(
+            'k' => 25,
+            'lg' => 'it',
+            'lb' => "italy",
+            'ka' => null,
+            'n' => null
+        )));
+        $this->assertTableHasNRecords('labels_test', 4);
+        $stmt = null;
+
         //SELECT
         $stmt2 = $cnx->prepare('SELECT '.$cnx->encloseName('key').','
-            .$cnx->encloseName('lang').','
+            .$cnx->encloseName('lang').','.$cnx->encloseName('keyalias').','
             .$cnx->encloseName('label').' FROM '.$cnx->encloseName('labels_test')
             .' WHERE lang = :la ORDER BY '.$cnx->encloseName('key').' asc');
         $this->assertInstanceOf($this->recordSetClassName, $stmt2);
@@ -375,6 +393,21 @@ abstract class queriesTestAbstract extends \Jelix\UnitTests\UnitTestCaseDb
         $this->assertEquals('11', $result->key);
         $this->assertEquals('fr', $result->lang);
         $this->assertEquals('France', $result->label);
+
+        $lang = 'it';
+        $bind = $stmt2->bindParam('la', $lang, \PDO::PARAM_STR);
+        $this->assertTrue($bind);
+
+        $this->assertTrue($stmt2->execute());
+        //$this->assertEquals(2, $stmt2->rowCount());
+
+        $result = $stmt2->fetch();
+        $this->assertNotFalse($result);
+        $this->assertNotNull($result);
+        $this->assertEquals('25', $result->key);
+        $this->assertEquals('it', $result->lang);
+        $this->assertEquals('italy', $result->label);
+        $this->assertEquals('', $result->keyalias);
     }
 
     /**

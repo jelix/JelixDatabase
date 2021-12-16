@@ -15,6 +15,12 @@ An object `Jelix\Database\Log\QueryLogger` is provided, implementing this
 interface, and can use a `Psr\Log\LoggerInterface` object.
 
 
+Version 1.2.1
+-------------
+
+- new method `ConnectionInterface::close()`
+- Fix the support of query parameters given to the `execute` method of mysql and postgresql connectors
+
 Version 1.2.0
 --------------
 
