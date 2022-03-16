@@ -23,7 +23,7 @@ services:
     ports:
       - "8522:3306"
   #sqlsrv:
-  #   image: mcr.microsoft.com/mssql/server:2019-CU12-ubuntu-20.04
+  #   image: mcr.microsoft.com/mssql/server:2019-CU15-ubuntu-20.04
   #   container_name: jdb_test_sqlsrv
   #   environment:
   #     ACCEPT_EULA: Y
@@ -34,12 +34,14 @@ services:
     build:
       context: ./docker-conf/php
       args:
-        test_user_id: ${TEST_USER_ID}
-        test_group_id: ${TEST_GROUP_ID}
         php_version: ${PHP_VERSION}
     container_name: jdb_test_php
+    environment:
+      APP_USER_ID: ${TEST_USER_ID}
+      APP_GROUP_ID: ${TEST_GROUP_ID}
+      DISPLAY_ERRORS: "on"
     volumes:
-      - "../:/src/tests/"
+      - "../:/app/"
     depends_on:
       - pgsql
       - mysql

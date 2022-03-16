@@ -14,9 +14,9 @@ fi
 
 case $COMMAND in
     reset)
-        docker exec -it jdb_test_sqlsrv /opt/mssql-tools/bin/sqlcmd \
-             -S localhost -U SA -P "JelixPass2020!" \
-             -Q "If(db_id(N'jelixtests') IS NULL) BEGIN CREATE DATABASE jelixtests END;"
+        #docker exec -it jdb_test_sqlsrv /opt/mssql-tools/bin/sqlcmd \
+        #     -S localhost -U SA -P "JelixPass2020!" \
+        #     -Q "If(db_id(N'jelixtests') IS NULL) BEGIN CREATE DATABASE jelixtests END;"
         docker exec -t -i jdb_test_php appctl.sh reset
       ;;
     composer-install)
@@ -26,7 +26,7 @@ case $COMMAND in
     unit-tests)
         docker exec -t -i jdb_test_php appctl.sh unit-tests "$@";;
     shell)
-       docker exec -it --user usertest jdb_test_php  /bin/bash -l;;
+       docker exec -it --user userphp jdb_test_php  /bin/bash -l;;
     shellroot)
        docker exec -it jdb_test_php  /bin/bash  -l;;
     pgsql)

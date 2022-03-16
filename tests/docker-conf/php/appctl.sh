@@ -1,7 +1,7 @@
 #!/bin/bash
-ROOTDIR="/src/tests"
-APP_USER=usertest
-APP_GROUP=grouptest
+ROOTDIR="/app"
+APP_USER=userphp
+APP_GROUP=groupphp
 
 COMMAND="$1"
 shift

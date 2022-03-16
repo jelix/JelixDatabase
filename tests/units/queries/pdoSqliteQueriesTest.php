@@ -22,7 +22,7 @@ class pdoSqliteQueriesTest extends queriesTestAbstract
         if (self::$connectionPDOSqlite === null) {
             $parameters = new \Jelix\Database\AccessParameters(array(
                 'driver'=>'sqlite3',
-                "database"=>"/src/tests/tests/units/tests.sqlite3",
+                "database"=>"/app/tests/units/tests.sqlite3",
                 'usepdo' => true
             ), array('charset'=>'UTF-8'));
 

@@ -22,7 +22,7 @@ class sqliteToolsTest extends \Jelix\UnitTests\UnitTestCaseDb {
         if (self::$connectionSqlite === null) {
             $parameters = new \Jelix\Database\AccessParameters(array(
                 'driver'=>'sqlite3',
-                "database"=>"/src/tests/tests/units/tests.sqlite3"
+                "database"=>"/app/tests/units/tests.sqlite3"
             ), array('charset'=>'UTF-8'));
 
             self::$connectionSqlite = Connection::create($parameters);

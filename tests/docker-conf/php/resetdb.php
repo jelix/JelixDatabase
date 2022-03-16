@@ -122,7 +122,7 @@ echo "  tables restored\n";
 
 echo "Delete and restore all tables from the Sqlite3 database\n";
 
-$SQLITE_FILE = '/src/tests/tests/units/tests.sqlite3';
+$SQLITE_FILE = '/app/tests/units/tests.sqlite3';
 
 if (file_exists($SQLITE_FILE)) {
     unlink($SQLITE_FILE);
