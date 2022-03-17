@@ -17,6 +17,16 @@ class pdoSqliteQueriesTest extends queriesTestAbstract
 
     protected static $connectionPDOSqlite = null;
 
+    public function setUp() : void
+    {
+        parent::setUp();
+        if (version_compare(PHP_VERSION, '8.1', '>=')) {
+            $this->returnFloatType = 'float';
+        }
+    }
+
+
+
     protected function getConnection()
     {
         if (self::$connectionPDOSqlite === null) {
