@@ -17,6 +17,14 @@ class pdoMysqlQueriesTest extends queriesTestAbstract
 
     protected static $connectionPDOMysql = null;
 
+    public function setUp() : void
+    {
+        parent::setUp();
+        if (version_compare(PHP_VERSION, '8.1', '>=')) {
+            $this->returnFloatType = 'float';
+        }
+    }
+
     protected function getConnection()
     {
         if (self::$connectionPDOMysql === null) {

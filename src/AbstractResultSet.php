@@ -273,16 +273,19 @@ abstract class AbstractResultSet implements ResultSetInterface, \Iterator
     protected $_currentRecord = false;
     protected $_recordIndex = 0;
 
+    #[\ReturnTypeWillChange]
     public function current()
     {
         return $this->_currentRecord;
     }
 
+    #[\ReturnTypeWillChange]
     public function key()
     {
         return $this->_recordIndex;
     }
 
+    #[\ReturnTypeWillChange]
     public function next()
     {
         $this->_currentRecord = $this->fetch();
@@ -291,6 +294,7 @@ abstract class AbstractResultSet implements ResultSetInterface, \Iterator
         }
     }
 
+    #[\ReturnTypeWillChange]
     public function rewind()
     {
         $this->_rewind();
@@ -298,6 +302,7 @@ abstract class AbstractResultSet implements ResultSetInterface, \Iterator
         $this->_currentRecord = $this->fetch();
     }
 
+    #[\ReturnTypeWillChange]
     public function valid()
     {
         return $this->_currentRecord != false;
