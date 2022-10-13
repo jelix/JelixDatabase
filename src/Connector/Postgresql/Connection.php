@@ -174,6 +174,13 @@ class Connection extends AbstractConnection
             }
         }
 
+        if (isset($this->profile['session_role']) && trim($this->profile['session_role']) != '') {
+            $sql = 'SET ROLE TO '.$this->profile['session_role'];
+            if (!@pg_query($cnx, $sql)) {
+                throw new Exception('invalid query: ', pg_last_error($cnx).'('.$sql.')', 403);
+            }
+        }
+
         return $cnx;
     }
 
