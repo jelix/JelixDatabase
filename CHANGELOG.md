@@ -1,6 +1,13 @@
 Changelog
 =========
 
+Version 1.2.2
+-------------
+
+- Fix prepared queries: support of placeholders $1, $2 etc
+- Fix some issues with PHP 8.1
+- New option for pgsql to set session role
+
 Version 1.2.1
 --------------
 

@@ -95,7 +95,7 @@ Possible parameters:
   Default: `false`
 - `search_path`: the list of schema where table are getting from, if the default 
   schema of the connection doesn't correspond to the schema used by the application.
-
+- `session_role`: the role to set into the session.
 
 SQLite profile
 ---------------
