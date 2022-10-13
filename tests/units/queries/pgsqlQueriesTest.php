@@ -35,6 +35,37 @@ class pgsqlQueriesTest extends queriesTestAbstract {
         return self::$connectionPgsql;
     }
 
+
+    /**
+     * @depends testPreparedQueries
+     */
+    function testPreparedQueries2()
+    {
+        $this->emptyTable('product_test');
+        $cnx = $this->getConnection();
+
+        $stmt = $cnx->prepare('INSERT INTO product_test (id, name, price, promo) VALUES($1, $2, $3, $4)');
+        $stmt->execute(array(
+            1, 'assiettes' , 3.87, 'f'
+        ));
+
+        $stmt->execute(array(
+            2, 'fourchettes' , 1.54, 't'
+        ));
+
+        $this->records = array(
+            array('id'=>1,
+                'name'=>'assiettes',
+                'price'=>3.87,
+                'promo'=>'f'),
+            array('id'=>2,
+                'name'=>'fourchettes',
+                'price'=>1.54,
+                'promo'=>'t'),
+        );
+        $this->assertTableContainsRecords('product_test', $this->records);
+    }
+
     function testVersion() {
 
         $cnx = $this->getConnection();
