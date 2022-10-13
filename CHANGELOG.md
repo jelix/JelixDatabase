@@ -15,6 +15,13 @@ An object `Jelix\Database\Log\QueryLogger` is provided, implementing this
 interface, and can use a `Psr\Log\LoggerInterface` object.
 
 
+Version 1.2.2
+-------------
+
+- Fix prepared queries: support of placeholders $1, $2 etc
+- Fix some issues with PHP 8.1
+- New option for pgsql to set session role
+
 Version 1.2.1
 -------------
 
