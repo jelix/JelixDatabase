@@ -31,7 +31,7 @@ namespace Jelix\Database;
  *  - dbtype: type of the database (so it determines the SQL language)
  *  - phpext: name of the php extension to use
  *  - persistent: if true, the connection should be persistent
- *  - extensions: some informations about extensions to load (For sqlite for example. optional)
+ *  - extensions: some information about extensions to load (For sqlite for example. optional)
  *  - single_transaction: indicate to execute all queries into a single transaction (pgsql, optional)
  *  - busytimeout: timeout for the connection (sqlite, optional)
  *  - timeout: timeout for the connection (pgsql, optional)
@@ -74,13 +74,10 @@ class AccessParameters
                 $this->parameters['dsn'] == '')) {
             $this->parameters['dsn'] = $this->getPDODsn($this->parameters);
         }
-        $pdooptions = array_diff(
-            array_keys($this->parameters),
-            array('driver', 'dsn', 'service', 'host', 'password', 'user', 'port', 'force_encoding',
-                'usepdo', 'persistent', 'pdodriver', 'pdoext', 'dbtype', 'phpext',
-                'extensions', 'table_prefix', 'database', 'table_prefix', '_name', )
-        );
-        $this->parameters['pdooptions'] = implode(',', $pdooptions);
+
+        if (!isset($this->parameters['pdooptions'])) {
+            $this->parameters['pdooptions'] = '';
+        }
 
         $this->parameters['charset'] = isset($options['charset']) ? $options['charset']: 'UTF-8';
         $this->parameters['filePathParser'] = isset($options['filePathParser']) ? $options['filePathParser']: '';
