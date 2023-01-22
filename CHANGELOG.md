@@ -1,6 +1,11 @@
 Changelog
 =========
 
+Version 1.2.3
+-------------
+
+- Fix AccessParameters: must not generate pdooptions with bad values
+
 Version 1.2.2
 -------------
 
