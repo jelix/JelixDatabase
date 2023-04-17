@@ -4,7 +4,7 @@
  * @contributor Laurent Jouanneau
  * @contributor Florian Lonqueu-Brochard
  *
- * @copyright  2001-2005 CopixTeam, 2005-2020 Laurent Jouanneau
+ * @copyright  2001-2005 CopixTeam, 2005-2023 Laurent Jouanneau
  * @copyright  2012 Florian Lonqueu-Brochard
  *
  * @see      https://jelix.org
@@ -197,7 +197,6 @@ class ResultSet extends AbstractResultSet
 
         $this->boundParameters = array();
         $this->boundParameterTypes = array();
-        $this->boundValues = array();
 
         if ($this->_stmt->result_metadata()) {
             //the query produces a result

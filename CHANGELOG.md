@@ -1,6 +1,11 @@
 Changelog
 =========
 
+Version 1.2.4
+-------------
+
+* Fix some issues with PHP 8.2
+
 Version 1.2.3
 -------------
 

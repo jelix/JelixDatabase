@@ -197,7 +197,6 @@ class Connection extends AbstractConnection
     {
         if ($qI = @pg_query($this->_connection, $queryString)) {
             $rs = new ResultSet($qI);
-            $rs->_connector = $this;
         } else {
             throw new Exception('invalid query: '.pg_last_error($this->_connection).'('.$queryString.')', 403);
         }
