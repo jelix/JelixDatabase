@@ -14,10 +14,15 @@ about what to do between and after queries.
 An object `Jelix\Database\Log\QueryLogger` is provided, implementing this
 interface, and can use a `Psr\Log\LoggerInterface` object.
 
-Version 1.2.3
+Version 1.2.4
 -------------
 
 * Fix some issues with PHP 8.2
+
+Version 1.2.3
+-------------
+
+- Fix AccessParameters: must not generate pdooptions with bad values
 
 Version 1.2.2
 -------------
