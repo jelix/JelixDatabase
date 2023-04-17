@@ -2,7 +2,7 @@
 /**
  * @author     Philippe Villiers
  * @contributor Laurent Jouanneau
- * @copyright  2013 Philippe Villiers, 2017-2021 Laurent Jouanneau
+ * @copyright  2013 Philippe Villiers, 2017-2023 Laurent Jouanneau
  *
  * @see        https://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -69,7 +69,6 @@ class Connection extends AbstractConnection
     {
         if ($stId = oci_parse($this->_connection, $queryString)) {
             $rs = new ociDbResultSet($stId, $this->_connection);
-            $rs->_connector = $this;
             if ($res = $rs->execute()) {
                 return $rs;
             }

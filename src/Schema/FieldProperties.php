@@ -2,7 +2,7 @@
 /**
  * @author     Gérald Croes, Laurent Jouanneau
  * @contributor Laurent Jouanneau, Gwendal Jouannic
- * @copyright  2001-2005 CopixTeam, 2005-2020 Laurent Jouanneau, 2008 Gwendal Jouannic
+ * @copyright  2001-2005 CopixTeam, 2005-2023 Laurent Jouanneau, 2008 Gwendal Jouannic
  *
  * @see        https://jelix.org
  * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -27,7 +27,7 @@ class FieldProperties
      *
      * @var string
      */
-    public $unifiedtype;
+    public $unifiedType;
 
     /**
      * field name.

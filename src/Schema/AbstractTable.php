@@ -1,7 +1,7 @@
 <?php
 /**
  * @author     Laurent Jouanneau
- * @copyright  2010-2020 Laurent Jouanneau
+ * @copyright  2010-2023 Laurent Jouanneau
  *
  * @see        https://jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -45,6 +45,7 @@ abstract class AbstractTable implements TableInterface
      */
     protected $references;
 
+    public $attributes = array();
     /**
      * @param string    $name   the table name
      * @param SchemaInterface $schema

@@ -4,7 +4,7 @@ Changelog
 Version 2.0.0 (not released yet)
 --------------------------------
 
-API CHANGES:
+**API CHANGES**:
 - new interface `QueryLoggerInterface` to log queries
 
 Connectors and Connection methods do not accept anymore a `Psr\Log\LoggerInterface`.
@@ -14,6 +14,10 @@ about what to do between and after queries.
 An object `Jelix\Database\Log\QueryLogger` is provided, implementing this
 interface, and can use a `Psr\Log\LoggerInterface` object.
 
+Version 1.2.3
+-------------
+
+* Fix some issues with PHP 8.2
 
 Version 1.2.2
 -------------
