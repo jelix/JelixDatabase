@@ -142,6 +142,10 @@ class Connection extends AbstractConnection
             }
         }
 
+        if (isset($this->profile['sslmode']) && $this->profile['sslmode'] != '') {
+            $str .= ' sslmode=\''.$this->profile['sslmode'].'\'';
+        }
+
         if (isset($this->profile['timeout']) && $this->profile['timeout'] != '') {
             $str .= ' connect_timeout=\''.$this->profile['timeout'].'\'';
         }
