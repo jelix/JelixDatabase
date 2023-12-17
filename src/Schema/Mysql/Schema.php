@@ -20,14 +20,13 @@ class Schema extends AbstractSchema
      * @param string          $name
      * @param Column[]     $columns
      * @param string|string[] $primaryKey  names of columns that represents primary keys
-     * @param mixed           $primaryKeys
      * @param mixed           $attributes
      *
      * @return Table
      */
-    public function _createTable($name, $columns, $primaryKeys, $attributes = array())
+    public function _createTable($name, $columns, $primaryKey, $attributes = array())
     {
-        $sql = $this->_createTableQuery($name, $columns, $primaryKeys, $attributes);
+        $sql = $this->_createTableQuery($name, $columns, $primaryKey, $attributes);
 
         if (isset($attributes['engine'])) {
             $sql .= ' ENGINE='.$attributes['engine'];
