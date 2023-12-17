@@ -156,8 +156,15 @@ class Connection extends AbstractConnection
             $str .= ' options=\''.$this->profile['pg_options'].'\'';
         }
 
+        if (isset($this->profile['force_new']) && $this->profile['force_new']) {
+            $cnx = @$funcconnect ($str, PGSQL_CONNECT_FORCE_NEW);
+        }
+        else {
+            $cnx = @$funcconnect ($str);
+        }
+
         // let's do the connection
-        if ($cnx = @$funcconnect($str)) {
+        if ($cnx) {
             if ($this->profile['force_encoding'] == true
                && isset($this->_charsets[$this->_profile['charset']])) {
                 pg_set_client_encoding($cnx, $this->_charsets[$this->_profile['charset']]);
