@@ -44,9 +44,15 @@ class Schema extends AbstractSchema
 
     protected function _getTables()
     {
+        $searchPath = $this->getConn()->getSearchPath();
+        $c = $this->getConn();
+        $schemas = implode(',', array_map(function($schema) use ($c) {
+            return $c->quote($schema);
+        }, $searchPath));
+
         $results = array();
-        $sql = "SELECT tablename FROM pg_tables
-                  WHERE schemaname NOT IN ('pg_catalog', 'information_schema')
+        $sql = "SELECT tablename, schemaname FROM pg_tables
+                  WHERE schemaname ILIKE ANY (array['.$schemas.'])
                   ORDER BY tablename";
         $rs = $this->getConn()->query($sql);
         while ($line = $rs->fetch()) {

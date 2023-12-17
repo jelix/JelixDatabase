@@ -34,6 +34,12 @@ class Table extends AbstractTable
         $conn = $this->schema->getConn();
         $tools = $conn->tools();
         $version = $conn->getServerMajorVersion();
+
+        $searchPath = $conn->getSearchPath();
+        $schemas = implode(',', array_map(function($schema) use ($conn) {
+            return $conn->quote($schema);
+        }, $searchPath));
+
         // pg_get_expr on adbin, not compatible with pgsql < 9
         $adColName = ($version < 12 ? 'd.adsrc' : 'pg_get_expr(d.adbin,d.adrelid) AS adsrc');
 
@@ -47,7 +53,8 @@ class Table extends AbstractTable
             LEFT OUTER JOIN pg_attrdef AS d
                 ON (d.adrelid = c.oid AND d.adnum = a.attnum)
             WHERE a.attnum > 0 AND c.relname = ".$conn->quote($this->name).
-            ' ORDER BY a.attnum';
+            ' AND c.relnamespace IN ( SELECT oid FROM pg_namespace WHERE nspname ILIKE ANY (array['.$schemas.']))
+             ORDER BY a.attnum';
         $rs = $conn->query($sql);
         while ($line = $rs->fetch()) {
             $name = $line->attname;

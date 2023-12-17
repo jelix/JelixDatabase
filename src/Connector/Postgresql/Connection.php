@@ -313,9 +313,17 @@ class Connection extends AbstractConnection
         return $this->serverVersion;
     }
 
-
     protected function _getSchema()
     {
         return new \Jelix\Database\Schema\Postgresql\Schema($this);
     }
+
+    public function getSearchPath()
+    {
+        if (isset($this->profile['search_path']) && trim($this->profile['search_path']) != '') {
+            return preg_split('/\"?\s*,\s*\"?/', trim($this->profile['search_path'], " \t\n\r\0\x0B\""));
+        }
+        return array('public');
+    }
+
 }
