@@ -16,9 +16,9 @@ use Jelix\Database\Schema\AbstractSchema;
  */
 class Schema extends AbstractSchema
 {
-    protected function _createTable($name, $columns, $primaryKeys, $attributes = array())
+    protected function _createTable($name, $columns, $primaryKey, $attributes = array())
     {
-        $sql = $this->_createTableQuery($name, $columns, $primaryKeys, $attributes);
+        $sql = $this->_createTableQuery($name, $columns, $primaryKey, $attributes);
 
         $this->conn->exec($sql);
 

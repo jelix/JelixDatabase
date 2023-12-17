@@ -182,7 +182,7 @@ class ResultSet extends AbstractResultSet
         $allParams = array('');
         foreach ($this->parameterNames as $k => $name) {
             if (!array_key_exists($name, $parameters)) {
-                throw new Exception("Execute: parameter '${name}' is missing from parameters");
+                throw new Exception("Execute: parameter '$name' is missing from parameters");
             }
             $allParams[0] .= $types[$name];
             $allParams[] = &$parameters[$name];

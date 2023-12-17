@@ -93,7 +93,7 @@ class Connection extends AbstractConnection
     }
 
     /**
-     * initialize the connection to the database.
+     * @inheritdoc
      *
      */
     protected function _connect()
@@ -120,7 +120,7 @@ class Connection extends AbstractConnection
     }
 
     /**
-     * 	close the connection to the database.
+     * @inheritdoc
      *
      */
     protected function _disconnect()
@@ -129,9 +129,7 @@ class Connection extends AbstractConnection
     }
 
     /**
-     * 	execute an SQL instruction.
-     *
-     * @param mixed $query
+     * @inheritdoc
      */
     protected function _doQuery($query)
     {
@@ -149,7 +147,7 @@ class Connection extends AbstractConnection
     }
 
     /**
-     * @param mixed $query
+     * @inheritdoc
      */
     protected function _doExec($query)
     {
@@ -174,9 +172,7 @@ class Connection extends AbstractConnection
     }
 
     /**
-     * @param mixed $queryString
-     * @param mixed $offset
-     * @param mixed $number
+     * @inheritdoc
      */
     protected function _doLimitQuery($queryString, $offset, $number)
     {
