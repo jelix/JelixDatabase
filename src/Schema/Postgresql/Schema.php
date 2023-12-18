@@ -52,7 +52,7 @@ class Schema extends AbstractSchema
 
         $results = array();
         $sql = "SELECT tablename, schemaname FROM pg_tables
-                  WHERE schemaname ILIKE ANY (array['.$schemas.'])
+                  WHERE schemaname ILIKE ANY (array[".$schemas."])
                   ORDER BY tablename";
         $rs = $this->getConn()->query($sql);
         while ($line = $rs->fetch()) {

@@ -1,6 +1,11 @@
 Changelog
 =========
 
+Version 1.2.5
+--------------
+
+- tests: new docker image
+
 Version 1.2.4
 -------------
 

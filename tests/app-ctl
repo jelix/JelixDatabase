@@ -7,7 +7,7 @@ if [ "$COMMAND" == "" ]; then
     echo "Error: command is missing"
     echo "Possible commands: "
     echo "- Into php: reset, composer-install, composer-update, unit-tests"
-    echo "- To enter into the php container: shell, shellroot"
+    echo "- To enter into the php container: shell, shell-root"
     echo "- to enter into a interactive sql shell: pgsql, mysql or sqlsrv"
     exit 1;
 fi
@@ -26,8 +26,8 @@ case $COMMAND in
     unit-tests)
         docker exec -t -i jdb_test_php appctl.sh unit-tests "$@";;
     shell)
-       docker exec -it --user usertest jdb_test_php  /bin/bash -l;;
-    shellroot)
+       docker exec -it --user userphp jdb_test_php  /bin/bash -l;;
+    shell-root)
        docker exec -it jdb_test_php  /bin/bash  -l;;
     pgsql)
       docker exec -it --user postgres -e PGPASSWORD="jelixpass" jdb_test_pgsql psql --username=jelix jelixtests

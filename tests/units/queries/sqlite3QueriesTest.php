@@ -46,11 +46,13 @@ class sqlite3QueriesTest extends queriesTestAbstract
         $this->assertNotEquals(false, $rec);
         $this->assertEquals(3, $rec->cnt);
         unset($rec);
+        $res->free();
         unset($res);
 
         $res = $db->query("SELECT id, name, price FROM products");
         $all = $res->fetchAll();
         $this->assertEquals(3, count($all));
+        $res->free();
         unset($res);
 
         $res = $db->query("SELECT id, name, price FROM products");
@@ -66,6 +68,7 @@ class sqlite3QueriesTest extends queriesTestAbstract
         $this->assertFalse($last);
 
         $this->assertEquals(3, $res->rowCount());
+        $res->free();
         unset($res);
 
         $res = $db->query("SELECT id, name, price FROM products");
@@ -74,6 +77,7 @@ class sqlite3QueriesTest extends queriesTestAbstract
         $this->assertEquals(3, $res->rowCount());
         $all = $res->fetchAll();
         $this->assertEquals(2, count($all));
+        $res->free();
         unset($res);
     }
 }

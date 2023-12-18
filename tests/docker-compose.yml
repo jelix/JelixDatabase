@@ -1,7 +1,7 @@
 version: '3.4'
 services:
   pgsql:
-    image: postgres:11
+    image: postgres:13
     container_name: jdb_test_pgsql
     environment:
       POSTGRES_DB: jelixtests
@@ -34,10 +34,12 @@ services:
     build:
       context: ./docker-conf/php
       args:
-        test_user_id: ${TEST_USER_ID}
-        test_group_id: ${TEST_GROUP_ID}
         php_version: ${PHP_VERSION}
     container_name: jdb_test_php
+    environment:
+      - APP_USER_ID
+      - APP_GROUP_ID
+      - DISPLAY_ERRORS=on
     volumes:
       - "../:/src/tests/"
     depends_on:
