@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2015-2020 Laurent Jouanneau
+ * @copyright   2015-2023 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -92,6 +92,15 @@ class AccessParameters
      * @return array list of normalized parameters
      */
     public function getNormalizedParameters()
+    {
+        return $this->parameters;
+    }
+
+    /**
+     * @deprecated
+     * @see getNormalizedParameters()
+     */
+    public function getParameters()
     {
         return $this->parameters;
     }

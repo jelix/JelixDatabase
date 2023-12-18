@@ -20,7 +20,7 @@ Au final, un profile est un tableau PHP associatif, comme dans ces exemples :
 
 $profile = array(
     'driver'=>'sqlite3',
-    "database"=>"/src/tests/tests/units/tests.sqlite3",
+    "database"=>"/app/tests/units/tests.sqlite3",
 );
 
 $profile = array(
@@ -101,6 +101,7 @@ Paramètres possibles :
 - `search_path` : indiquer la liste des schémas dans lequel il faut
   chercher les tables, si le schéma par défaut pour la connexion ne
   correspond pas à celui dans lequel l'application va chercher.
+- `session_role`: le role à utiliser dans la session. 
 
 Profil pour SQLite 
 ------------------

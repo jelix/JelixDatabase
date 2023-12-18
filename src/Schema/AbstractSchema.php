@@ -268,6 +268,15 @@ abstract class AbstractSchema implements SchemaInterface
     }
 
     /**
+     * @deprecated
+     * @see prepareSqlColumn()
+     */
+    public function _prepareSqlColumn($col, $isPrimaryKey = false, $isSinglePrimaryKey = false)
+    {
+        return $this->prepareSqlColumn($col, $isPrimaryKey, $isSinglePrimaryKey);
+    }
+
+    /**
      * @param Column $col                the column
      */
     protected function _getAutoIncrementKeyWord($col, $isPrimaryKey, $isSinglePrimaryKey)

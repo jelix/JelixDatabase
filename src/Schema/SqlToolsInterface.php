@@ -123,6 +123,7 @@ interface SqlToolsInterface
      *
      * @return string[] list of table names
      * @deprecated
+     * @see SchemaInterface
      */
     public function getTableList();
 
@@ -136,6 +137,7 @@ interface SqlToolsInterface
      *
      * @return FieldProperties[] keys are field names
      * @deprecated
+     * @see SchemaInterface
      */
     public function getFieldList($tableName, $sequence = '', $schemaName = '');
 

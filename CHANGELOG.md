@@ -14,6 +14,16 @@ about what to do between and after queries.
 An object `Jelix\Database\Log\QueryLogger` is provided, implementing this
 interface, and can use a `Psr\Log\LoggerInterface` object.
 
+Version 1.3.0
+--------------
+
+- New option `sslmode` for pgsql to encrypt connections
+- New option `force_new` for pgsql to force a new connection
+- Fix pgsql schema: should list only tables from the search_path
+- tests: new docker image
+- compatible with PHP 8.3
+
+
 Version 1.2.4
 -------------
 

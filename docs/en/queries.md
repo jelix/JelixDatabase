@@ -19,7 +19,7 @@ use \Jelix\Database\Connection;
 
 $parameters = array(
   'driver'=>'sqlite3',
-  "database"=>"/src/tests/tests/units/tests.sqlite3",
+  "database"=>"/app/tests/units/tests.sqlite3",
 );
 
 // verify content of parameters and prepare them for the Connection object.
@@ -52,7 +52,7 @@ else {
     // no cache, we put parameters in the cache
     $parameters = array(
       'driver'=>'sqlite3',
-      "database"=>"/src/tests/tests/units/tests.sqlite3",
+      "database"=>"/app/tests/units/tests.sqlite3",
     );
     
     // verify content of parameters and prepare them for the Connection object.

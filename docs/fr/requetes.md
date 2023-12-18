@@ -19,7 +19,7 @@ use \Jelix\Database\Connection;
 
 $parameters = array(
   'driver'=>'sqlite3',
-  "database"=>"/src/tests/tests/units/tests.sqlite3",
+  "database"=>"/app/tests/units/tests.sqlite3",
 );
 
 // vérification des parameters et préparation pour l'objet Connection
@@ -52,7 +52,7 @@ else {
     // pas de cache, on met les paramètres en cache
     $parameters = array(
       'driver'=>'sqlite3',
-      "database"=>"/src/tests/tests/units/tests.sqlite3",
+      "database"=>"/app/tests/units/tests.sqlite3",
     );
     
     $accessParameters = new AccessParameters($parameters, array('charset'=>'UTF-8'));
