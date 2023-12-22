@@ -6,7 +6,7 @@
  * @contributor Sylvain de Vathaire, Julien Issler
  * @contributor Florian Lonqueu-Brochard
  *
- * @copyright  2001-2005 CopixTeam, 2005-2021 Laurent Jouanneau, 2009 Julien Issler, 2012 Florian Lonqueu-Brochard
+ * @copyright  2001-2005 CopixTeam, 2005-2023 Laurent Jouanneau, 2009 Julien Issler, 2012 Florian Lonqueu-Brochard
  *
  * @see      https://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -167,7 +167,7 @@ class Connection extends AbstractConnection
     protected function _doLimitQuery($queryString, $offset, $number)
     {
         $queryString .= ' LIMIT '.$offset.','.$number;
-        $this->lastQuery = $queryString;
+        $this->_lastQuery = $queryString;
 
         return $this->_doQuery($queryString);
     }

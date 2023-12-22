@@ -3,7 +3,7 @@
  * @author     Laurent Jouanneau
  * @contributor Gwendal Jouannic, Thomas, Julien Issler
  *
- * @copyright  2005-2021 Laurent Jouanneau
+ * @copyright  2005-2023 Laurent Jouanneau
  * @copyright  2008 Gwendal Jouannic, 2009 Thomas
  * @copyright  2009 Julien Issler
  *
@@ -91,7 +91,7 @@ class ResultSet  extends AbstractResultSet
     /**
      * @inheritDoc
      */
-    public function bindParam($parameterName, &$variable, $data_type = \PDO::PARAM_STR, $length = null, $driver_options = null)
+    public function bindParam($parameterName, &$variable, $data_type = \PDO::PARAM_STR, $length = 0, $driver_options = null)
     {
         return $this->_idResult->bindParam($parameterName, $variable, $data_type, $length, $driver_options);
     }

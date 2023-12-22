@@ -3,7 +3,7 @@
  * @author     Gérald Croes, Laurent Jouanneau
  * @contributor Laurent Jouanneau
  *
- * @copyright  2001-2005 CopixTeam, 2005-2022 Laurent Jouanneau
+ * @copyright  2001-2005 CopixTeam, 2005-2023 Laurent Jouanneau
  *
  * @see      https://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -113,7 +113,7 @@ class ResultSet extends AbstractResultSet
         return true;
     }
 
-    public function bindParam($parameter, &$variable, $dataType = \PDO::PARAM_STR, $length = null, $driverOptions = null)
+    public function bindParam($parameter, &$variable, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = null)
     {
         if (!$this->_stmtId) {
             throw new Exception('Not a prepared statement');

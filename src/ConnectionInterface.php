@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2020 Laurent Jouanneau
+ * @copyright   2020-2023 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -145,6 +145,11 @@ interface ConnectionInterface
      * @author Julien Issler
      */
     public function hasTablePrefix();
+
+    /**
+     * @return string
+     */
+    public function getTablePrefix();
 
     /**
      * sets the autocommit state.

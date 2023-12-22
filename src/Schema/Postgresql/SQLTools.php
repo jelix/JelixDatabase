@@ -4,7 +4,7 @@
  * @contributor Laurent Jouanneau
  * @contributor Nicolas Jeudy (patch ticket #99)
  *
- * @copyright  2005-2020 Laurent Jouanneau
+ * @copyright  2005-2023 Laurent Jouanneau
  *
  * @see     https://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -309,11 +309,7 @@ class SQLTools extends \Jelix\Database\Schema\AbstractSqlTools
 
     public function execSQLScript($file)
     {
-        if (!isset($this->_conn->profile['table_prefix'])) {
-            $prefix = '';
-        } else {
-            $prefix = $this->_conn->profile['table_prefix'];
-        }
+        $prefix = $this->_conn->getTablePrefix();
         $sqlQueries = str_replace('%%PREFIX%%', $prefix, file_get_contents($file));
         $this->_conn->query($sqlQueries);
     }

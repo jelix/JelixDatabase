@@ -29,7 +29,8 @@ class pgsqlQueriesTest extends queriesTestAbstract {
                 'host'=>'pgsql',
                 'user'=>'jelix',
                 'password'=>"jelixpass",
-                "database"=>"jelixtests"
+                "database"=>"jelixtests",
+                "debug" => true
             ), array('charset'=>'UTF-8'));
 
             self::$connectionPgsql = Connection::create($parameters);

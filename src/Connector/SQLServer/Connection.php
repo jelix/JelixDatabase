@@ -3,7 +3,7 @@
  * @author     Yann Lecommandoux
  * @contributor Laurent Jouanneau, Louis S.
  *
- * @copyright  2008 Yann Lecommandoux, 2011-2021 Laurent Jouanneau, Louis S.
+ * @copyright  2008 Yann Lecommandoux, 2011-2023 Laurent Jouanneau, Louis S.
  *
  * @see     https://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -94,24 +94,24 @@ class Connection extends AbstractConnection
     protected function _connect()
     {
         $connectOptions = array();
-        if (isset($this->profile['user']) && $this->profile['user'] != '') {
-            $connectOptions['UID'] = $this->profile['user'];
+        if (isset($this->_profile['user']) && $this->_profile['user'] != '') {
+            $connectOptions['UID'] = $this->_profile['user'];
         }
-        if (isset($this->profile['password']) && $this->profile['password'] != '') {
-            $connectOptions['PWD'] = $this->profile['password'];
+        if (isset($this->_profile['password']) && $this->_profile['password'] != '') {
+            $connectOptions['PWD'] = $this->_profile['password'];
         }
-        if (isset($this->profile['database']) && $this->profile['database'] != '') {
-            $connectOptions['Database'] = $this->profile['database'];
+        if (isset($this->_profile['database']) && $this->_profile['database'] != '') {
+            $connectOptions['Database'] = $this->_profile['database'];
         }
-        if (isset($this->profile['force_encoding']) && $this->profile['force_encoding'] == true) {
+        if (isset($this->_profile['force_encoding']) && $this->_profile['force_encoding'] == true) {
             $connectOptions['CharacterSet'] = 'UTF-8';
         }
 
-        if ($cnx = sqlsrv_connect($this->profile['host'], $connectOptions)) {
+        if ($cnx = sqlsrv_connect($this->_profile['host'], $connectOptions)) {
             return $cnx;
         }
 
-        throw new Exception('Error during the connection on '.$this->profile['host'], 402);
+        throw new Exception('Error during the connection on '.$this->_profile['host'], 402);
     }
 
     /**
@@ -206,7 +206,7 @@ class Connection extends AbstractConnection
         }
 
         $queryString .= $limit;
-        $this->lastQuery = $queryString;
+        $this->_lastQuery = $queryString;
 
         return $this->_doQuery($queryString);
     }
