@@ -25,23 +25,22 @@ class Connection extends AbstractConnection
         if (!function_exists('oci_connect')) {
             throw new Exception('Oci extension is not installed in PHP', 405);
         }
+        $profile['dbtype'] = 'oci';
         parent::__construct($profile, $logger);
-
-        $this->dbms = 'oci';
     }
 
     protected function _connect()
     {
-        $funcConnect = (isset($this->profile['persistent']) && $this->profile['persistent'] ? 'oci_pconnect' : 'oci_connect');
+        $funcConnect = (isset($this->_profile['persistent']) && $this->_profile['persistent'] ? 'oci_pconnect' : 'oci_connect');
 
-        if (isset($this->profile['dsn'])) {
-            $connString = $this->profile['dsn'];
+        if (isset($this->_profile['dsn'])) {
+            $connString = $this->_profile['dsn'];
         } else {
-            $connString = $this->profile['host'];
-            if (isset($this->profile['port'])) {
-                $connString .= ':'.$this->profile['port'];
+            $connString = $this->_profile['host'];
+            if (isset($this->_profile['port'])) {
+                $connString .= ':'.$this->_profile['port'];
             }
-            $connString .= '/'.$this->profile['database'];
+            $connString .= '/'.$this->_profile['database'];
         }
         if (isset($this->_charsets[$this->_profile['charset']])) {
             $charset = $this->_charsets[$this->_profile['charset']];
@@ -49,7 +48,7 @@ class Connection extends AbstractConnection
             $charset = 'AL32UTF8';
         }
 
-        $conn = $funcConnect($this->profile['user'], $this->profile['password'], $connString, $charset);
+        $conn = $funcConnect($this->_profile['user'], $this->_profile['password'], $connString, $charset);
         if (!$conn) {
             //$err = oci_error();
             throw new Exception('Error during the connection on '.$this->_profile['host'], 402);

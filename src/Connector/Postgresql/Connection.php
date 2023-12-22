@@ -7,7 +7,7 @@
  * @contributor Julien Issler
  * @contributor Alexandre Zanelli
  *
- * @copyright  2001-2005 CopixTeam, 2005-2021 Laurent Jouanneau, 2007-2008 Laurent Raufaste, 2009 Julien Issler
+ * @copyright  2001-2005 CopixTeam, 2005-2023 Laurent Jouanneau, 2007-2008 Laurent Raufaste, 2009 Julien Issler
  *
  * @see      https://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -30,7 +30,7 @@ class Connection extends AbstractConnection
             throw new Exception('Pgsql extension is not installed in PHP', 405);
         }
         parent::__construct($profile, $logger);
-        if (isset($this->profile['single_transaction']) && ($this->profile['single_transaction'])) {
+        if (isset($this->_profile['single_transaction']) && ($this->_profile['single_transaction'])) {
             $this->beginTransaction();
             $this->setAutoCommit(false);
         } else {
@@ -55,7 +55,7 @@ class Connection extends AbstractConnection
 
     public function __destruct()
     {
-        if (isset($this->profile['single_transaction']) && ($this->profile['single_transaction'])) {
+        if (isset($this->_profile['single_transaction']) && ($this->_profile['single_transaction'])) {
             $this->commit();
         }
         parent::__destruct();
@@ -102,59 +102,59 @@ class Connection extends AbstractConnection
 
     protected function _connect()
     {
-        $funcconnect = (isset($this->profile['persistent']) && $this->profile['persistent'] ? 'pg_pconnect' : 'pg_connect');
+        $funcconnect = (isset($this->_profile['persistent']) && $this->_profile['persistent'] ? 'pg_pconnect' : 'pg_connect');
 
         $str = '';
 
         // Service is PostgreSQL way to store credentials in a file :
         // http://www.postgresql.org/docs/9.1/static/libpq-pgservice.html
         // If given, no need to add host, user, database, port and password
-        if (isset($this->profile['service']) && $this->profile['service'] != '') {
-            $str = 'service=\''.$this->profile['service'].'\''.$str;
+        if (isset($this->_profile['service']) && $this->_profile['service'] != '') {
+            $str = 'service=\''.$this->_profile['service'].'\''.$str;
 
             // Database name may be given, even if service is used
             // dbname should not be mandatory in service file
-            if (isset($this->profile['database']) && $this->profile['database'] != '') {
-                $str .= ' dbname=\''.$this->profile['database'].'\'';
+            if (isset($this->_profile['database']) && $this->_profile['database'] != '') {
+                $str .= ' dbname=\''.$this->_profile['database'].'\'';
             }
         } else {
             // we do a distinction because if the host is given == TCP/IP connection else unix socket
-            if ($this->profile['host'] != '') {
-                $str = 'host=\''.$this->profile['host'].'\''.$str;
+            if ($this->_profile['host'] != '') {
+                $str = 'host=\''.$this->_profile['host'].'\''.$str;
             }
 
-            if (isset($this->profile['port'])) {
-                $str .= ' port=\''.$this->profile['port'].'\'';
+            if (isset($this->_profile['port'])) {
+                $str .= ' port=\''.$this->_profile['port'].'\'';
             }
 
-            if ($this->profile['database'] != '') {
-                $str .= ' dbname=\''.$this->profile['database'].'\'';
+            if ($this->_profile['database'] != '') {
+                $str .= ' dbname=\''.$this->_profile['database'].'\'';
             }
 
             // we do isset instead of equality test against an empty string, to allow to specify
             // that we want to use configuration set in environment variables
-            if (isset($this->profile['user'])) {
-                $str .= ' user=\''.$this->profile['user'].'\'';
+            if (isset($this->_profile['user'])) {
+                $str .= ' user=\''.$this->_profile['user'].'\'';
             }
 
-            if (isset($this->profile['password'])) {
-                $str .= ' password=\''.$this->profile['password'].'\'';
+            if (isset($this->_profile['password'])) {
+                $str .= ' password=\''.$this->_profile['password'].'\'';
             }
         }
 
-        if (isset($this->profile['sslmode']) && $this->profile['sslmode'] != '') {
-            $str .= ' sslmode=\''.$this->profile['sslmode'].'\'';
+        if (isset($this->_profile['sslmode']) && $this->_profile['sslmode'] != '') {
+            $str .= ' sslmode=\''.$this->_profile['sslmode'].'\'';
         }
 
-        if (isset($this->profile['timeout']) && $this->profile['timeout'] != '') {
-            $str .= ' connect_timeout=\''.$this->profile['timeout'].'\'';
+        if (isset($this->_profile['timeout']) && $this->_profile['timeout'] != '') {
+            $str .= ' connect_timeout=\''.$this->_profile['timeout'].'\'';
         }
 
-        if (isset($this->profile['pg_options']) && $this->profile['pg_options'] != '') {
-            $str .= ' options=\''.$this->profile['pg_options'].'\'';
+        if (isset($this->_profile['pg_options']) && $this->_profile['pg_options'] != '') {
+            $str .= ' options=\''.$this->_profile['pg_options'].'\'';
         }
 
-        if (isset($this->profile['force_new']) && $this->profile['force_new']) {
+        if (isset($this->_profile['force_new']) && $this->_profile['force_new']) {
             $cnx = @$funcconnect ($str, PGSQL_CONNECT_FORCE_NEW);
         }
         else {
@@ -163,28 +163,28 @@ class Connection extends AbstractConnection
 
         // let's do the connection
         if ($cnx) {
-            if ($this->profile['force_encoding'] == true
+            if ($this->_profile['force_encoding'] == true
                && isset($this->_charsets[$this->_profile['charset']])) {
                 pg_set_client_encoding($cnx, $this->_charsets[$this->_profile['charset']]);
             }
         } else {
-            if (isset($this->profile['service'])) {
-                $uri = $this->profile['service'];
+            if (isset($this->_profile['service'])) {
+                $uri = $this->_profile['service'];
             } else {
-                $uri = $this->profile['host'];
+                $uri = $this->_profile['host'];
             }
             throw new Exception('Error during the connection on '.$uri, 402);
         }
 
-        if (isset($this->profile['search_path']) && trim($this->profile['search_path']) != '') {
-            $sql = 'SET search_path TO '.$this->profile['search_path'];
+        if (isset($this->_profile['search_path']) && trim($this->_profile['search_path']) != '') {
+            $sql = 'SET search_path TO '.$this->_profile['search_path'];
             if (!@pg_query($cnx, $sql)) {
                 throw new Exception('invalid query: '.pg_last_error($cnx).'('.$sql.')', 403);
             }
         }
 
-        if (isset($this->profile['session_role']) && trim($this->profile['session_role']) != '') {
-            $sql = 'SET ROLE TO '.$this->profile['session_role'];
+        if (isset($this->_profile['session_role']) && trim($this->_profile['session_role']) != '') {
+            $sql = 'SET ROLE TO '.$this->_profile['session_role'];
             if (!@pg_query($cnx, $sql)) {
                 throw new Exception('invalid query: ', pg_last_error($cnx).'('.$sql.')', 403);
             }
@@ -230,7 +230,7 @@ class Connection extends AbstractConnection
             $number = 'ALL';
         }
         $queryString .= ' LIMIT '.$number.' OFFSET '.$offset;
-        $this->lastQuery = $queryString;
+        $this->_lastQuery = $queryString;
 
         return $this->_doQuery($queryString);
     }
@@ -242,7 +242,7 @@ class Connection extends AbstractConnection
 
             return false;
         }
-        $cur = $this->query("select currval('${seqname}') as id");
+        $cur = $this->query("select currval('{$seqname}') as id");
         if ($cur) {
             $res = $cur->fetch();
             if ($res) {
@@ -325,8 +325,8 @@ class Connection extends AbstractConnection
 
     public function getSearchPath()
     {
-        if (isset($this->profile['search_path']) && trim($this->profile['search_path']) != '') {
-            return preg_split('/\"?\s*,\s*\"?/', trim($this->profile['search_path'], " \t\n\r\0\x0B\""));
+        if (isset($this->_profile['search_path']) && trim($this->_profile['search_path']) != '') {
+            return preg_split('/\"?\s*,\s*\"?/', trim($this->_profile['search_path'], " \t\n\r\0\x0B\""));
         }
         return array('public');
     }

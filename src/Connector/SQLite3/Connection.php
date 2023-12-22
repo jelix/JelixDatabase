@@ -3,7 +3,7 @@
  * @author     Loic Mathaud
  * @contributor Laurent Jouanneau
  *
- * @copyright  2006 Loic Mathaud, 2007-2021 Laurent Jouanneau
+ * @copyright  2006 Loic Mathaud, 2007-2023 Laurent Jouanneau
  *
  * @see      https://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -77,7 +77,7 @@ class Connection extends AbstractConnection
 
     protected function _connect()
     {
-        $db = $this->profile['database'];
+        $db = $this->_profile['database'];
         if ($this->_profile['filePathParser']) {
             $db = call_user_func_array($this->_profile['filePathParser'], array($db));
         }
@@ -85,8 +85,8 @@ class Connection extends AbstractConnection
         $sqlite = new \SQLite3($db);
 
         // Load extensions if needed
-        if (isset($this->profile['extensions'])) {
-            $list = preg_split('/ *, */', $this->profile['extensions']);
+        if (isset($this->_profile['extensions'])) {
+            $list = preg_split('/ *, */', $this->_profile['extensions']);
             foreach ($list as $ext) {
                 try {
                     $sqlite->loadExtension($ext);
@@ -97,8 +97,8 @@ class Connection extends AbstractConnection
         }
 
         // set timeout
-        if (isset($this->profile['busytimeout'])) {
-            $timeout = intval($this->profile['busytimeout']);
+        if (isset($this->_profile['busytimeout'])) {
+            $timeout = intval($this->_profile['busytimeout']);
             if ($timeout) {
                 $sqlite->busyTimeout($timeout);
             }
@@ -132,7 +132,7 @@ class Connection extends AbstractConnection
     protected function _doLimitQuery($queryString, $offset, $number)
     {
         $queryString .= ' LIMIT '.$offset.','.$number;
-        $this->lastQuery = $queryString;
+        $this->_lastQuery = $queryString;
 
         return $this->_doQuery($queryString);
     }

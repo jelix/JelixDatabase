@@ -1,7 +1,7 @@
 <?php
 /**
  * @author     Laurent Jouanneau
- * @copyright  2005-2020 Laurent Jouanneau
+ * @copyright  2005-2023 Laurent Jouanneau
  *
  * @see        https://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -59,13 +59,14 @@ class Schema extends AbstractSchema
     protected function _getTables()
     {
         $results = array();
-        if (isset($this->conn->profile['database'])) {
-            $db = $this->conn->profile['database'];
-        } elseif (isset($this->conn->profile['dsn'])
-            && preg_match('/dbname=([a-z0-9_ ]*)/', $this->conn->profile['dsn'], $m)) {
+        $profile = $this->conn->profile;
+        if (isset($profile['database'])) {
+            $db = $profile['database'];
+        } elseif (isset($profile['dsn'])
+            && preg_match('/dbname=([a-z0-9_ ]*)/', $profile['dsn'], $m)) {
             $db = $m[1];
         } else {
-            throw new Exception('No database defined in the profile "'.$this->conn->profile['name'].'"');
+            throw new Exception('No database defined in the profile "'.$profile['name'].'"');
         }
         $rs = $this->conn->query('SHOW TABLES FROM '.$this->conn->encloseName($db));
         $col_name = 'Tables_in_'.$db;

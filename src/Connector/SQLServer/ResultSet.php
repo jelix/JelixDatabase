@@ -3,7 +3,7 @@
  * @author     Yann Lecommandoux
  * @contributor Laurent Jouanneau
  *
- * @copyright  2008 Yann Lecommandoux, 2017-2020 Laurent Jouanneau
+ * @copyright  2008 Yann Lecommandoux, 2017-2023 Laurent Jouanneau
  *
  * @see      https://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -109,7 +109,7 @@ class ResultSet extends AbstractResultSet
         throw new Exception('JDb: the sqlsrv connector doesn\'t support this feature "bindColumn"', 404);
     }
 
-    public function bindParam($parameter, &$variable, $dataType = \PDO::PARAM_STR, $length = null, $driverOptions = null)
+    public function bindParam($parameter, &$variable, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = null)
     {
         if (!$this->preparedQuery) {
             throw new Exception('Not a prepared statement');
@@ -161,7 +161,7 @@ class ResultSet extends AbstractResultSet
             $this->parametersReferences = array();
             foreach ($this->parameterNames as $k => $name) {
                 if (!isset($parameters[$name])) {
-                    throw new Exception("Execute: parameter '${name}' is missing from parameters");
+                    throw new Exception("Execute: parameter '{$name}' is missing from parameters");
                 }
                 $this->parametersReferences[] = &$parameters[$name];
             }

@@ -8,6 +8,7 @@
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 require_once(__DIR__.'/queriesTestAbstract.php');
+require_once(__DIR__.'/../UnitLogger.php');
 
 use \Jelix\Database\Connection;
 
@@ -29,10 +30,12 @@ class pgsqlQueriesTest extends queriesTestAbstract {
                 'host'=>'pgsql',
                 'user'=>'jelix',
                 'password'=>"jelixpass",
-                "database"=>"jelixtests"
+                "database"=>"jelixtests",
+                "debug" => true
             ), array('charset'=>'UTF-8'));
 
-            self::$connectionPgsql = Connection::create($parameters);
+            $logger = new UnitLogger();
+            self::$connectionPgsql = Connection::create($parameters, $logger);
         }
         return self::$connectionPgsql;
     }

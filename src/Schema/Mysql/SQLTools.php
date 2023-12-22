@@ -4,7 +4,7 @@
  * @contributor Laurent Jouanneau
  * @contributor Florian Lonqueu-Brochard
  *
- * @copyright  2001-2005 CopixTeam, 2005-2020 Laurent Jouanneau
+ * @copyright  2001-2005 CopixTeam, 2005-2023 Laurent Jouanneau
  * @copyright  2012 Florian Lonqueu-Brochard
  *
  * @see      https://jelix.org
@@ -260,11 +260,7 @@ class SQLTools extends \Jelix\Database\Schema\AbstractSqlTools
 
     public function execSQLScript($file)
     {
-        if (!isset($this->_conn->profile['table_prefix'])) {
-            $prefix = '';
-        } else {
-            $prefix = $this->_conn->profile['table_prefix'];
-        }
+        $prefix = $this->_conn->getTablePrefix();
         $sqlQueries = str_replace('%%PREFIX%%', $prefix, file_get_contents($file));
         $queries = $this->parseSQLScript($sqlQueries);
         foreach ($queries as $query) {

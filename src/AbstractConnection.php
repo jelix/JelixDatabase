@@ -3,7 +3,7 @@
  * @author      Laurent Jouanneau, Gerald Croes
  * @contributor Julien Issler
  *
- * @copyright   2005-2022 Laurent Jouanneau
+ * @copyright   2005-2023 Laurent Jouanneau
  * @copyright   2007-2009 Julien Issler
  * @copyright 2001-2005 CopixTeam
  * This class was get originally from the Copix project (CopixDbConnection, Copix 2.3dev20050901, http://www.copix.org)
@@ -24,7 +24,7 @@ use Jelix\Database\Log\QueryMessage;
  *
  * @property $driverName deprecated
  * @property $dbms  deprecated
- * @property $profile  deprecated
+ * @property $profile
  * @property $lastQuery  deprecated
  *
  */
@@ -307,7 +307,7 @@ abstract class AbstractConnection implements ConnectionInterface, ConnectionCons
      */
     public function unprefixTable($tableName)
     {
-        if (!isset($this->_profile['table_prefix']) || $this->_profile['table_prefix'] == '') {
+        if ($this->_profile['table_prefix'] == '') {
             return $tableName;
         }
         $prefix = $this->_profile['table_prefix'];
@@ -328,6 +328,12 @@ abstract class AbstractConnection implements ConnectionInterface, ConnectionCons
     public function hasTablePrefix()
     {
         return $this->_profile['table_prefix'] != '';
+    }
+
+
+    public function getTablePrefix()
+    {
+        return $this->_profile['table_prefix'];
     }
 
     /**

@@ -2,7 +2,7 @@
 /**
  * @author     Gérald Croes, Laurent Jouanneau
  * @contributor Laurent Jouanneau, Julien Issler
- * @copyright  2001-2005 CopixTeam, 2005-2020 Laurent Jouanneau, 2008 Julien Issler
+ * @copyright  2001-2005 CopixTeam, 2005-2023 Laurent Jouanneau, 2008 Julien Issler
  *
  * @see        https://jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -428,11 +428,8 @@ abstract class AbstractSqlTools implements SqlToolsInterface
      */
     public function execSQLScript($file)
     {
-        if (!isset($this->_conn->profile['table_prefix'])) {
-            $prefix = '';
-        } else {
-            $prefix = $this->_conn->profile['table_prefix'];
-        }
+
+        $prefix = $this->_conn->getTablePrefix();
 
         $lines = file($file);
         $cmdSQL = '';
@@ -585,7 +582,7 @@ abstract class AbstractSqlTools implements SqlToolsInterface
         $tableName = $this->_conn->prefixTable($tableName);
 
         if ($options == self::IBD_INSERT_ONLY_IF_TABLE_IS_EMPTY) {
-            $rs = $this->_conn->query("SELECT count(*) as _cnt_ FROM ${tableName}");
+            $rs = $this->_conn->query("SELECT count(*) as _cnt_ FROM {$tableName}");
             if ($rs) {
                 $rec = $rs->fetch();
                 if (intval($rec->_cnt_) > 0) {
@@ -628,7 +625,7 @@ abstract class AbstractSqlTools implements SqlToolsInterface
         $this->_conn->beginTransaction();
 
         if ($options == self::IBD_EMPTY_TABLE_BEFORE) {
-            $this->_conn->exec("DELETE FROM ${tableName}");
+            $this->_conn->exec("DELETE FROM {$tableName}");
         }
         $recCount = 0;
         foreach ($data as $rk => $row) {
@@ -636,7 +633,7 @@ abstract class AbstractSqlTools implements SqlToolsInterface
             if (count($row) != count($columns)) {
                 $this->_conn->rollback();
 
-                throw new Exception("insertBulkData: row ${rk} does not content right values count");
+                throw new Exception("insertBulkData: row {$rk} does not content right values count");
             }
             $sqlPk = array();
             $sqlUpdateValue = array();
@@ -673,9 +670,9 @@ abstract class AbstractSqlTools implements SqlToolsInterface
                 }
                 $values[] = $val;
                 if ($pkIndexes[$vk] !== false) {
-                    $sqlPk[] = $pkIndexes[$vk]." ${op} ${val}";
+                    $sqlPk[] = $pkIndexes[$vk]." {$op} {$val}";
                 } elseif ($options == self::IBD_UPDATE_IF_EXIST) {
-                    $sqlUpdateValue[] = $sqlColumns[$vk]." = ${val}";
+                    $sqlUpdateValue[] = $sqlColumns[$vk]." = {$val}";
                 }
             }
 

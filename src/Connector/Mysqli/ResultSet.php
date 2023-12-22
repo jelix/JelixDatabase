@@ -139,10 +139,10 @@ class ResultSet extends AbstractResultSet
      * @param string     $parameter
      * @param mixed      $variable
      * @param mixed      $dataType
-     * @param null|mixed $length
+     * @param int $length
      * @param null|mixed $driverOptions
      */
-    public function bindParam($parameter, &$variable, $dataType = \PDO::PARAM_STR, $length = null, $driverOptions = null)
+    public function bindParam($parameter, &$variable, $dataType = \PDO::PARAM_STR, $length = 0, $driverOptions = null)
     {
         if (!$this->_stmt) {
             throw new Exception('Not a prepared statement');

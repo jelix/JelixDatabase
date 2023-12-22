@@ -3,7 +3,7 @@
  * @author     Loic Mathaud
  * @contributor Laurent Jouanneau
  *
- * @copyright  2006 Loic Mathaud, 2008-2020 Laurent Jouanneau
+ * @copyright  2006 Loic Mathaud, 2008-2023 Laurent Jouanneau
  *
  * @see      http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -154,7 +154,7 @@ class ResultSet extends AbstractResultSet
         return SQLITE3_TEXT;
     }
 
-    public function bindParam($parameter, &$variable, $data_type = \PDO::PARAM_STR, $length = null, $driver_options = null)
+    public function bindParam($parameter, &$variable, $data_type = \PDO::PARAM_STR, $length = 0, $driver_options = null)
     {
         if (!$this->_stmt) {
             throw new Exception('Not a prepared statement');
