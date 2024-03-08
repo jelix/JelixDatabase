@@ -14,10 +14,10 @@ fi
 
 if [ "$CMD" == "reset" ]; then
     # Stop/Remove containers
-    docker-compose -p jdb-tests rm -sf || true
+    docker compose -p jdb-tests rm -sf || true
     # Clean postgres volume
     docker volume rm "jdb_test_pg_data" || true
     exit 0
 fi
 
-docker-compose -p jdb-tests $CMD
+docker compose -p jdb-tests $CMD

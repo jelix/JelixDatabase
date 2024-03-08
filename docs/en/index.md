@@ -10,7 +10,7 @@ to every databases. For the moment, featured drivers are those for:
   * PDO
 
 Notice that, although JelixDatabase is a common API to all databases, it doesn't 
-adapt your queries to specificities of the database.
+adapt your queries to specificities of the database server.
 
 
 Chapters:
