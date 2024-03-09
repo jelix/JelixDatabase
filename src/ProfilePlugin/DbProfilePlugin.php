@@ -25,14 +25,11 @@ class DbProfilePlugin extends ReaderPlugin implements ProfileInstancePluginInter
 
     protected $pgTimeouts = array();
 
+    protected $accessOptions = array();
 
     protected function consolidate($profile)
     {
-        $options = array(
-            'filePathParser' => 'jDb::parseSqlitePath'
-        );
-
-        $parameters = new AccessParameters($profile, $options);
+        $parameters = new AccessParameters($profile, $this->accessOptions);
 
         $newProfile =  $parameters->getNormalizedParameters();
         if ($newProfile['driver'] != 'pgsql') {
