@@ -8,6 +8,11 @@ ARG msphpsql_version=5.12.0-beta1
 ARG DEBIAN_FRONTEND=noninteractive
 ENV PHP_VERSION=${php_version}
 
+RUN apt-get update; apt-get upgrade; \
+    apt-get install \
+    php${PHP_VERSION}-xdebug \
+    ; apt-get clean;
+
 # Install drivers to access to SQL server
 # see https://docs.microsoft.com/en-us/sql/connect/odbc/linux-mac/installing-the-microsoft-odbc-driver-for-sql-server?view=sql-server-ver15#debian18
 # see https://github.com/microsoft/msphpsql/releases
@@ -25,7 +30,8 @@ RUN  curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -; \
      printf "; priority=20\nextension=php_sqlsrv_${shrinkphpversion}_nts.so\n" > /etc/php/${PHP_VERSION}/mods-available/sqlsrv.ini; \
      printf "; priority=30\nextension=php_pdo_sqlsrv_${shrinkphpversion}_nts.so\n" > /etc/php/${PHP_VERSION}/mods-available/pdo_sqlsrv.ini; \
      phpenmod  -v ${PHP_VERSION} sqlsrv pdo_sqlsrv; \
-     rm -rf /tmp/msodbcsql.deb /tmp/debsqlsrv.tar /tmp/Debian${debian_version_num}-${PHP_VERSION};
+     rm -rf /tmp/msodbcsql.deb /tmp/debsqlsrv.tar /tmp/Debian${debian_version_num}-${PHP_VERSION}; \
+     apt-get clean;
 
 COPY database-entrypoint.sh /bin/entrypoint.d/
 COPY appctl.sh /bin/
