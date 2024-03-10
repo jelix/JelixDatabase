@@ -78,7 +78,6 @@ class Connection
                 $tools = new Schema\Oci\SQLTools($connection);
                 break;
             default:
-                $tools = null;
                 throw new Exception("not implemented");
         }
         return $tools;

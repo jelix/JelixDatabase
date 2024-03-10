@@ -3,7 +3,7 @@
  * @author      Laurent Jouanneau, Gerald Croes
  * @contributor Julien Issler
  *
- * @copyright   2005-2023 Laurent Jouanneau
+ * @copyright   2005-2024 Laurent Jouanneau
  * @copyright   2007-2009 Julien Issler
  * @copyright 2001-2005 CopixTeam
  * This class was get originally from the Copix project (CopixDbConnection, Copix 2.3dev20050901, http://www.copix.org)
@@ -83,9 +83,7 @@ abstract class AbstractConnection implements ConnectionInterface, ConnectionCons
 
     public function __destruct()
     {
-        if ($this->_connection !== null) {
-            $this->_disconnect();
-        }
+        $this->close();
     }
 
     /**
@@ -97,7 +95,17 @@ abstract class AbstractConnection implements ConnectionInterface, ConnectionCons
     {
         if ($this->_connection !== null) {
             $this->_disconnect();
+            $this->_connection = null;
         }
+    }
+
+    /**
+     * @since 1.8.8
+     * @return bool
+     */
+    public function isClosed()
+    {
+        return ($this->_connection == null) ;
     }
 
     /**

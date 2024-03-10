@@ -3,7 +3,7 @@
  * @author     Loic Mathaud
  * @contributor Laurent Jouanneau
  *
- * @copyright  2006 Loic Mathaud, 2007-2023 Laurent Jouanneau
+ * @copyright  2006 Loic Mathaud, 2007-2024 Laurent Jouanneau
  *
  * @see      https://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -57,7 +57,7 @@ class Connection extends AbstractConnection
     {
         $res = $this->_connection->prepare($query);
         if ($res) {
-            $rs = new ResultSet(null, $res);
+            $rs = new ResultSet(null, $res, $this);
         } else {
             throw new Exception('invalid query: '.$this->_connection->error.'('.$query.')', 403);
         }
@@ -115,14 +115,14 @@ class Connection extends AbstractConnection
     protected function _doQuery($query)
     {
         if ($qI = $this->_connection->query($query)) {
-            return new ResultSet($qI);
+            return new ResultSet($qI, null, $this);
         }
         throw new Exception('invalid query: '.$this->_connection->lastErrorMsg().' ('.$query.')', 403);
     }
 
     protected function _doExec($query)
     {
-        if ($qI = $this->_connection->exec($query)) {
+        if ($this->_connection->exec($query)) {
             return $this->_connection->changes();
         }
 

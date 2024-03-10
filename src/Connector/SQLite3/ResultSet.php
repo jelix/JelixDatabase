@@ -3,7 +3,7 @@
  * @author     Loic Mathaud
  * @contributor Laurent Jouanneau
  *
- * @copyright  2006 Loic Mathaud, 2008-2023 Laurent Jouanneau
+ * @copyright  2006 Loic Mathaud, 2008-2024 Laurent Jouanneau
  *
  * @see      http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -29,6 +29,11 @@ class ResultSet extends AbstractResultSet
     protected $_idResult;
 
     /**
+     * @var Connection
+     */
+    protected $_conn;
+
+    /**
      * number of rows.
      */
     protected $numRows = 0;
@@ -46,15 +51,16 @@ class ResultSet extends AbstractResultSet
      */
     protected $buffer = array();
 
-
     /**
-     * @param \SQLite3Result $result
-     * @param \SQLite3Stmt   $stmt
+     * @param \SQLite3Result|null $result
+     * @param \SQLite3Stmt|null   $stmt
+     * @param Connection
      */
-    public function __construct($result, $stmt = null)
+    public function __construct($result, $stmt, $conn)
     {
         parent::__construct($result);
         $this->_stmt = $stmt;
+        $this->_conn = $conn;
     }
 
     protected function _fetch()
@@ -100,7 +106,12 @@ class ResultSet extends AbstractResultSet
         $this->numRows = 0;
         $this->buffer = array();
         $this->ended = false;
-        $this->_idResult->finalize();
+        // finalize may lead to an error if connection has been closed before
+        // the resultset object destruction.
+        if ($this->_conn && !$this->_conn->isClosed()) {
+            $this->_idResult->finalize();
+        }
+        $this->_conn = null;
     }
 
     protected function _rewind()

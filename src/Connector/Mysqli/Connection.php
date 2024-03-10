@@ -6,7 +6,7 @@
  * @contributor Sylvain de Vathaire, Julien Issler
  * @contributor Florian Lonqueu-Brochard
  *
- * @copyright  2001-2005 CopixTeam, 2005-2023 Laurent Jouanneau, 2009 Julien Issler, 2012 Florian Lonqueu-Brochard
+ * @copyright  2001-2005 CopixTeam, 2005-2024 Laurent Jouanneau, 2009 Julien Issler, 2012 Florian Lonqueu-Brochard
  *
  * @see      https://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -155,7 +155,7 @@ class Connection extends AbstractConnection
 
     protected function _doExec($query)
     {
-        if ($qI = $this->_connection->query($query)) {
+        if ($this->_connection->query($query)) {
             return $this->_connection->affected_rows;
         }
 
