@@ -11,20 +11,21 @@ namespace Jelix\Database\Schema\Mysql;
 use Jelix\Database\Schema\AbstractSchema;
 use Jelix\Database\Schema\Column;
 use Jelix\Database\Schema\Exception;
+use Jelix\Database\Schema\TableNameInterface;
 
 /**
  */
 class Schema extends AbstractSchema
 {
     /**
-     * @param string          $name
+     * @param TableNameInterface          $name
      * @param Column[]     $columns
      * @param string|string[] $primaryKey  names of columns that represents primary keys
      * @param mixed           $attributes
      *
      * @return Table
      */
-    public function _createTable($name, $columns, $primaryKey, $attributes = array())
+    public function _createTable(TableNameInterface $name, $columns, $primaryKey, $attributes = array())
     {
         $sql = $this->_createTableQuery($name, $columns, $primaryKey, $attributes);
 

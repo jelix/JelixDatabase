@@ -50,7 +50,7 @@ class Table extends AbstractTable
                          WHERE UCCM.TABLE_NAME = UTC.TABLE_NAME
                          AND UCCM.COLUMN_NAME = UTC.COLUMN_NAME) AS COLUMN_COMMENT
                     FROM USER_TAB_COLUMNS UTC 
-                    WHERE UTC.TABLE_NAME = \''.strtoupper($this->name).'\'';
+                    WHERE UTC.TABLE_NAME = \''.strtoupper($this->tableName->getTableName()).'\'';
 
         $rs = $conn->query($query);
         $tools = new SQLTools($conn);
@@ -87,7 +87,7 @@ class Table extends AbstractTable
 
             // FIXME, retrieve autoincrement property for other field than primary key
             if ($isPrimary) {
-                $sequence = $this->_getAISequenceName($this->name, $name);
+                $sequence = $this->_getAISequenceName($this->tableName->getTableName(), $name);
                 if ($sequence != '') {
                     $sqlai = "SELECT 'Y' FROM USER_SEQUENCES US
                                 WHERE US.SEQUENCE_NAME = '".$sequence."'";

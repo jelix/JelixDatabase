@@ -37,7 +37,7 @@ class Table extends AbstractTable
         $conn = $this->schema->getConn();
         $this->columns = array();
         $this->primaryKey = null;
-        $sql = 'PRAGMA table_info('.$conn->quote($this->name).')';
+        $sql = 'PRAGMA table_info('.$conn->quote($this->tableName->getTableName()).')';
         $rs = $conn->query($sql);
         $tools = $conn->tools();
         $this->primaryKey = false;
@@ -264,7 +264,7 @@ class Table extends AbstractTable
         $pk = $this->getPrimaryKey();
         $isPk = ($pk && in_array($new->name, $pk->columns));
         $isSinglePk = $isPk && count($pk->columns) == 1;
-        $sql = 'ALTER TABLE '.$conn->encloseName($this->name)
+        $sql = 'ALTER TABLE '.$this->tableName->getEnclosedFullName()
             .' ADD COLUMN '.$this->schema->prepareSqlColumn($new, $isPk, $isSinglePk);
         $conn->exec($sql);
     }
@@ -333,7 +333,7 @@ class Table extends AbstractTable
         // constraint name in CREATE TABLE)
 
         $sql = 'SELECT name, sql FROM sqlite_master 
-                WHERE tbl_name = '.$conn->quote($this->name).' AND sql IS NOT NULL';
+                WHERE tbl_name = '.$conn->quote($this->tableName->getTableName()).' AND sql IS NOT NULL';
         $rs = $conn->query($sql);
         while ($rec = $rs->fetch()) {
             if (isset($rec->type)) {
@@ -365,7 +365,7 @@ class Table extends AbstractTable
                         if ($m[1]) {
                             $name = $m[1];
                         } else {
-                            $name = $this->name.'_'.$column.'_unique';
+                            $name = $this->tableName->getTableName().'_'.$column.'_unique';
                         }
                         $this->uniqueKeys[$name] = new UniqueKey($name, $column);
                     }
@@ -376,7 +376,7 @@ class Table extends AbstractTable
                         if ($m[1]) {
                             $name = $m[1];
                         } else {
-                            $name = $this->name.'_'.implode('_', $columns).'_unique';
+                            $name = $this->tableName->getTableName().'_'.implode('_', $columns).'_unique';
                         }
 
                         $this->uniqueKeys[$name] = new UniqueKey($name, $columns);
@@ -385,7 +385,7 @@ class Table extends AbstractTable
                         $ref->columns = $this->_splitColumnsName($m[2]);
                         $ref->fTable = $m[3];
                         $ref->fColumns = $this->_splitColumnsName($m[4]);
-                        $ref->name = ($m[1] != '' ? $m[1] : $this->name.'_'.implode('_', $ref->columns).'_fkey');
+                        $ref->name = ($m[1] != '' ? $m[1] : $this->tableName->getTableName().'_'.implode('_', $ref->columns).'_fkey');
                         $this->references[$ref->name] = $ref;
                         if (preg_match('/ON\s+DELETE\s+([^,)])/msi', $m[5], $m2)) {
                             $ref->onDelete = trim($m2[1]);
@@ -399,7 +399,7 @@ class Table extends AbstractTable
         }
 
         // retrieve unicity of indexes
-        $sql = 'PRAGMA index_list('.$conn->quote($this->name).')';
+        $sql = 'PRAGMA index_list('.$conn->quote($this->tableName->getTableName()).')';
         $rs = $conn->query($sql);
         while ($indexRec = $rs->fetch()) {
             if (isset($this->indexes[$indexRec->name])) {
@@ -429,7 +429,7 @@ class Table extends AbstractTable
             $sql .= 'UNIQUE ';
         }
         $sql .= 'INDEX '.$conn->encloseName($index->name).
-            ' ON '.$conn->encloseName($this->name).
+            ' ON '.$this->tableName->getEnclosedFullName().
             ' ('.$conn->tools()->getSQLColumnsList($index->columns).')';
         $conn->exec($sql);
     }

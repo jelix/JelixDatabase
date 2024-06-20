@@ -9,14 +9,15 @@
 namespace Jelix\Database\Schema\Sqlserver;
 
 use Jelix\Database\Schema\AbstractSchema;
+use Jelix\Database\Schema\TableNameInterface;
 
 /**
  */
 class Schema extends AbstractSchema
 {
-    protected function _createTable($name, $columns, $primaryKeys, $attributes = array())
+    protected function _createTable(TableNameInterface $name, $columns, $primaryKey, $attributes = array())
     {
-        $sql = $this->_createTableQuery($name, $columns, $primaryKeys, $attributes);
+        $sql = $this->_createTableQuery($name, $columns, $primaryKey, $attributes);
 
         $this->conn->exec($sql);
 
