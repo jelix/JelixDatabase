@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2020-2023 Laurent Jouanneau
+ * @copyright   2020-2024 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -46,7 +46,6 @@ interface ConnectionInterface
     public function getDriverName();
 
     public function getLastQuery();
-
 
     public function setQueryLogger(Log\QueryLoggerInterface $logger);
 
@@ -259,6 +258,15 @@ interface ConnectionInterface
      * @return int the maximum value
      */
     public function lastIdInTable($fieldName, $tableName);
+
+    /**
+     * Indicate the default schema used for the user of the connection.
+     *
+     * For connector that don't support schema, return an empty name
+     *
+     * @return string the schema name
+     */
+    public function getDefaultSchemaName();
 
     /**
      * @return SqlToolsInterface

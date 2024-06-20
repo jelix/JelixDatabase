@@ -7,7 +7,7 @@
  * @contributor Julien Issler
  * @contributor Alexandre Zanelli
  *
- * @copyright  2001-2005 CopixTeam, 2005-2023 Laurent Jouanneau, 2007-2008 Laurent Raufaste, 2009 Julien Issler
+ * @copyright  2001-2005 CopixTeam, 2005-2024 Laurent Jouanneau, 2007-2008 Laurent Raufaste, 2009 Julien Issler
  *
  * @see      https://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -258,6 +258,16 @@ class Connection extends AbstractConnection
         trigger_error(get_class($this).'::lastInstertId invalide sequence name', E_USER_WARNING);
 
         return false;
+    }
+
+    protected $defaultSchemaName = null;
+
+    public function getDefaultSchemaName()
+    {
+        if ($this->defaultSchemaName === null) {
+            $this->defaultSchemaName = $this->tools()->getDefaultSchemaName($this);
+        }
+        return $this->defaultSchemaName;
     }
 
     protected function _autoCommitNotify($state)
