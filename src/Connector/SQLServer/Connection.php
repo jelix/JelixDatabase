@@ -12,6 +12,8 @@ namespace Jelix\Database\Connector\SQLServer;
 
 use Jelix\Database\AbstractConnection;
 use Jelix\Database\Exception;
+use Jelix\Database\Schema\Sqlserver\TableName;
+use Jelix\Database\Schema\TableNameInterface;
 
 /**
  *
@@ -282,5 +284,10 @@ class Connection extends AbstractConnection
     protected function _getSchema()
     {
         return new \Jelix\Database\Schema\Sqlserver\Schema($this);
+    }
+
+    public function createTableName(string $name, $schema='') : TableNameInterface
+    {
+        return new TableName($name, $schema);
     }
 }

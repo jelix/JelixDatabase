@@ -236,11 +236,11 @@ abstract class AbstractSqlTools implements SqlToolsInterface
     }
 
     /**
-     * Enclose the field name.
+     * Enclose a field name or a table name.
      *
-     * @param string $fieldName the field name
+     * @param string $fieldName the field/table name
      *
-     * @return string the enclosed field name
+     * @return string the enclosed name
      *
      */
     public function encloseName($fieldName)

@@ -12,6 +12,8 @@ namespace Jelix\Database\Connector\SQLite3;
 
 use Jelix\Database\AbstractConnection;
 use Jelix\Database\Exception;
+use Jelix\Database\Schema\Sqlite\TableName;
+use Jelix\Database\Schema\TableNameInterface;
 
 /**
  */
@@ -199,5 +201,11 @@ class Connection extends AbstractConnection
     protected function _getSchema()
     {
         return new \Jelix\Database\Schema\Sqlite\Schema($this);
+    }
+
+
+    public function createTableName(string $name, $schema='') : TableNameInterface
+    {
+        return new TableName($name, $schema);
     }
 }

@@ -16,6 +16,8 @@ namespace Jelix\Database\Connector\Postgresql;
 
 use Jelix\Database\AbstractConnection;
 use Jelix\Database\Exception;
+use Jelix\Database\Schema\Postgresql\TableName;
+use Jelix\Database\Schema\TableNameInterface;
 
 /**
  */
@@ -333,4 +335,8 @@ class Connection extends AbstractConnection
         return array('public');
     }
 
+    public function createTableName(string $name, $schema='') : TableNameInterface
+    {
+        return new TableName($name, $schema);
+    }
 }
