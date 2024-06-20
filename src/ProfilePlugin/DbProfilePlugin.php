@@ -14,7 +14,10 @@ use \Jelix\Database\AccessParameters;
 
 
 /**
- * Plugin to be used with \Jelix\Profiles\ProfilesReader
+ * Plugin to be used with \Jelix\Profiles\ProfilesReader.
+ *
+ * You may want to inherit from this class to have a better integration into
+ * your application or framework.
  */
 class DbProfilePlugin extends ReaderPlugin implements ProfileInstancePluginInterface
 {
@@ -25,6 +28,9 @@ class DbProfilePlugin extends ReaderPlugin implements ProfileInstancePluginInter
 
     protected $pgTimeouts = array();
 
+    /**
+     * @var array list of options for AccessParameters. Should be filled by a child class.
+     */
     protected $accessOptions = array();
 
     protected function consolidate($profile)
