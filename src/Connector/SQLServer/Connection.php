@@ -3,7 +3,7 @@
  * @author     Yann Lecommandoux
  * @contributor Laurent Jouanneau, Louis S.
  *
- * @copyright  2008 Yann Lecommandoux, 2011-2023 Laurent Jouanneau, Louis S.
+ * @copyright  2008 Yann Lecommandoux, 2011-2024 Laurent Jouanneau, Louis S.
  *
  * @see     https://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -222,8 +222,8 @@ class Connection extends AbstractConnection
     {
         $queryString = 'SELECT @@IDENTITY AS id';
         $result = $this->_doQuery($queryString);
-        if ($result) {
-            return $result->id;
+        if ($result && $rec = $result->fetch()) {
+            return $rec->id;
         }
 
         return null;
