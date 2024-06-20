@@ -25,7 +25,7 @@ interface SchemaInterface
     /**
      * create the given table if it does not exist.
      *
-     * @param string          $name       the unprefixed table name
+     * @param string       $name       the unprefixed table name
      * @param Column[]     $columns    list of columns
      * @param string|string[] $primaryKey the name of the column which contains the primary key
      * @param array           $attributes some table attributes specific to the database
@@ -62,7 +62,7 @@ interface SchemaInterface
     public function renameTable($oldName, $newName);
 
     /**
-     * fill correctly some properties of the column, depending of its type
+     * fill correctly some properties of the column, depending on its type
      * and other properties.
      *
      * @param Column $col

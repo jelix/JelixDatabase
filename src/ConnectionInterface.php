@@ -12,6 +12,7 @@ namespace Jelix\Database;
 use Jelix\Database\Schema\SchemaInterface;
 use Jelix\Database\Schema\SqlToolsInterface;
 use Psr\Log\LoggerInterface;
+use Jelix\Database\Schema\TableNameInterface;
 
 interface ConnectionInterface
 {
@@ -111,14 +112,13 @@ interface ConnectionInterface
      * Prefix the given table with the prefix specified in the connection's profile
      * If there's no prefix for the connection's profile, return the table's name unchanged.
      *
-     * @param string $table      the table's name
-     * @param mixed  $table_name
+     * @param string $tableName      the table's name
      *
      * @return string the prefixed table's name
      *
      * @author Julien Issler
      */
-    public function prefixTable($table_name);
+    public function prefixTable($tableName);
 
     /**
      * Remove the prefix of the given table name.
@@ -142,6 +142,34 @@ interface ConnectionInterface
      * @return string
      */
     public function getTablePrefix();
+
+    /**
+     * Create a TableNameInterface name tied to the type of database server
+     *
+     * @param string $name
+     * @param string $schema
+     * @return TableNameInterface
+     */
+    public function createTableName(string $name, $schema='') : TableNameInterface;
+
+    /**
+     * Prefix the given table with the prefix specified in the connection's profile
+     * If there's no prefix for the connection's profile, return the table's name unchanged.
+     *
+     * @param TableNameInterface $tableName      the table's name
+     *
+     * @return TableNameInterface a new instance of TableNameInterface with the prefixed name
+     */
+    public function prefixTableName(TableNameInterface $tableName) : TableNameInterface;
+
+    /**
+     * Remove the prefix of the given table name.
+     *
+     * @param TableNameInterface $tableName
+     *
+     * @return TableNameInterface a new instance of TableNameInterface with the unprefixed name
+     */
+    public function unprefixTableName(TableNameInterface $tableName) : TableNameInterface;
 
     /**
      * sets the autocommit state.

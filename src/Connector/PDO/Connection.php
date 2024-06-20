@@ -16,6 +16,7 @@ use Psr\Log\LoggerInterface;
 use Jelix\Database\Exception;
 
 use \Jelix\Database\Connection as ConnectionFactory;
+use Jelix\Database\Schema\TableNameInterface;
 
 /**
  * A connection object based on PDO.
@@ -395,6 +396,31 @@ class Connection extends AbstractConnection
                 break;
             case ConnectionFactory::DB_TYPE_ORACLE:
                 $schema = new \Jelix\Database\Schema\Oci\Schema($this);
+                break;
+            default:
+                $schema = null;
+                throw new Exception("not implemented");
+        }
+        return $schema;
+    }
+
+    public function createTableName(string $name, $schema='') : TableNameInterface
+    {
+        switch ($this->_profile['dbtype']) {
+            case ConnectionFactory::DB_TYPE_MYSQL:
+                $schema = new \Jelix\Database\Schema\Mysql\TableName($name, $schema);
+                break;
+            case ConnectionFactory::DB_TYPE_PGSQL:
+                $schema = new \Jelix\Database\Schema\Postgresql\TableName($name, $schema);
+                break;
+            case ConnectionFactory::DB_TYPE_SQLITE:
+                $schema = new \Jelix\Database\Schema\Sqlite\TableName($name, $schema);
+                break;
+            case ConnectionFactory::DB_TYPE_SQLSERVER:
+                $schema = new \Jelix\Database\Schema\Sqlserver\TableName($name, $schema);
+                break;
+            case ConnectionFactory::DB_TYPE_ORACLE:
+                $schema = new \Jelix\Database\Schema\Oci\TableName($name, $schema);
                 break;
             default:
                 $schema = null;
