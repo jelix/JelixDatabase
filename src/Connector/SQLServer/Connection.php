@@ -234,6 +234,23 @@ class Connection extends AbstractConnection
         return null;
     }
 
+    protected $defaultSchemaName = null;
+
+    public function getDefaultSchemaName()
+    {
+        if ($this->defaultSchemaName === null) {
+            $queryString = 'SELECT SCHEMA_NAME() as name';
+            $result = $this->_doQuery($queryString);
+            if ($result && $rec = $result->fetch()) {
+                $this->defaultSchemaName = $rec->name;
+            }
+            else {
+                $this->defaultSchemaName = '';
+            }
+        }
+        return $this->defaultSchemaName;
+    }
+
     /**
      * @param mixed $query
      */

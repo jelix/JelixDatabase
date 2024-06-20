@@ -11,6 +11,7 @@
 namespace Jelix\Database\Connector\PDO;
 
 use Jelix\Database\AbstractConnection;
+use Jelix\Database\Schema\Postgresql\SQLTools;
 use Jelix\Database\Schema\SchemaInterface;
 use Psr\Log\LoggerInterface;
 use Jelix\Database\Exception;
@@ -427,5 +428,21 @@ class Connection extends AbstractConnection
                 throw new Exception("not implemented");
         }
         return $schema;
+    }
+
+    public function getDefaultSchemaName()
+    {
+        if ($this->_profile['dbtype'] == ConnectionFactory::DB_TYPE_PGSQL) {
+            $tools = new SQLTools();
+            return $tools->getDefaultSchemaName($this);
+        }
+        elseif ($this->_profile['dbtype'] == ConnectionFactory::DB_TYPE_SQLSERVER) {
+            $queryString = 'SELECT SCHEMA_NAME() as name';
+            $result = $this->_doQuery($queryString);
+            if ($result && $rec = $result->fetch()) {
+                return $rec->name;
+            }
+        }
+        return '';
     }
 }

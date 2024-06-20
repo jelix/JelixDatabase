@@ -258,6 +258,16 @@ class Connection extends AbstractConnection
         return false;
     }
 
+    protected $defaultSchemaName = null;
+
+    public function getDefaultSchemaName()
+    {
+        if ($this->defaultSchemaName === null) {
+            $this->defaultSchemaName = $this->tools()->getDefaultSchemaName($this);
+        }
+        return $this->defaultSchemaName;
+    }
+
     protected function _autoCommitNotify($state)
     {
         if (version_compare(pg_parameter_status($this->_connection, 'server_version'), '7.4') < 0) {

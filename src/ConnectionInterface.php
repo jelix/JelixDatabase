@@ -44,6 +44,12 @@ interface ConnectionInterface
      */
     public function getSQLType();
 
+
+    public function getDriverName();
+
+    public function getLastQuery();
+
+
     /**
      * Launch a SQL Query which returns rows (typically, a SELECT statement).
      *
@@ -251,6 +257,15 @@ interface ConnectionInterface
      * @return int the maximum value
      */
     public function lastIdInTable($fieldName, $tableName);
+
+    /**
+     * Indicate the default schema used for the user of the connection.
+     *
+     * For connectors that don't support schema, return an empty name
+     *
+     * @return string the schema name
+     */
+    public function getDefaultSchemaName();
 
     /**
      * @return SqlToolsInterface

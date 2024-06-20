@@ -464,6 +464,18 @@ abstract class AbstractConnection implements ConnectionInterface, ConnectionCons
     }
 
     /**
+     * Indicate the default schema used for the user of the connection.
+     *
+     * For connectors that don't support schema, return an empty name
+     *
+     * @return string the schema name
+     */
+    public function getDefaultSchemaName()
+    {
+        return '';
+    }
+
+    /**
      * Notify the changes on autocommit
      * Drivers may overload this.
      *
