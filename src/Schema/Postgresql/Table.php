@@ -52,7 +52,7 @@ class Table extends AbstractTable
                 ON (co.conrelid = c.oid AND a.attnum = ANY(co.conkey) AND co.contype = 'p')
             LEFT OUTER JOIN pg_attrdef AS d
                 ON (d.adrelid = c.oid AND d.adnum = a.attnum)
-            WHERE a.attnum > 0 AND c.relname = ".$conn->quote($this->name).
+            WHERE a.attnum > 0 AND c.relname = ".$conn->quote($this->tableName->getTableName()).
             ' AND c.relnamespace IN ( SELECT oid FROM pg_namespace WHERE nspname ILIKE ANY (array['.$schemas.']))
              ORDER BY a.attnum';
         $rs = $conn->query($sql);
@@ -123,7 +123,7 @@ class Table extends AbstractTable
         $conn = $this->schema->getConn();
         $tools = $conn->tools();
         if ($new->name != $old->name) {
-            $conn->exec('ALTER TABLE '.$conn->encloseName($this->name).
+            $conn->exec('ALTER TABLE '.$this->tableName->getEnclosedFullName().
                 ' RENAME COLUMN '.$conn->encloseName($old->name).
                 ' TO '.$conn->encloseName($new->name));
         }
@@ -135,7 +135,7 @@ class Table extends AbstractTable
         ) {
             $typeInfo = $tools->getTypeInfo($new->type);
 
-            $sql = 'ALTER TABLE '.$conn->encloseName($this->name).
+            $sql = 'ALTER TABLE '.$this->tableName->getEnclosedFullName().
                 ' ALTER COLUMN '.$conn->encloseName($new->name).
                 ' TYPE '.$typeInfo[0];
             if ($new->precision) {
@@ -152,18 +152,18 @@ class Table extends AbstractTable
 
         if ($new->hasDefault !== $old->hasDefault) {
             if ($new->hasDefault && $new->default !== null) {
-                $sql = 'ALTER TABLE '.$conn->encloseName($this->name).
+                $sql = 'ALTER TABLE '.$this->tableName->getEnclosedFullName().
                     ' ALTER COLUMN '.$conn->encloseName($new->name).
                     ' SET DEFAULT '.$new->default;
                 $conn->exec($sql);
             } else {
-                $sql = 'ALTER TABLE '.$conn->encloseName($this->name).
+                $sql = 'ALTER TABLE '.$this->tableName->getEnclosedFullName().
                     ' ALTER COLUMN '.$conn->encloseName($new->name).
                     ' DROP DEFAULT';
                 $conn->exec($sql);
             }
         } elseif ($new->hasDefault && $new->default !== null && $new->default != $old->default) {
-            $sql = 'ALTER TABLE '.$conn->encloseName($this->name).
+            $sql = 'ALTER TABLE '.$this->tableName->getEnclosedFullName().
                 ' ALTER COLUMN '.$conn->encloseName($new->name).
                 ' SET DEFAULT '.$new->default;
             $conn->exec($sql);
@@ -171,12 +171,12 @@ class Table extends AbstractTable
 
         if ($new->notNull != $old->notNull) {
             if ($new->notNull) {
-                $sql = 'ALTER TABLE '.$conn->encloseName($this->name).
+                $sql = 'ALTER TABLE '.$this->tableName->getEnclosedFullName().
                     ' ALTER COLUMN '.$conn->encloseName($new->name).
                     ' SET NOT NULL ';
                 $conn->exec($sql);
             } else {
-                $sql = 'ALTER TABLE '.$conn->encloseName($this->name).
+                $sql = 'ALTER TABLE '.$this->tableName->getEnclosedFullName().
                     ' ALTER COLUMN '.$conn->encloseName($new->name).
                     ' DROP NOT NULL ';
                 $conn->exec($sql);
@@ -187,7 +187,7 @@ class Table extends AbstractTable
     protected function _addColumn(Column $new)
     {
         $conn = $this->schema->getConn();
-        $sql = 'ALTER TABLE '.$conn->encloseName($this->name).
+        $sql = 'ALTER TABLE '.$this->tableName->getEnclosedFullName().
             ' ADD COLUMN '.$this->schema->prepareSqlColumn($new);
         $conn->exec($sql);
     }
@@ -329,7 +329,7 @@ class Table extends AbstractTable
     {
         $conn = $this->schema->getConn();
         $tools = $conn->tools();
-        $sql = 'ALTER TABLE '.$conn->encloseName($this->name).
+        $sql = 'ALTER TABLE '.$this->tableName->getEnclosedFullName().
             ' ADD CONSTRAINT '.$conn->encloseName($constraint->name);
         if ($constraint instanceof PrimaryKey) {
             $sql .= ' PRIMARY KEY ('.$tools->getSQLColumnsList($constraint->columns).')';
@@ -346,7 +346,7 @@ class Table extends AbstractTable
     protected function _dropConstraint(AbstractConstraint $constraint)
     {
         $conn = $this->schema->getConn();
-        $sql = 'ALTER TABLE '.$conn->encloseName($this->name).
+        $sql = 'ALTER TABLE '.$this->tableName->getEnclosedFullName().
             ' DROP CONSTRAINT IF EXISTS '.$conn->encloseName($constraint->name);
         $conn->exec($sql);
     }

@@ -36,7 +36,7 @@ class Table extends AbstractTable
         $conn = $this->schema->getConn();
         $tools = $conn->tools();
 
-        $sql = 'exec sp_columns @table_name = '.$conn->encloseName($this->name);
+        $sql = 'exec sp_columns @table_name = '.$conn->encloseName($this->tableName->getTableName());
         $rs = $conn->query($sql);
         $tableOwner = null;
         while ($line = $rs->fetch()) {
@@ -82,7 +82,7 @@ class Table extends AbstractTable
 
         // get primary key info
         $sql = 'exec sp_pkeys @table_owner = '.$tableOwner.', @table_name = '.
-            $conn->encloseName($this->name);
+            $conn->encloseName($this->tableName->getTableName());
         $rs = $conn->query($sql);
         while ($line = $rs->fetch()) {
             if (!$this->primaryKey) {

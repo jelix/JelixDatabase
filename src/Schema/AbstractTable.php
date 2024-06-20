@@ -1,7 +1,7 @@
 <?php
 /**
  * @author     Laurent Jouanneau
- * @copyright  2010-2023 Laurent Jouanneau
+ * @copyright  2010-2024 Laurent Jouanneau
  *
  * @see        https://jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -11,9 +11,9 @@ namespace Jelix\Database\Schema;
 abstract class AbstractTable implements TableInterface
 {
     /**
-     * @var string the name of the table
+     * @var TableNameInterface the name of the table
      */
-    protected $name;
+    protected $tableName;
 
     /**
      * @var AbstractSchema the schema which holds the table
@@ -47,18 +47,23 @@ abstract class AbstractTable implements TableInterface
 
     public $attributes = array();
     /**
-     * @param string    $name   the table name
+     * @param TableNameInterface    $name   the table name
      * @param SchemaInterface $schema
      */
-    public function __construct($name, SchemaInterface $schema)
+    public function __construct(TableNameInterface $name, SchemaInterface $schema)
     {
-        $this->name = $name;
+        $this->tableName = $name;
         $this->schema = $schema;
     }
 
     public function getName()
     {
-        return $this->name;
+        return $this->tableName->getTableName();
+    }
+
+    public function getTableName()
+    {
+        return $this->tableName;
     }
 
     /**
@@ -350,7 +355,7 @@ abstract class AbstractTable implements TableInterface
     public function addReference(Reference $reference)
     {
         if (trim($reference->name) == '') {
-            $reference->name = $this->name.'_'.implode('_', $reference->columns).'_fkey';
+            $reference->name = $this->tableName->getTableName().'_'.implode('_', $reference->columns).'_fkey';
         }
         $this->alterReference($reference);
     }
@@ -392,7 +397,7 @@ abstract class AbstractTable implements TableInterface
     protected function _dropColumn(Column $col)
     {
         $conn = $this->schema->getConn();
-        $sql = 'ALTER TABLE '.$conn->encloseName($this->name).
+        $sql = 'ALTER TABLE '.$this->tableName->getEnclosedFullName().
             ' DROP COLUMN '.$conn->encloseName($col->name);
         $conn->exec($sql);
     }

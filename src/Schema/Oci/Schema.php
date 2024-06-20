@@ -11,12 +11,13 @@
 namespace Jelix\Database\Schema\Oci;
 
 use Jelix\Database\Schema\AbstractSchema;
+use Jelix\Database\Schema\TableNameInterface;
 
 /**
  */
 class Schema extends AbstractSchema
 {
-    protected function _createTable($name, $columns, $primaryKey, $attributes = array())
+    protected function _createTable(TableNameInterface $name, $columns, $primaryKey, $attributes = array())
     {
         $sql = $this->_createTableQuery($name, $columns, $primaryKey, $attributes);
 

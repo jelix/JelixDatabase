@@ -10,18 +10,19 @@
 namespace Jelix\Database\Schema\Postgresql;
 
 use Jelix\Database\Schema\AbstractSchema;
+use Jelix\Database\Schema\TableNameInterface;
 
 /**
  */
 class Schema extends AbstractSchema
 {
     /**
-     * @param mixed $name
+     * @param TableNameInterface $name
      * @param mixed $columns
      * @param mixed $primaryKey
      * @param mixed $attributes
      */
-    public function _createTable($name, $columns, $primaryKey, $attributes = array())
+    public function _createTable(TableNameInterface $name, $columns, $primaryKey, $attributes = array())
     {
         $sql = $this->_createTableQuery($name, $columns, $primaryKey, $attributes);
 
