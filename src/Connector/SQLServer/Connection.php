@@ -225,8 +225,8 @@ class Connection extends AbstractConnection
     {
         $queryString = 'SELECT @@IDENTITY AS id';
         $result = $this->_doQuery($queryString);
-        if ($result) {
-            return $result->id;
+        if ($result && $rec = $result->fetch()) {
+            return $rec->id;
         }
 
         return null;
