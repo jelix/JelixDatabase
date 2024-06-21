@@ -32,16 +32,17 @@ class Schema extends AbstractSchema
         $results = array();
 
         $rs = $this->conn->query('SELECT name FROM sqlite_master WHERE type="table"');
+        $prefix = $this->conn->getTablePrefix();
 
         while ($line = $rs->fetch()) {
             $unpName = $this->conn->unprefixTable($line->name);
-            $results[$unpName] = new Table($line->name, $this);
+            $results[$unpName] = new Table(new TableName($unpName, '', $prefix), $this);
         }
 
         return $results;
     }
 
-    protected function _getTableInstance($name)
+    protected function _getTableInstance(TableNameInterface $name)
     {
         return new Table($name, $this);
     }
@@ -77,13 +78,13 @@ class Schema extends AbstractSchema
     ) {
         $conn = $this->getConn();
 
-        $tmpName = $conn->unprefixTable($table->getName()).'_tmp';
+        $tmpName = $table->getTableName()->getTableName().'_tmp';
         $count = 0;
         while ($this->getTable($tmpName.$count) !== null) {
             ++$count;
         }
         $tmpName .= $count;
-        $tmpName = $this->conn->prefixTable($tmpName);
+        $tmpTableName = $conn->createTableName($tmpName);
 
         $conn->beginTransaction();
 
@@ -100,11 +101,11 @@ class Schema extends AbstractSchema
 
             $sql = 'INSERT INTO '.$conn->encloseName($tmpName).'('.
                 $sqlNewTableColumns.') SELECT '.$sqlOldTableColumns.
-                ' FROM '.$conn->encloseName($table->getName());
+                ' FROM '.$table->getTableName()->getEnclosedFullName();
             $conn->exec($sql);
 
-            $this->_dropTable($table->getName());
-            $this->_renameTable($tmpName, $table->getName());
+            $this->_dropTable($table->getTableName());
+            $this->_renameTable($tmpTableName, $table->getTableName());
             $conn->commit();
 
             if ($newIndexes !== null) {
@@ -118,7 +119,7 @@ class Schema extends AbstractSchema
                     $sql .= 'UNIQUE ';
                 }
                 $sql .= 'INDEX '.$conn->encloseName($index->name).
-                    ' ON '.$conn->encloseName($table->getName()).
+                    ' ON '.$table->getTableName()->getEnclosedFullName().
                     ' ('.$conn->tools()->getSQLColumnsList($index->columns).')';
                 $conn->exec($sql);
             }

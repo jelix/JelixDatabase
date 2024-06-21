@@ -11,6 +11,7 @@ namespace Jelix\Database\Schema;
 abstract class TableName implements TableNameInterface
 {
 
+    protected $tablePrefix = '';
     protected $tableName = '';
 
     protected $schemaName = '';
@@ -20,8 +21,12 @@ abstract class TableName implements TableNameInterface
     protected $encloseCharacterLeft = '';
     protected $encloseCharacterRight = '';
 
-
-    public function __construct($name, $schemaName = '')
+    /**
+     * @param string $name table name without prefix
+     * @param string $schemaName
+     * @param string $prefix
+     */
+    public function __construct($name, $schemaName = '', $prefix= '')
     {
         if (strpos($name, '.') !== false) {
             // we get only two last element.
@@ -39,6 +44,12 @@ abstract class TableName implements TableNameInterface
         if ($this->supportSchema) {
             $this->schemaName = $schemaName;
         }
+        $this->tablePrefix = $prefix;
+    }
+
+    public function getRealTableName()
+    {
+        return $this->tablePrefix.$this->tableName;
     }
 
     public function getTableName()
@@ -54,7 +65,7 @@ abstract class TableName implements TableNameInterface
     public function getFullName()
     {
         if ($this->schemaName) {
-            return $this->schemaName.'.'.$this->tableName;
+            return $this->schemaName.'.'.$this->tablePrefix.$this->tableName;
         }
         return $this->tableName;
     }
@@ -64,8 +75,13 @@ abstract class TableName implements TableNameInterface
         $cl = $this->encloseCharacterLeft;
         $cr = $this->encloseCharacterRight;
         if ($this->schemaName) {
-            return $cl.$this->schemaName.$cr.'.'.$cl.$this->tableName.$cr;
+            return $cl.$this->schemaName.$cr.'.'.$cl.$this->tablePrefix.$this->tableName.$cr;
         }
         return $cl.$this->tableName.$cr;
+    }
+
+    public function getPrefix()
+    {
+        return $this->tablePrefix;
     }
 }

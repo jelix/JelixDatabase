@@ -308,8 +308,8 @@ class Connection extends AbstractConnection
         return new \Jelix\Database\Schema\Sqlserver\Schema($this);
     }
 
-    public function createTableName(string $name, $schema='') : TableNameInterface
+    public function createTableName(string $name) : TableNameInterface
     {
-        return new TableName($name, $schema);
+        return new TableName($name, $this->getDefaultSchemaName(), $this->getTablePrefix());
     }
 }

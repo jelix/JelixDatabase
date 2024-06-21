@@ -461,14 +461,14 @@ class SQLTools extends \Jelix\Database\Schema\AbstractSqlTools
         $queryString = 'show search_path';
         $result = $conn->query($queryString);
         if ($result) {
-            $schemasList = preg_split('/\s*,\s*/', $result->fetch()->search_path);
+            $schemasList = preg_split('/\"?\s*,\s*\"?/', trim($result->fetch()->search_path, " \t\n\r\0\x0B\""));
             if (count($schemasList)) {
                 // we take the first existing schema from the list indicated into the search_path
                 foreach($schemasList as $schema) {
-                    if ($schema == '"$user"') {
+                    if ($schema == '$user') {
                         $resUser = $conn->query('SELECT CURRENT_USER');
                         if ($resUser && ($user = $resUser->fetch())) {
-                            $schema = $user;
+                            $schema = $user->current_user;
                         }
                         else {
                             continue;

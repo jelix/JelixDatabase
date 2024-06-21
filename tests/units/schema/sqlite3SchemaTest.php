@@ -13,6 +13,7 @@ use \Jelix\Database\Schema\UniqueKey;
 use \Jelix\Database\Schema\Reference;
 use \Jelix\Database\Schema\Index;
 use \Jelix\Database\Schema\Sqlite\Table as sqliteTable;
+use \Jelix\Database\Schema\Sqlite\TableName as sqliteTableName;
 use \Jelix\Database\Schema\Sqlite\Schema as sqliteSchema;
 
 class sqlite3SchemaTest extends \Jelix\UnitTests\UnitTestCaseDb {
@@ -444,7 +445,7 @@ class sqlite3SchemaTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
         $schema->createTable('test_prod', $columns, 'id');
 
-        $table = new sqliteTable('test_prod', $schema);
+        $table = new sqliteTable(new sqliteTableName('test_prod'), $schema);
 
         $this->assertEquals('test_prod', $table->getName());
 

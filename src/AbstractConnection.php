@@ -345,30 +345,7 @@ abstract class AbstractConnection implements ConnectionInterface, ConnectionCons
         return $this->_profile['table_prefix'];
     }
 
-    abstract public function createTableName(string $name, $schema='') : TableNameInterface;
-
-    public function prefixTableName(TableNameInterface $tableName) : TableNameInterface
-    {
-        return $this->createTableName(
-            $this->_profile['table_prefix'].$tableName->getTableName(),
-            $tableName->getSchemaName()
-        );
-    }
-
-    public function unprefixTableName(TableNameInterface $tableName) : TableNameInterface
-    {
-        if ($this->_profile['table_prefix'] == '') {
-            return $tableName;
-        }
-        $prefix = $this->_profile['table_prefix'];
-        if (strpos($tableName->getTableName(), $prefix) !== 0) {
-            return $tableName;
-        }
-        return $this->createTableName(
-            substr($tableName->getTableName(), strlen($prefix)),
-            $tableName->getSchemaName()
-        );
-    }
+    abstract public function createTableName(string $name) : TableNameInterface;
 
     /**
      * sets the autocommit state.
@@ -455,7 +432,7 @@ abstract class AbstractConnection implements ConnectionInterface, ConnectionCons
      */
     public function lastIdInTable($fieldName, $tableName)
     {
-        $rs = $this->query('SELECT MAX('.$fieldName.') as ID FROM '.$tableName);
+        $rs = $this->query('SELECT MAX('.$this->encloseName($fieldName).') as ID FROM '.$this->encloseName($tableName));
         if (($rs !== null) && $r = $rs->fetch()) {
             return $r->ID;
         }

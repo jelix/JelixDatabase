@@ -12,7 +12,12 @@ interface TableNameInterface
 {
 
     /**
-     * @return string the table name
+     * @return string the real table name, i.e., with prefix
+     */
+    public function getRealTableName();
+
+    /**
+     * @return string the table name, without prefixe
      */
     public function getTableName();
 
@@ -22,7 +27,7 @@ interface TableNameInterface
     public function getSchemaName();
 
     /**
-     * @return string the full name of the table, including the schema name if set and supported
+     * @return string the full name of the table, including the schema name if set and supported, and the prefix
      */
     public function getFullName();
 
@@ -30,4 +35,10 @@ interface TableNameInterface
      * @return string the full name, with delimiter around names
      */
     public function getEnclosedFullName();
+
+    /**
+     * Prefix added to the name, when all table should be prefixed
+     * @return string the prefix
+     */
+    public function getPrefix();
 }
