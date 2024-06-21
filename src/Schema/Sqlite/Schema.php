@@ -3,7 +3,7 @@
  * @author     Laurent Jouanneau
  * @contributor     Loic Mathaud
  *
- * @copyright  2006 Loic Mathaud, 2007-2020 Laurent Jouanneau
+ * @copyright  2006 Loic Mathaud, 2007-2024 Laurent Jouanneau
  *
  * @see        https://jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -13,12 +13,13 @@ namespace Jelix\Database\Schema\Sqlite;
 use Jelix\Database\Schema\AbstractSchema;
 use Jelix\Database\Schema\Column;
 use Jelix\Database\Schema\Exception;
+use Jelix\Database\Schema\TableNameInterface;
 
 /**
  */
 class Schema extends AbstractSchema
 {
-    protected function _createTable($name, $columns, $primaryKey, $attributes = array())
+    protected function _createTable(TableNameInterface $name, $columns, $primaryKey, $attributes = array())
     {
         $sql = $this->_createTableQuery($name, $columns, $primaryKey, $attributes);
         $this->conn->exec($sql);
@@ -31,16 +32,17 @@ class Schema extends AbstractSchema
         $results = array();
 
         $rs = $this->conn->query('SELECT name FROM sqlite_master WHERE type="table"');
+        $prefix = $this->conn->getTablePrefix();
 
         while ($line = $rs->fetch()) {
             $unpName = $this->conn->unprefixTable($line->name);
-            $results[$unpName] = new Table($line->name, $this);
+            $results[$unpName] = new Table(new TableName($unpName, '', $prefix), $this);
         }
 
         return $results;
     }
 
-    protected function _getTableInstance($name)
+    protected function _getTableInstance(TableNameInterface $name)
     {
         return new Table($name, $this);
     }
@@ -76,13 +78,13 @@ class Schema extends AbstractSchema
     ) {
         $conn = $this->getConn();
 
-        $tmpName = $conn->unprefixTable($table->getName()).'_tmp';
+        $tmpName = $table->getTableName()->getTableName().'_tmp';
         $count = 0;
         while ($this->getTable($tmpName.$count) !== null) {
             ++$count;
         }
         $tmpName .= $count;
-        $tmpName = $this->conn->prefixTable($tmpName);
+        $tmpTableName = $conn->createTableName($tmpName);
 
         $conn->beginTransaction();
 
@@ -99,11 +101,11 @@ class Schema extends AbstractSchema
 
             $sql = 'INSERT INTO '.$conn->encloseName($tmpName).'('.
                 $sqlNewTableColumns.') SELECT '.$sqlOldTableColumns.
-                ' FROM '.$conn->encloseName($table->getName());
+                ' FROM '.$table->getTableName()->getEnclosedFullName();
             $conn->exec($sql);
 
-            $this->_dropTable($table->getName());
-            $this->_renameTable($tmpName, $table->getName());
+            $this->_dropTable($table->getTableName());
+            $this->_renameTable($tmpTableName, $table->getTableName());
             $conn->commit();
 
             if ($newIndexes !== null) {
@@ -117,7 +119,7 @@ class Schema extends AbstractSchema
                     $sql .= 'UNIQUE ';
                 }
                 $sql .= 'INDEX '.$conn->encloseName($index->name).
-                    ' ON '.$conn->encloseName($table->getName()).
+                    ' ON '.$table->getTableName()->getEnclosedFullName().
                     ' ('.$conn->tools()->getSQLColumnsList($index->columns).')';
                 $conn->exec($sql);
             }

@@ -32,6 +32,11 @@ class queryparseConnection extends \Jelix\Database\AbstractConnection {
      protected function _doExec ($queryString) {}
     protected function _doLimitQuery ($queryString, $offset, $number) {}
     protected function _getSchema () {}
+
+    public function createTableName(string $name): \Jelix\Database\Schema\TableNameInterface
+    {
+        return new \Jelix\Database\Schema\Sqlite\TableName($name);
+    }
 }
 
 

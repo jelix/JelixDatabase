@@ -1,7 +1,7 @@
 <?php
 /**
  * @author     Laurent Jouanneau
- * @copyright  2010-2020 Laurent Jouanneau
+ * @copyright  2010-2024 Laurent Jouanneau
  *
  * @see        https://jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -10,18 +10,19 @@
 namespace Jelix\Database\Schema\Postgresql;
 
 use Jelix\Database\Schema\AbstractSchema;
+use Jelix\Database\Schema\TableNameInterface;
 
 /**
  */
 class Schema extends AbstractSchema
 {
     /**
-     * @param mixed $name
+     * @param TableNameInterface $name
      * @param mixed $columns
      * @param mixed $primaryKey
      * @param mixed $attributes
      */
-    public function _createTable($name, $columns, $primaryKey, $attributes = array())
+    public function _createTable(TableNameInterface $name, $columns, $primaryKey, $attributes = array())
     {
         $sql = $this->_createTableQuery($name, $columns, $primaryKey, $attributes);
 
@@ -55,15 +56,18 @@ class Schema extends AbstractSchema
                   WHERE schemaname ILIKE ANY (array[".$schemas."])
                   ORDER BY tablename";
         $rs = $this->getConn()->query($sql);
+        $prefix = $this->conn->getTablePrefix();
+
         while ($line = $rs->fetch()) {
             $unpName = $this->conn->unprefixTable($line->tablename);
-            $results[$unpName] = new Table($line->tablename, $this);
+            $tableName = new TableName($unpName, $line->schemaname, $prefix);
+            $results[$tableName->getFullName()] = new Table($tableName, $this);
         }
 
         return $results;
     }
 
-    protected function _getTableInstance($name)
+    protected function _getTableInstance(TableNameInterface $name)
     {
         return new Table($name, $this);
     }

@@ -15,6 +15,7 @@ while($tryAgain) {
     pg_query($cnx, "drop table if exists product_test");
     pg_query($cnx, "drop table if exists labels_test");
     pg_query($cnx, "drop table if exists item_array_text");
+    pg_query($cnx, "drop table if exists newspaper.article");
 
     pg_query($cnx, "CREATE TABLE product_test (
         id serial NOT NULL,
@@ -50,6 +51,14 @@ while($tryAgain) {
     myintegers2 int ARRAY[4] NOT NULL,
     myintegers3 integer[3][2] NOT NULL
 )");
+
+    pg_query($cnx, "CREATE SCHEMA IF NOT EXISTS newspaper");
+
+    pg_query($cnx, "CREATE TABLE newspaper.article (
+        id serial NOT NULL,
+        title VARCHAR( 255 ) NOT NULL,
+        content TEXT NOT NULL)");
+    pg_query($cnx, "SELECT pg_catalog.setval(pg_catalog.pg_get_serial_sequence('newspaper.article', 'id'), 1, false)");
 
     pg_query($cnx, "SELECT pg_catalog.setval(pg_catalog.pg_get_serial_sequence('products', 'id'), 1, false)");
 

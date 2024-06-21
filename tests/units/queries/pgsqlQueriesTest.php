@@ -111,4 +111,11 @@ class pgsqlQueriesTest extends queriesTestAbstract {
 
     }
 
+    function testDefaultSchema()
+    {
+        $cnx = $this->getConnection();
+        $schema = $cnx->getDefaultSchemaName();
+        $this->assertEquals('public', $schema);
+    }
+
 }

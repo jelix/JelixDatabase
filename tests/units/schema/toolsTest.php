@@ -30,6 +30,26 @@ class toolsTest extends \Jelix\UnitTests\UnitTestCaseDb {
         return self::$connectionMysql;
     }
 
+
+    protected static $connectionPgsql = null;
+
+    protected function getPgConnection()
+    {
+        if (self::$connectionPgsql === null) {
+            $parameters = new \Jelix\Database\AccessParameters(array(
+                'driver'=>'pgsql',
+                'host'=>'pgsql',
+                'user'=>'jelix',
+                'password'=>"jelixpass",
+                "database"=>"jelixtests",
+                'search_path'=>"public,newspaper"
+            ), array('charset'=>'UTF-8'));
+
+            self::$connectionPgsql = Connection::create($parameters);
+        }
+        return self::$connectionPgsql;
+    }
+
     public static function setUpBeforeClass() : void {
     }
 
@@ -208,8 +228,9 @@ class toolsTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $this->assertEquals('NULL',$result);
     }
 
-    function testParseCreateTable() {
-        $tools = new Schema\Mysql\SQLTools(null);
+    function testParseCreateTable()
+    {
+        $tools = new Schema\Mysql\SQLTools($this->getConnection());
         $sql = "CREATE TABLE city (
                 city_id INTEGER  PRIMARY KEY AUTOINCREMENT,
                 country_id integer NOT NULL,
@@ -242,7 +263,7 @@ class toolsTest extends \Jelix\UnitTests\UnitTestCaseDb {
     }
 
     function testParseCreateTemporaryTable() {
-        $tools = new Schema\Mysql\SQLTools(null);
+        $tools = new Schema\Mysql\SQLTools($this->getConnection());
         $sql = "CREATE TEMPORARY 
                 TABLE IF NOT
                 EXISTS city (
@@ -273,6 +294,23 @@ class toolsTest extends \Jelix\UnitTests\UnitTestCaseDb {
             'CONSTRAINT coordinates UNIQUE(latitude, longitude)',
             'FOREIGN KEY (country_id) REFERENCES country (country_id)',
         ), $result['constraints']);
+    }
+
+    function testParseCreateSchemaTable()
+    {
+        $tools = new Schema\Postgresql\SQLTools($this->getPgConnection());
+        $sql = "CREATE TABLE \"newspaper\".\"test_article\" (
+                art_id INTEGER  PRIMARY KEY AUTOINCREMENT,
+                name  varchar(50) not null)
+                ";
+        $result = $tools->parseCREATETABLE($sql);
+        $this->assertTrue($result !== false);
+        $this->assertEquals('test_article', $result['name']);
+        $this->assertInstanceOf(Schema\Postgresql\TableName::class, $result['tableName']);
+        $this->assertEquals('', $result['options']);
+        $this->assertEquals('newspaper.test_article', $result['tableName']->getFullName());
+        $this->assertFalse($result['temporary']);
+        $this->assertFalse($result['ifnotexists']);
     }
 
     function testInsertDataEmptyTableBefore() {

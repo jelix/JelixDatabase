@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2020-2023 Laurent Jouanneau
+ * @copyright   2020-2024 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -11,6 +11,7 @@ namespace Jelix\Database;
 
 use Jelix\Database\Schema\SchemaInterface;
 use Jelix\Database\Schema\SqlToolsInterface;
+use Jelix\Database\Schema\TableNameInterface;
 
 interface ConnectionInterface
 {
@@ -45,7 +46,6 @@ interface ConnectionInterface
     public function getDriverName();
 
     public function getLastQuery();
-
 
     public function setQueryLogger(Log\QueryLoggerInterface $logger);
 
@@ -119,14 +119,13 @@ interface ConnectionInterface
      * Prefix the given table with the prefix specified in the connection's profile
      * If there's no prefix for the connection's profile, return the table's name unchanged.
      *
-     * @param string $table      the table's name
-     * @param mixed  $table_name
+     * @param string $tableName      the table's name
      *
      * @return string the prefixed table's name
      *
      * @author Julien Issler
      */
-    public function prefixTable($table_name);
+    public function prefixTable($tableName);
 
     /**
      * Remove the prefix of the given table name.
@@ -150,6 +149,14 @@ interface ConnectionInterface
      * @return string
      */
     public function getTablePrefix();
+
+    /**
+     * Create a TableNameInterface name tied to the type of database server
+     *
+     * @param string $name
+     * @return TableNameInterface
+     */
+    public function createTableName(string $name) : TableNameInterface;
 
     /**
      * sets the autocommit state.
@@ -231,6 +238,15 @@ interface ConnectionInterface
      * @return int the maximum value
      */
     public function lastIdInTable($fieldName, $tableName);
+
+    /**
+     * Indicate the default schema used for the user of the connection.
+     *
+     * For connector that don't support schema, return an empty name
+     *
+     * @return string the schema name
+     */
+    public function getDefaultSchemaName();
 
     /**
      * @return SqlToolsInterface

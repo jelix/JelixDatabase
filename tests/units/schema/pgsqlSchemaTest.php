@@ -12,6 +12,7 @@ use \Jelix\Database\Schema\UniqueKey;
 use \Jelix\Database\Schema\Reference;
 use \Jelix\Database\Schema\Index;
 use \Jelix\Database\Schema\Postgresql\Table as pgsqlTable;
+use \Jelix\Database\Schema\Postgresql\TableName as pgsqlTableName;
 use \Jelix\Database\Schema\Postgresql\Schema as pgsqlSchema;
 
 
@@ -30,7 +31,8 @@ class pgsqlSchemaTest extends \Jelix\UnitTests\UnitTestCaseDb
                 'host'=>'pgsql',
                 'user'=>'jelix',
                 'password'=>"jelixpass",
-                "database"=>"jelixtests"
+                "database"=>"jelixtests",
+                'search_path'=>"public,newspaper"
             ), array('charset'=>'UTF-8'));
 
             self::$connectionPgsql = Connection::create($parameters);
@@ -279,17 +281,15 @@ class pgsqlSchemaTest extends \Jelix\UnitTests\UnitTestCaseDb
         $schema = $db->schema();
 
         $goodList = array(
-            'item_array_text',
-            'labels_test',
-            'product_test',
-            'products',
+            'public.item_array_text',
+            'public.labels_test',
+            'public.product_test',
+            'public.products',
+            'newspaper.article',
         );
 
         $list = $schema->getTables();
-        $tables = array();
-        foreach($list as $table) {
-            $tables[] = $table->getName();
-        }
+        $tables = array_keys($list);
 
         sort($goodList);
         sort($tables);
@@ -300,11 +300,18 @@ class pgsqlSchemaTest extends \Jelix\UnitTests\UnitTestCaseDb
         $db = $this->getConnection();
         $schema = $db->schema();
 
+        $artTable = $schema->getTable('article');
+        $this->assertNull($artTable); // because it is not into the default schema, public
+        $artTable = $schema->getTable('newspaper.article');
+        $this->assertNotNull($artTable);
+
+
         $table = $schema->getTable('product_test');
 
         $this->assertNotNull($table);
 
         $this->assertEquals('product_test', $table->getName());
+        $this->assertEquals('public.product_test', $table->getTableName()->getFullName());
 
         $pk = $table->getPrimaryKey();
         $this->assertEquals(array('id'), $pk->columns);
@@ -596,7 +603,7 @@ class pgsqlSchemaTest extends \Jelix\UnitTests\UnitTestCaseDb
 
         $schema->createTable('test_prod', $columns, 'id');
 
-        $table = new pgsqlTable('test_prod', $schema);
+        $table = new pgsqlTable(new pgsqlTableName('test_prod'), $schema);
 
         $this->assertEquals('test_prod', $table->getName());
 
@@ -700,6 +707,73 @@ class pgsqlSchemaTest extends \Jelix\UnitTests\UnitTestCaseDb
         $this->assertComplexIdenticalStr($table->getColumns(), $verif);
     }
 
+    function testCreateSchemaTable()
+    {
+        $db = $this->getConnection();
+        $db->exec('DROP TABLE IF EXISTS newspaper.test_article');
+        $schema = $db->schema();
+
+        $columns = array();
+        $col = new Column('id', 'int', 0, false, null, true);
+        $col->autoIncrement = true;
+        $columns[] = $col;
+        $columns[] = new Column('title', 'string', 50);
+
+        $schema->createTable('newspaper.test_article', $columns, 'id');
+
+        $table = new pgsqlTable(new pgsqlTableName('newspaper.test_article'), $schema);
+
+        $this->assertEquals('test_article', $table->getName());
+        $this->assertEquals('newspaper.test_article', $table->getTableName()->getFullName());
+
+        $pk = $table->getPrimaryKey();
+        $this->assertEquals(array('id'), $pk->columns);
+
+        $is64bits = ( PHP_INT_SIZE*8 == 64 );
+
+        $verif='<array>
+    <object class="\\Jelix\\Database\\Schema\\Column" key="id">
+        <string property="type" value="integer" />
+        <string property="name" value="id" />
+        <boolean property="notNull" value="true"/>
+        <boolean property="autoIncrement" value="true"/>
+        <string property="default" value="" />
+        <boolean property="hasDefault" value="true"/>
+        <integer property="length" value="0"/>
+        <integer property="precision" value="0"/>
+        <integer property="scale" value="0"/>
+        <string property="sequence" value="test_article_id_seq" />
+        <boolean property="unsigned" value="false" />
+        <null property="minLength"/>
+        <null property="maxLength"/>'.
+            ($is64bits ?
+                '<integer property="minValue" value="-2147483648"/>' :
+                '<double property="minValue" value="-2147483648"/>').
+            '<integer property="maxValue" value="2147483647"/>
+    </object>
+    <object class="\\Jelix\\Database\\Schema\\Column" key="title">
+        <string property="type" value="character" />
+        <string property="name" value="title" />
+        <boolean property="notNull" value="false"/>
+        <boolean property="autoIncrement" value="false"/>
+        <null property="default" />
+        <boolean property="hasDefault" value="false"/>
+        <integer property="length" value="50"/>
+        <integer property="precision" value="0"/>
+        <integer property="scale" value="0"/>
+        <boolean property="sequence" value="false" />
+        <boolean property="unsigned" value="false" />
+        <integer property="minLength" value="0"/>
+        <integer property="maxLength" value="50"/>
+        <null property="minValue"/>
+        <null property="maxValue"/>
+    </object>
+</array>';
+
+        $this->assertComplexIdenticalStr($table->getColumns(), $verif);
+        $db->exec('DROP TABLE IF EXISTS newspaper.test_article');
+    }
+
     public function testGetTablesAndConstraintsIndexes() {
         $db = $this->getConnection();
         $db->exec('DROP TABLE IF EXISTS city');
@@ -784,6 +858,7 @@ class pgsqlSchemaTest extends \Jelix\UnitTests\UnitTestCaseDb
         $schema->renameTable('city', 'bigcity');
 
         $goodList = array(
+            'article',
             'country',
             'bigcity',
             'item_array_text',
@@ -957,6 +1032,7 @@ class pgsqlSchemaTest extends \Jelix\UnitTests\UnitTestCaseDb
         $schema->dropTable('bigcity');
         $schema->dropTable($schema->getTable('country'));
         $goodList = array(
+            'article',
             'labels_test',
             'product_test',
             'products',

@@ -7,7 +7,7 @@
  * @contributor Julien Issler
  * @contributor Alexandre Zanelli
  *
- * @copyright  2001-2005 CopixTeam, 2005-2023 Laurent Jouanneau, 2007-2008 Laurent Raufaste, 2009 Julien Issler
+ * @copyright  2001-2005 CopixTeam, 2005-2024 Laurent Jouanneau, 2007-2008 Laurent Raufaste, 2009 Julien Issler
  *
  * @see      https://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -16,6 +16,8 @@ namespace Jelix\Database\Connector\Postgresql;
 
 use Jelix\Database\AbstractConnection;
 use Jelix\Database\Exception;
+use Jelix\Database\Schema\Postgresql\TableName;
+use Jelix\Database\Schema\TableNameInterface;
 
 /**
  */
@@ -258,6 +260,16 @@ class Connection extends AbstractConnection
         return false;
     }
 
+    protected $defaultSchemaName = null;
+
+    public function getDefaultSchemaName()
+    {
+        if ($this->defaultSchemaName === null) {
+            $this->defaultSchemaName = $this->tools()->getDefaultSchemaName($this);
+        }
+        return $this->defaultSchemaName;
+    }
+
     protected function _autoCommitNotify($state)
     {
         if (version_compare(pg_parameter_status($this->_connection, 'server_version'), '7.4') < 0) {
@@ -333,4 +345,8 @@ class Connection extends AbstractConnection
         return array('public');
     }
 
+    public function createTableName(string $name) : TableNameInterface
+    {
+        return new TableName($name, $this->getDefaultSchemaName(), $this->getTablePrefix());
+    }
 }

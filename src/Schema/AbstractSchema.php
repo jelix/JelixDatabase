@@ -35,7 +35,7 @@ abstract class AbstractSchema implements SchemaInterface
     /**
      * create the given table if it does not exist.
      *
-     * @param string          $name       the unprefixed table name
+     * @param string       $name       the unprefixed table name, with an optional schema name
      * @param Column[]     $columns    list of columns
      * @param string|string[] $primaryKey the name of the column which contains the primary key
      * @param array           $attributes some table attributes specific to the database
@@ -44,7 +44,9 @@ abstract class AbstractSchema implements SchemaInterface
      */
     public function createTable($name, $columns, $primaryKey, $attributes = array())
     {
-        $prefixedName = $this->conn->prefixTable($name);
+        $tableName = $this->conn->createTableName($name);
+        $name = $tableName->getFullName();
+
         // be sure list of table is updated
         $this->tables = $this->_getTables();
 
@@ -52,7 +54,7 @@ abstract class AbstractSchema implements SchemaInterface
             return null;
         }
 
-        $this->tables[$name] = $this->_createTable($prefixedName, $columns, $primaryKey, $attributes);
+        $this->tables[$name] = $this->_createTable($tableName, $columns, $primaryKey, $attributes);
 
         return $this->tables[$name];
     }
@@ -60,12 +62,15 @@ abstract class AbstractSchema implements SchemaInterface
     /**
      * load informations of the given.
      *
-     * @param string $name the unprefixed table name
+     * @param string $name the unprefixed table name, with optionnaly a schema
      *
      * @return TableInterface ready to make change
      */
     public function getTable($name)
     {
+        $tableName = $this->conn->createTableName($name);
+        $name = $tableName->getFullName();
+
         if ($this->tables === null) {
             $this->tables = $this->_getTables();
         }
@@ -102,14 +107,18 @@ abstract class AbstractSchema implements SchemaInterface
         $this->tables = $this->_getTables();
 
         if (is_string($table)) {
-            $name = $this->conn->prefixTable($table);
-            $unprefixedName = $table;
+            $tableName = $this->conn->createTableName($table);
+        } else if ($table instanceof TableNameInterface) {
+            $tableName = $table;
+        } else if ($table instanceof TableInterface) {
+            $tableName = $table->getTableName();
         } else {
-            $name = $table->getName();
-            $unprefixedName = $this->conn->unprefixTable($name);
+            throw new \InvalidArgumentException();
         }
+        $unprefixedName = $tableName->getFullName();
+
         if (isset($this->tables[$unprefixedName])) {
-            $this->_dropTable($name);
+            $this->_dropTable($tableName);
             unset($this->tables[$unprefixedName]);
         }
     }
@@ -126,18 +135,22 @@ abstract class AbstractSchema implements SchemaInterface
             $this->tables = $this->_getTables();
         }
 
+        $oldTableName = $this->conn->createTableName($oldName);
+        $oldName = $oldTableName->getFullName();
+        $newTableName = $this->conn->createTableName($newName);
+        $newName = $newTableName->getFullName();
+
         if (isset($this->tables[$newName])) {
             return $this->tables[$newName];
         }
 
         if (isset($this->tables[$oldName])) {
-            $newPrefixedName = $this->conn->prefixTable($newName);
             $this->_renameTable(
-                $this->conn->prefixTable($oldName),
-                $newPrefixedName
+                $oldTableName,
+                $newTableName
             );
             unset($this->tables[$oldName]);
-            $this->tables[$newName] = $this->_getTableInstance($newPrefixedName);
+            $this->tables[$newName] = $this->_getTableInstance($newTableName);
 
             return $this->tables[$newName];
         }
@@ -148,16 +161,16 @@ abstract class AbstractSchema implements SchemaInterface
     /**
      * create the given table into the database.
      *
-     * @param string       $name       the table name
+     * @param TableNameInterface  $name       the table name
      * @param Column[]  $columns
      * @param array|string $primaryKey the name of the column which contains the primary key
      * @param array        $attributes
      *
      * @return TableInterface the object corresponding to the created table
      */
-    abstract protected function _createTable($name, $columns, $primaryKey, $attributes = array());
+    abstract protected function _createTable(TableNameInterface $name, $columns, $primaryKey, $attributes = array());
 
-    protected function _createTableQuery($name, $columns, $primaryKey, $attributes = array())
+    protected function _createTableQuery(TableNameInterface $name, $columns, $primaryKey, $attributes = array())
     {
         $cols = array();
 
@@ -183,9 +196,9 @@ abstract class AbstractSchema implements SchemaInterface
             $sql = 'CREATE TABLE ';
         }
 
-        $sql .= $this->conn->encloseName($name).' ('.implode(', ', $cols);
+        $sql .= $name->getEnclosedFullName().' ('.implode(', ', $cols);
         if (count($primaryKey) > 1) {
-            $pkName = $this->conn->encloseName($name.'_pkey');
+            $pkName = $this->conn->encloseName($name->getRealTableName().'_pkey');
             $pkEsc = array();
             foreach ($primaryKey as $k) {
                 $pkEsc[] = $this->conn->encloseName($k);
@@ -194,7 +207,7 @@ abstract class AbstractSchema implements SchemaInterface
         }
 
         if ($autoIncrementUniqueKey) {
-            $ukName = $this->conn->encloseName($name.'_'.$autoIncrementUniqueKey->name.'_ukey');
+            $ukName = $this->conn->encloseName($name->getRealTableName().'_'.$autoIncrementUniqueKey->name.'_ukey');
             $sql .= ', CONSTRAINT '.$ukName.' UNIQUE ('.$this->conn->encloseName($autoIncrementUniqueKey->name).')';
         }
 
@@ -205,18 +218,18 @@ abstract class AbstractSchema implements SchemaInterface
 
     abstract protected function _getTables();
 
-    protected function _dropTable($name)
+    protected function _dropTable(TableNameInterface $name)
     {
-        $this->conn->exec('DROP TABLE '.$this->conn->encloseName($name));
+        $this->conn->exec('DROP TABLE '.$name->getEnclosedFullName());
     }
 
-    protected function _renameTable($oldName, $newName)
+    protected function _renameTable(TableNameInterface $oldName, TableNameInterface $newName)
     {
-        $this->conn->exec('ALTER TABLE '.$this->conn->encloseName($oldName).
-        ' RENAME TO '.$this->conn->encloseName($newName));
+        $this->conn->exec('ALTER TABLE '.$oldName->getEnclosedFullName().
+        ' RENAME TO '.$this->conn->encloseName($newName->getRealTableName()));
     }
 
-    abstract protected function _getTableInstance($name);
+    abstract protected function _getTableInstance(TableNameInterface $name);
 
 
     /**

@@ -1,7 +1,7 @@
 <?php
 /**
  * @author     Laurent Jouanneau
- * @copyright  2005-2023 Laurent Jouanneau
+ * @copyright  2005-2024 Laurent Jouanneau
  *
  * @see        https://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -29,7 +29,7 @@ class Table extends AbstractTable
         $conn = $this->schema->getConn();
         $tools = $conn->tools();
 
-        $rs = $conn->query('SHOW FULL FIELDS FROM '.$conn->encloseName($this->name));
+        $rs = $conn->query('SHOW FULL FIELDS FROM '.$this->tableName->getEnclosedFullName());
         while ($line = $rs->fetch()) {
             list($type, $length, $precision, $scale) = $tools->parseSQLType($line->Type);
             $typeInfo = $tools->getTypeInfo($type);
@@ -102,7 +102,7 @@ class Table extends AbstractTable
         $isPk = ($pk && in_array($new->name, $pk->columns));
         $isSinglePk = $isPk && count($pk->columns) == 1;
 
-        $sql = 'ALTER TABLE '.$conn->encloseName($this->name)
+        $sql = 'ALTER TABLE '.$this->tableName->getEnclosedFullName()
             .' CHANGE COLUMN '.$conn->encloseName($old->name)
             .' '.$this->schema->prepareSqlColumn($new, $isPk, $isSinglePk);
         $conn->exec($sql);
@@ -115,7 +115,7 @@ class Table extends AbstractTable
         $isPk = ($pk && in_array($new->name, $pk->columns));
         $isSinglePk = $isPk && count($pk->columns) == 1;
 
-        $sql = 'ALTER TABLE '.$conn->encloseName($this->name)
+        $sql = 'ALTER TABLE '.$this->tableName->getEnclosedFullName()
             .' ADD COLUMN '.$this->schema->prepareSqlColumn($new, $isPk, $isSinglePk);
         $conn->exec($sql);
     }
@@ -143,7 +143,7 @@ class Table extends AbstractTable
                 AND k.CONSTRAINT_CATALOG = c.CONSTRAINT_CATALOG
                 AND k.table_name = c.table_name
                 AND k.table_schema = c.table_schema
-                ) WHERE k.table_name = '.$conn->quote($this->name).
+                ) WHERE k.table_name = '.$conn->quote($this->tableName->getRealTableName()).
                 ' AND k.table_schema = '.$conn->quote($conn->profile['database']).
                 ' ORDER BY ORDINAL_POSITION ASC');
 
@@ -192,7 +192,7 @@ class Table extends AbstractTable
         // (except if we are with mysql <5.0.6, we use indexes as
         //  but in this case we don't know if the index is related to a
         //  foreign key or not, so we will have an unwanted index in indexes)
-        $rs = $conn->query('SHOW INDEX FROM '.$conn->encloseName($this->name));
+        $rs = $conn->query('SHOW INDEX FROM '.$this->tableName->getEnclosedFullName());
 
         while ($idx = $rs->fetch()) {
             if ($key_column_usageSupport) {
@@ -265,7 +265,7 @@ class Table extends AbstractTable
     protected function _createIndex(Index $index)
     {
         $conn = $this->schema->getConn();
-        $sql = 'ALTER TABLE '.$conn->encloseName($this->name).' ADD ';
+        $sql = 'ALTER TABLE '.$this->tableName->getEnclosedFullName().' ADD ';
 
         $sql .= 'INDEX '.$conn->encloseName($index->name);
         if ($index->type != '') {
@@ -283,7 +283,7 @@ class Table extends AbstractTable
     protected function _dropIndex(Index $index)
     {
         $conn = $this->schema->getConn();
-        $sql = 'ALTER TABLE '.$conn->encloseName($this->name).' DROP ';
+        $sql = 'ALTER TABLE '.$this->tableName->getEnclosedFullName().' DROP ';
         $sql .= 'INDEX '.$conn->encloseName($index->name);
 
         $conn->exec($sql);
@@ -305,7 +305,7 @@ class Table extends AbstractTable
         }
 
         $conn = $this->schema->getConn();
-        $sql = 'SHOW CREATE TABLE '.$conn->encloseName($this->name);
+        $sql = 'SHOW CREATE TABLE '.$this->tableName->getEnclosedFullName();
         $rs = $conn->query($sql);
         $rec = $rs->fetch();
         if (!$rec) {
@@ -347,7 +347,7 @@ class Table extends AbstractTable
                         } elseif ($constraint[2]) {
                             $ref->name = $constraint[2];
                         } else {
-                            $ref->name = $this->name.'_'.$key.'_fk';
+                            $ref->name = $this->tableName->getRealTableName().'_'.$key.'_fk';
                         }
 
                         $ref->fTable = $constraint[4];
@@ -371,7 +371,7 @@ class Table extends AbstractTable
     protected function _createReference(Reference $ref)
     {
         $conn = $this->schema->getConn();
-        $sql = 'ALTER TABLE '.$conn->encloseName($this->name).' ADD CONSTRAINT ';
+        $sql = 'ALTER TABLE '.$this->tableName->getEnclosedFullName().' ADD CONSTRAINT ';
         $sql .= $conn->encloseName($ref->name).' FOREIGN KEY (';
 
         $cols = $conn->tools()->getSQLColumnsList($ref->columns);
@@ -392,7 +392,7 @@ class Table extends AbstractTable
     protected function _dropReference(Reference $ref)
     {
         $conn = $this->schema->getConn();
-        $sql = 'ALTER TABLE '.$conn->encloseName($this->name).' DROP FOREIGN KEY '.$conn->encloseName($ref->name);
+        $sql = 'ALTER TABLE '.$this->tableName->getEnclosedFullName().' DROP FOREIGN KEY '.$conn->encloseName($ref->name);
         $conn->exec($sql);
     }
 
@@ -405,7 +405,7 @@ class Table extends AbstractTable
         }
 
         $conn = $this->schema->getConn();
-        $sql = 'ALTER TABLE '.$conn->encloseName($this->name).' ADD ';
+        $sql = 'ALTER TABLE '.$this->tableName->getEnclosedFullName().' ADD ';
 
         if ($constraint instanceof PrimaryKey) {
             $sql .= 'PRIMARY KEY';
@@ -426,7 +426,7 @@ class Table extends AbstractTable
             return;
         }
         $conn = $this->schema->getConn();
-        $sql = 'ALTER TABLE '.$conn->encloseName($this->name).' DROP ';
+        $sql = 'ALTER TABLE '.$this->tableName->getEnclosedFullName().' DROP ';
 
         if ($constraint instanceof PrimaryKey) {
             $sql .= 'PRIMARY KEY';

@@ -14,11 +14,23 @@ namespace Jelix\Database\Schema;
 class Reference extends AbstractConstraint
 {
     /**
+     * @var string schema where the reference is stored
+     */
+    public $schema = '';
+
+    /**
      * name of the foreign table.
      *
      * @var string
      */
     public $fTable = '';
+
+    /**
+     * schema name of the foreign table.
+     *
+     * @var string
+     */
+    public $fTableSchema = '';
 
     /**
      * list of foreign columns.
@@ -41,10 +53,13 @@ class Reference extends AbstractConstraint
      * @param string          $foreignTable
      * @param string|string[] $foreignColumns
      */
-    public function __construct($name = '', $columns = array(), $foreignTable = '', $foreignColumns = array())
+    public function __construct($name = '', $columns = array(), $foreignTable = '', $foreignColumns = array(), $schema='', $foreignTableSchema = '')
     {
         parent::__construct($name, $columns);
         $this->fTable = $foreignTable;
+        $this->fTableSchema = $foreignTableSchema;
+        $this->schema = $schema;
+
         if (is_string($foreignColumns)) {
             $this->fColumns = array($foreignColumns);
         } else {

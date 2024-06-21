@@ -3,7 +3,7 @@
  * @author     Yann Lecommandoux
  * @contributor Laurent Jouanneau, Louis S.
  *
- * @copyright  2008 Yann Lecommandoux, 2011-2023 Laurent Jouanneau, Louis S.
+ * @copyright  2008 Yann Lecommandoux, 2011-2024 Laurent Jouanneau, Louis S.
  *
  * @see     https://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -12,6 +12,8 @@ namespace Jelix\Database\Connector\SQLServer;
 
 use Jelix\Database\AbstractConnection;
 use Jelix\Database\Exception;
+use Jelix\Database\Schema\Sqlserver\TableName;
+use Jelix\Database\Schema\TableNameInterface;
 
 /**
  *
@@ -220,11 +222,28 @@ class Connection extends AbstractConnection
     {
         $queryString = 'SELECT @@IDENTITY AS id';
         $result = $this->_doQuery($queryString);
-        if ($result) {
-            return $result->id;
+        if ($result && $rec = $result->fetch()) {
+            return $rec->id;
         }
 
         return null;
+    }
+
+    protected $defaultSchemaName = null;
+
+    public function getDefaultSchemaName()
+    {
+        if ($this->defaultSchemaName === null) {
+            $queryString = 'SELECT SCHEMA_NAME() as name';
+            $result = $this->_doQuery($queryString);
+            if ($result && $rec = $result->fetch()) {
+                $this->defaultSchemaName = $rec->name;
+            }
+            else {
+                $this->defaultSchemaName = '';
+            }
+        }
+        return $this->defaultSchemaName;
     }
 
     /**
@@ -282,5 +301,10 @@ class Connection extends AbstractConnection
     protected function _getSchema()
     {
         return new \Jelix\Database\Schema\Sqlserver\Schema($this);
+    }
+
+    public function createTableName(string $name) : TableNameInterface
+    {
+        return new TableName($name, $this->getDefaultSchemaName(), $this->getTablePrefix());
     }
 }
