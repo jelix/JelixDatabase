@@ -504,6 +504,7 @@ abstract class AbstractSqlTools implements SqlToolsInterface
     {
         $result = array(
             'name' => '',
+            'tableName' => null,
             'temporary' => false,
             'ifnotexists' => false,
             'columns' => array(),
@@ -516,7 +517,13 @@ abstract class AbstractSqlTools implements SqlToolsInterface
         }
         $result['temporary'] = (bool) ($m[1]);
         $result['ifnotexists'] = (bool) ($m[2]);
-        $result['name'] = trim($m[3]);
+
+        // remove enclose characters
+        $name = preg_replace('/[`"\[\]\']/', "", trim($m[3]));
+        
+        $tableName = $this->_conn->createTableName($name);
+        $result['name'] = $tableName->getTableName();
+        $result['tableName'] = $tableName;
 
         $posStart = strlen($m[0]);
         $posEnd = strrpos($createTableStatement, ')');
@@ -590,10 +597,11 @@ abstract class AbstractSqlTools implements SqlToolsInterface
      */
     public function insertBulkData($tableName, $columns, $data, $primaryKey = null, $options = 0)
     {
-        $tableName = $this->_conn->prefixTable($tableName);
+        $tableName = $this->_conn->createTableName($tableName);
+        $enclosedTableName = $tableName->getEnclosedFullName();
 
         if ($options == self::IBD_INSERT_ONLY_IF_TABLE_IS_EMPTY) {
-            $rs = $this->_conn->query("SELECT count(*) as _cnt_ FROM {$tableName}");
+            $rs = $this->_conn->query("SELECT count(*) as _cnt_ FROM ".$enclosedTableName);
             if ($rs) {
                 $rec = $rs->fetch();
                 if (intval($rec->_cnt_) > 0) {
@@ -627,16 +635,16 @@ abstract class AbstractSqlTools implements SqlToolsInterface
             $sqlColumns[] = $this->_conn->encloseName($col);
         }
 
-        $sqlInsert = 'INSERT INTO '.$this->_conn->encloseName($tableName).' ('.
+        $sqlInsert = 'INSERT INTO '.$enclosedTableName.' ('.
             implode(',', $sqlColumns).') VALUES (';
         if ($checkExist) {
-            $sqlCheck = 'SELECT '.implode(',', $sqlPk).' FROM '.$tableName.' WHERE ';
+            $sqlCheck = 'SELECT '.implode(',', $sqlPk).' FROM '.$enclosedTableName.' WHERE ';
         }
 
         $this->_conn->beginTransaction();
 
         if ($options == self::IBD_EMPTY_TABLE_BEFORE) {
-            $this->_conn->exec("DELETE FROM {$tableName}");
+            $this->_conn->exec("DELETE FROM ".$enclosedTableName);
         }
         $recCount = 0;
         foreach ($data as $rk => $row) {
@@ -698,7 +706,7 @@ abstract class AbstractSqlTools implements SqlToolsInterface
                         continue;
                     }
                     if ($options == self::IBD_UPDATE_IF_EXIST) {
-                        $sqlUpdate = 'UPDATE '.$tableName.' SET ';
+                        $sqlUpdate = 'UPDATE '.$enclosedTableName.' SET ';
                         $sqlUpdate .= implode(',', $sqlUpdateValue);
                         $sqlUpdate .= ' WHERE '.implode(' AND ', $sqlPk);
                         $this->_conn->exec($sqlUpdate);
