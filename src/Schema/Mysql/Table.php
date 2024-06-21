@@ -1,7 +1,7 @@
 <?php
 /**
  * @author     Laurent Jouanneau
- * @copyright  2005-2023 Laurent Jouanneau
+ * @copyright  2005-2024 Laurent Jouanneau
  *
  * @see        https://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -143,7 +143,7 @@ class Table extends AbstractTable
                 AND k.CONSTRAINT_CATALOG = c.CONSTRAINT_CATALOG
                 AND k.table_name = c.table_name
                 AND k.table_schema = c.table_schema
-                ) WHERE k.table_name = '.$conn->quote($this->tableName->getTableName()).
+                ) WHERE k.table_name = '.$conn->quote($this->tableName->getRealTableName()).
                 ' AND k.table_schema = '.$conn->quote($conn->profile['database']).
                 ' ORDER BY ORDINAL_POSITION ASC');
 
@@ -347,7 +347,7 @@ class Table extends AbstractTable
                         } elseif ($constraint[2]) {
                             $ref->name = $constraint[2];
                         } else {
-                            $ref->name = $this->tableName->getTableName().'_'.$key.'_fk';
+                            $ref->name = $this->tableName->getRealTableName().'_'.$key.'_fk';
                         }
 
                         $ref->fTable = $constraint[4];

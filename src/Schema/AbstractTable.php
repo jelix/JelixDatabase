@@ -355,7 +355,7 @@ abstract class AbstractTable implements TableInterface
     public function addReference(Reference $reference)
     {
         if (trim($reference->name) == '') {
-            $reference->name = $this->tableName->getTableName().'_'.implode('_', $reference->columns).'_fkey';
+            $reference->name = $this->tableName->getRealTableName().'_'.implode('_', $reference->columns).'_fkey';
         }
         $this->alterReference($reference);
     }

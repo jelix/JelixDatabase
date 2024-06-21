@@ -154,29 +154,9 @@ interface ConnectionInterface
      * Create a TableNameInterface name tied to the type of database server
      *
      * @param string $name
-     * @param string $schema
      * @return TableNameInterface
      */
-    public function createTableName(string $name, $schema='') : TableNameInterface;
-
-    /**
-     * Prefix the given table with the prefix specified in the connection's profile
-     * If there's no prefix for the connection's profile, return the table's name unchanged.
-     *
-     * @param TableNameInterface $tableName      the table's name
-     *
-     * @return TableNameInterface a new instance of TableNameInterface with the prefixed name
-     */
-    public function prefixTableName(TableNameInterface $tableName) : TableNameInterface;
-
-    /**
-     * Remove the prefix of the given table name.
-     *
-     * @param TableNameInterface $tableName
-     *
-     * @return TableNameInterface a new instance of TableNameInterface with the unprefixed name
-     */
-    public function unprefixTableName(TableNameInterface $tableName) : TableNameInterface;
+    public function createTableName(string $name) : TableNameInterface;
 
     /**
      * sets the autocommit state.

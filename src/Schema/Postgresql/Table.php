@@ -1,7 +1,7 @@
 <?php
 /**
  * @author     Laurent Jouanneau
- * @copyright  2010-2020 Laurent Jouanneau
+ * @copyright  2010-2024 Laurent Jouanneau
  *
  * @see        https://jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -52,7 +52,7 @@ class Table extends AbstractTable
                 ON (co.conrelid = c.oid AND a.attnum = ANY(co.conkey) AND co.contype = 'p')
             LEFT OUTER JOIN pg_attrdef AS d
                 ON (d.adrelid = c.oid AND d.adnum = a.attnum)
-            WHERE a.attnum > 0 AND c.relname = ".$conn->quote($this->tableName->getTableName()).
+            WHERE a.attnum > 0 AND c.relname = ".$conn->quote($this->tableName->getRealTableName()).
             ' AND c.relnamespace IN ( SELECT oid FROM pg_namespace WHERE nspname ILIKE ANY (array['.$schemas.']))
              ORDER BY a.attnum';
         $rs = $conn->query($sql);
@@ -196,6 +196,15 @@ class Table extends AbstractTable
     {
         $this->indexes = array();
         $conn = $this->schema->getConn();
+
+        $schema = $this->tableName->getSchemaName();
+        if ($schema != '') {
+            $sqlSchema = " and n.nspname ILIKE ".$conn->quote($schema);
+        }
+        else {
+            $sqlSchema = " and n.nspname NOT IN ('pg_catalog', 'pg_toast')";
+        }
+
         $sql = "SELECT n.nspname  as schemaname,  t.relname  as tablename,
                 c.relname  as indexname, a.attname, i.indisunique, a.attnum
         FROM pg_class c
@@ -205,10 +214,10 @@ class Table extends AbstractTable
         JOIN pg_attribute a ON (a.attrelid = t.oid and a.attnum = ANY(i.indkey))
         LEFT JOIN pg_constraint co on (t.oid = co.conrelid and co.conindid = c.oid)
         WHERE c.relkind = 'i'
-          and n.nspname not in ('pg_catalog', 'pg_toast')
+          ".$sqlSchema."
           and pg_catalog.pg_table_is_visible(c.oid)
           and co.conindid is null
-          AND t.relname = ".$conn->quote($this->getName());
+          AND t.relname = ".$conn->quote($this->tableName->getRealTableName());
         $rs = $conn->query($sql);
         while ($indexRec = $rs->fetch()) {
             if (isset($this->indexes[$indexRec->indexname])) {
@@ -229,7 +238,7 @@ class Table extends AbstractTable
         if ($index->isUnique) {
             $sql .= 'UNIQUE ';
         }
-        $sql .= 'INDEX '.$conn->encloseName($index->name).' ON '.$conn->encloseName($this->getName());
+        $sql .= 'INDEX '.$conn->encloseName($index->name).' ON '.$this->tableName->getEnclosedFullName();
         $sql .= ' ('.$conn->tools()->getSQLColumnsList($index->columns).')';
         $conn->exec($sql);
     }
@@ -237,7 +246,14 @@ class Table extends AbstractTable
     protected function _dropIndex(Index $index)
     {
         $conn = $this->schema->getConn();
-        $sql = 'DROP INDEX IF EXISTS '.$conn->encloseName($index->name);
+
+        $schema = $this->tableName->getSchemaName();
+        if ($schema) {
+            $sql = 'DROP INDEX IF EXISTS '.$conn->encloseName($schema).'.'.$conn->encloseName($index->name);
+        }
+        else {
+            $sql = 'DROP INDEX IF EXISTS '.$conn->encloseName($index->name);
+        }
         $conn->exec($sql);
     }
 
@@ -248,13 +264,25 @@ class Table extends AbstractTable
         $this->references = array();
 
         $conn = $this->schema->getConn();
+        $schema = $this->tableName->getSchemaName();
+        if ($schema != '') {
+            $sqlSchema = " tc.table_schema ILIKE ".$conn->quote($schema);
+        }
+        else {
+            $sqlSchema = "  tc.table_schema NOT IN ('pg_catalog', 'information_schema')";
+        }
+
+
         $sql = "SELECT
+          tc.constraint_schema,
           tc.constraint_name,
           tc.constraint_type,
+          tc.table_schema,
           tc.table_name,
           kcu.column_name,
           rc.update_rule AS on_update,
           rc.delete_rule AS on_delete,
+          ccu.table_schema AS references_schema,
           ccu.table_name AS references_table,
           ccu.column_name AS references_field
         
@@ -275,9 +303,9 @@ class Table extends AbstractTable
           AND rc.unique_constraint_schema = ccu.constraint_schema
           AND rc.unique_constraint_name = ccu.constraint_name
         
-        WHERE tc.table_schema NOT IN ('pg_catalog', 'information_schema')
+        WHERE ".$sqlSchema."
           AND constraint_type IN ('PRIMARY KEY', 'UNIQUE', 'FOREIGN KEY')
-          AND tc.table_name = ".$conn->quote($this->getName());
+          AND tc.table_name = ".$conn->quote($this->tableName->getRealTableName());
 
         $rs = $conn->query($sql);
         while ($constraint = $rs->fetch()) {
@@ -306,18 +334,20 @@ class Table extends AbstractTable
 
                     break;
                 case 'FOREIGN KEY':
-                    if (!isset($this->references[$constraint->constraint_name])) {
+                    if (isset($this->references[$constraint->constraint_name])) {
+                        $fk = $this->references[$constraint->constraint_name];
+                        $fk->columns[] = $constraint->column_name;
+                        $fk->fColumns[] = $constraint->references_field;
+                    } else {
                         $fk = new Reference(
                             $constraint->constraint_name,
                             $constraint->column_name,
                             $constraint->references_table,
-                            array($constraint->references_field)
+                            array($constraint->references_field),
+                            $constraint->constraint_schema,
+                            $constraint->references_schema
                         );
                         $this->references[$constraint->constraint_name] = $fk;
-                    } else {
-                        $fk = $this->references[$constraint->constraint_name];
-                        $fk->columns[] = $constraint->column_name;
-                        $fk->fColumns[] = $constraint->references_field;
                     }
 
                     break;
@@ -337,8 +367,14 @@ class Table extends AbstractTable
             $sql .= ' UNIQUE ('.$tools->getSQLColumnsList($constraint->columns).')';
         } elseif ($constraint instanceof Reference) {
             $sql .= ' FOREIGN KEY ('.$tools->getSQLColumnsList($constraint->columns).')';
-            $sql .= ' REFERENCES '.$conn->encloseName($constraint->fTable).
-                '  ('.$tools->getSQLColumnsList($constraint->fColumns).')';
+
+            if ($constraint->fTableSchema) {
+                $sql .= ' REFERENCES '.$conn->encloseName($constraint->fTableSchema).'.'.$conn->encloseName($constraint->fTable);
+            }
+            else {
+                $sql .= ' REFERENCES '.$conn->encloseName($constraint->fTable);
+            }
+            $sql .=     '  ('.$tools->getSQLColumnsList($constraint->fColumns).')';
         }
         $conn->exec($sql);
     }

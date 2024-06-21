@@ -397,23 +397,23 @@ class Connection extends AbstractConnection
         return $schema;
     }
 
-    public function createTableName(string $name, $schema='') : TableNameInterface
+    public function createTableName(string $name) : TableNameInterface
     {
         switch ($this->_profile['dbtype']) {
             case ConnectionFactory::DB_TYPE_MYSQL:
-                $schema = new \Jelix\Database\Schema\Mysql\TableName($name, $schema);
+                $schema = new \Jelix\Database\Schema\Mysql\TableName($name, '', $this->getTablePrefix());
                 break;
             case ConnectionFactory::DB_TYPE_PGSQL:
-                $schema = new \Jelix\Database\Schema\Postgresql\TableName($name, $schema);
+                $schema = new \Jelix\Database\Schema\Postgresql\TableName($name, $this->getDefaultSchemaName(), $this->getTablePrefix());
                 break;
             case ConnectionFactory::DB_TYPE_SQLITE:
-                $schema = new \Jelix\Database\Schema\Sqlite\TableName($name, $schema);
+                $schema = new \Jelix\Database\Schema\Sqlite\TableName($name, '', $this->getTablePrefix());
                 break;
             case ConnectionFactory::DB_TYPE_SQLSERVER:
-                $schema = new \Jelix\Database\Schema\Sqlserver\TableName($name, $schema);
+                $schema = new \Jelix\Database\Schema\Sqlserver\TableName($name, $this->getDefaultSchemaName(), $this->getTablePrefix());
                 break;
             case ConnectionFactory::DB_TYPE_ORACLE:
-                $schema = new \Jelix\Database\Schema\Oci\TableName($name, $schema);
+                $schema = new \Jelix\Database\Schema\Oci\TableName($name, '', $this->getTablePrefix());
                 break;
             default:
                 $schema = null;
