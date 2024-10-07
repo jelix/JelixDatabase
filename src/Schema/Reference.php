@@ -53,7 +53,9 @@ class Reference extends AbstractConstraint
      * @param string          $foreignTable
      * @param string|string[] $foreignColumns
      */
-    public function __construct($name = '', $columns = array(), $foreignTable = '', $foreignColumns = array(), $schema='', $foreignTableSchema = '')
+    public function __construct($name = '', $columns = array(),
+                                $foreignTable = '', $foreignColumns = array(),
+                                $schema='', $foreignTableSchema = '')
     {
         parent::__construct($name, $columns);
         $this->fTable = $foreignTable;

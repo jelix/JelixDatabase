@@ -281,6 +281,7 @@ class pgsqlSchemaTest extends \Jelix\UnitTests\UnitTestCaseDb
         $schema = $db->schema();
 
         $goodList = array(
+            'public.generated_column_test',
             'public.item_array_text',
             'public.labels_test',
             'public.product_test',
@@ -581,6 +582,41 @@ class pgsqlSchemaTest extends \Jelix\UnitTests\UnitTestCaseDb
         $this->assertFalse($table->getColumn('myintegers2')->isAutoincrementedColumn());
     }
 
+    function testGeneratedColumn()
+    {
+        $db = $this->getConnection();
+        $schema = $db->schema();
+
+        $table = $schema->getTable('generated_column_test');
+
+        $this->assertNotNull($table);
+
+        $this->assertEquals('generated_column_test', $table->getName());
+
+        $pk = $table->getPrimaryKey();
+        $this->assertEquals(array('id'), $pk->columns);
+        $this->assertTrue($table->getColumn('total')->generated);
+
+        // insert test value
+        $stmt = $db->prepare('INSERT INTO generated_column_test (description, amount, change) VALUES(:d, :a, :c)');
+
+        $stmt->bindValue('d','candy');
+        $stmt->bindValue('a', 2);
+        $stmt->bindValue('c',1.02);
+
+        $stmt->execute();
+
+        $rs = $db->query('SELECT id, description, amount, change, total FROM generated_column_test');
+
+        $record = $rs->fetch();
+
+        $this->assertEquals($record->id, 1);
+        $this->assertEquals($record->description, 'candy');
+        $this->assertEquals($record->amount, 2);
+        $this->assertEquals($record->change, 1.02);
+        $this->assertEquals($record->total, 2.04);
+    }
+
     function testCreateTable()
     {
         $db = $this->getConnection();
@@ -861,6 +897,7 @@ class pgsqlSchemaTest extends \Jelix\UnitTests\UnitTestCaseDb
             'article',
             'country',
             'bigcity',
+            'generated_column_test',
             'item_array_text',
             'labels_test',
             'product_test',
@@ -1033,6 +1070,7 @@ class pgsqlSchemaTest extends \Jelix\UnitTests\UnitTestCaseDb
         $schema->dropTable($schema->getTable('country'));
         $goodList = array(
             'article',
+            'generated_column_test',
             'labels_test',
             'product_test',
             'products',

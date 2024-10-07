@@ -71,6 +71,13 @@ class FieldProperties
      */
     public $hasDefault = false;
 
+    /**
+     * says if the column is generated.
+     *
+     * @var bool
+     */
+    public $generated = false;
+
     public $length = 0;
 
     /**

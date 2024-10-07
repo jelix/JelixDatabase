@@ -1,7 +1,7 @@
 <?php
 /**
  * @author     Laurent Jouanneau
- * @copyright  2010-2020 Laurent Jouanneau
+ * @copyright  2010-2024 Laurent Jouanneau
  *
  * @see        https://jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -60,6 +60,13 @@ class Column
     public $hasDefault = false;
 
     /**
+     * says if the column is generated.
+     *
+     * @var bool
+     */
+    public $generated = false;
+
+    /**
      * The length for a string.
      *
      * @var int
@@ -107,12 +114,14 @@ class Column
         $length = 0,
         $hasDefault = false,
         $default = null,
-        $notNull = false
+        $notNull = false,
+        $generated = false
     ) {
         $this->type = $type;
         $this->name = $name;
         $this->length = $length;
         $this->hasDefault = $hasDefault;
+        $this->generated = $generated;
         if ($hasDefault) {
             $this->default = ($notNull && $default === null ? '' : $default);
         } else {
