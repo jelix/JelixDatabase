@@ -1,6 +1,12 @@
 Changelog
 =========
 
+Next
+-----
+
+- support of generated column in the PostgreSQL adapter. 
+
+
 Version 1.3.2
 -------------
 
