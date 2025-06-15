@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2020 Laurent Jouanneau
+ * @copyright   2020-2025 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -20,7 +20,7 @@ class Connection
      * @return ConnectionInterface
      * @throws Exception
      */
-    public static function create(AccessParameters $parameters, LoggerInterface $logger = null)
+    public static function create(AccessParameters $parameters, ?LoggerInterface $logger = null)
     {
         return self::createWithNormalizedParameters($parameters->getNormalizedParameters(), $logger);
     }
@@ -31,7 +31,7 @@ class Connection
      * @return ConnectionInterface
      * @throws Exception
      */
-    public static function createWithNormalizedParameters(array $profile, LoggerInterface $logger = null)
+    public static function createWithNormalizedParameters(array $profile, ?LoggerInterface $logger = null)
     {
         if ($profile['driver'] == 'pdo' || $profile['usepdo']) {
             return new Connector\PDO\Connection($profile, $logger);

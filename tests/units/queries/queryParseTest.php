@@ -4,14 +4,14 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2015-2022 Laurent Jouanneau
+* @copyright   2015-2025 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
 
 class queryparseConnection extends \Jelix\Database\AbstractConnection {
-    function __construct($profile, \Psr\Log\LoggerInterface $logger = null) { }
+    function __construct($profile, ?\Psr\Log\LoggerInterface $logger = null) { }
     function parseQuery($sql, $reParam) {
         return $this->findParameters($sql, $reParam);
     }

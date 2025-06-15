@@ -3,7 +3,7 @@
  * @author     Laurent Jouanneau
  * @contributor Gwendal Jouannic, Thomas, Julien Issler, Vincent Herr
  *
- * @copyright  2005-2021 Laurent Jouanneau, 2008 Gwendal Jouannic, 2009 Thomas, 2009 Julien Issler, 2011 Vincent Herr
+ * @copyright  2005-2025 Laurent Jouanneau, 2008 Gwendal Jouannic, 2009 Thomas, 2009 Julien Issler, 2011 Vincent Herr
  *
  * @see      https://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -40,7 +40,7 @@ class Connection extends AbstractConnection
      *
      * @param array $profile the profile data. Its content must be normalized by AccessParameters
      */
-    public function __construct($profile, LoggerInterface $logger = null)
+    public function __construct($profile, ?LoggerInterface $logger = null)
     {
         parent::__construct($profile, $logger);
     }

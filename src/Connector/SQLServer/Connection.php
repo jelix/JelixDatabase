@@ -3,7 +3,7 @@
  * @author     Yann Lecommandoux
  * @contributor Laurent Jouanneau, Louis S.
  *
- * @copyright  2008 Yann Lecommandoux, 2011-2023 Laurent Jouanneau, Louis S.
+ * @copyright  2008 Yann Lecommandoux, 2011-2025 Laurent Jouanneau, Louis S.
  *
  * @see     https://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -26,7 +26,7 @@ class Connection extends AbstractConnection
      *
      * @throws Exception
      */
-    public function __construct($profile, LoggerInterface $logger = null)
+    public function __construct($profile, ?LoggerInterface $logger = null)
     {
         if (!function_exists('sqlsrv_connect')) {
             throw new Exception('sqlsrv extension is not installed in PHP', 405);

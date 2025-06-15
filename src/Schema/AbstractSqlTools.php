@@ -32,7 +32,7 @@ abstract class AbstractSqlTools implements SqlToolsInterface
     /**
      * @param ConnectionInterface $connector the connection to a database
      */
-    public function __construct(ConnectionInterface $connector = null)
+    public function __construct(?ConnectionInterface $connector = null)
     {
         $this->_conn = $connector;
     }

@@ -3,7 +3,7 @@
  * @author      Laurent Jouanneau, Gerald Croes
  * @contributor Julien Issler
  *
- * @copyright   2005-2024 Laurent Jouanneau
+ * @copyright   2005-2025 Laurent Jouanneau
  * @copyright   2007-2009 Julien Issler
  * @copyright 2001-2005 CopixTeam
  * This class was get originally from the Copix project (CopixDbConnection, Copix 2.3dev20050901, http://www.copix.org)
@@ -68,7 +68,7 @@ abstract class AbstractConnection implements ConnectionInterface, ConnectionCons
      *
      * @param array $profile profile properties. Its content must be normalized by AccessParameters
      */
-    public function __construct($profile, LoggerInterface $logger = null)
+    public function __construct($profile, ?LoggerInterface $logger = null)
     {
         $this->_profile = &$profile;
         $this->_connection = $this->_connect();

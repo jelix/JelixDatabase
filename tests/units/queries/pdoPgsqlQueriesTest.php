@@ -17,6 +17,15 @@ class pdoPgsqlQueriesTest extends queriesTestAbstract
 
     protected static $connectionPDOPgsql = null;
 
+    public function setUp() : void
+    {
+        parent::setUp();
+        if (version_compare(PHP_VERSION, '8.4', '>=')) {
+            $this->returnFloatType = 'float';
+        }
+    }
+
+
     protected function getConnection()
     {
         if (self::$connectionPDOPgsql === null) {

@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2020-2023 Laurent Jouanneau
+ * @copyright   2020-2025 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -21,7 +21,7 @@ interface ConnectionInterface
      *
      * @param array $profile profile properties. Its content must be normalized by AccessParameters
      */
-    public function __construct($profile, LoggerInterface $logger = null);
+    public function __construct($profile, ?LoggerInterface $logger = null);
 
     /**
      * Close the connection.

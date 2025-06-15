@@ -6,7 +6,7 @@
  * @contributor Sylvain de Vathaire, Julien Issler
  * @contributor Florian Lonqueu-Brochard
  *
- * @copyright  2001-2005 CopixTeam, 2005-2024 Laurent Jouanneau, 2009 Julien Issler, 2012 Florian Lonqueu-Brochard
+ * @copyright  2001-2005 CopixTeam, 2005-2025 Laurent Jouanneau, 2009 Julien Issler, 2012 Florian Lonqueu-Brochard
  *
  * @see      https://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -23,7 +23,7 @@ class Connection extends AbstractConnection
 {
     protected $_charsets = array('UTF-8' => 'utf8', 'ISO-8859-1' => 'latin1');
 
-    public function __construct($profile, LoggerInterface $logger = null)
+    public function __construct($profile, ?LoggerInterface $logger = null)
     {
         // Because of the use of '@', we must test the existence of Mysql
         // else we cou

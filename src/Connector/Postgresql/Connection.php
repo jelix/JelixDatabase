@@ -7,7 +7,7 @@
  * @contributor Julien Issler
  * @contributor Alexandre Zanelli
  *
- * @copyright  2001-2005 CopixTeam, 2005-2023 Laurent Jouanneau, 2007-2008 Laurent Raufaste, 2009 Julien Issler
+ * @copyright  2001-2005 CopixTeam, 2005-2025 Laurent Jouanneau, 2007-2008 Laurent Raufaste, 2009 Julien Issler
  *
  * @see      https://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -24,7 +24,7 @@ class Connection extends AbstractConnection
 {
     protected $_charsets = array('UTF-8' => 'UNICODE', 'ISO-8859-1' => 'LATIN1');
 
-    public function __construct($profile, LoggerInterface $logger = null)
+    public function __construct($profile, ?LoggerInterface $logger = null)
     {
         if (!function_exists('pg_connect')) {
             throw new Exception('Pgsql extension is not installed in PHP', 405);

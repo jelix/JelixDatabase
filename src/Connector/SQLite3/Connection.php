@@ -3,7 +3,7 @@
  * @author     Loic Mathaud
  * @contributor Laurent Jouanneau
  *
- * @copyright  2006 Loic Mathaud, 2007-2024 Laurent Jouanneau
+ * @copyright  2006 Loic Mathaud, 2007-2025 Laurent Jouanneau
  *
  * @see      https://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -18,7 +18,7 @@ use Psr\Log\LoggerInterface;
  */
 class Connection extends AbstractConnection
 {
-    public function __construct($profile, LoggerInterface $logger = null)
+    public function __construct($profile, ?LoggerInterface $logger = null)
     {
         if (!class_exists('SQLite3')) {
             throw new Exception('Sqlite3 extension is not installed in PHP', 405);

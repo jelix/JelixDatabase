@@ -2,7 +2,7 @@
 /**
  * @author     Philippe Villiers
  * @contributor Laurent Jouanneau
- * @copyright  2013 Philippe Villiers, 2017-2023 Laurent Jouanneau
+ * @copyright  2013 Philippe Villiers, 2017-2025 Laurent Jouanneau
  *
  * @see        https://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -20,7 +20,7 @@ class Connection extends AbstractConnection
     // Charsets equivalents
     protected $_charsets = array('UTF-8' => 'AL32UTF8', 'ISO-8859-1' => 'WE8ISO8859P1');
 
-    public function __construct($profile, LoggerInterface $logger = null)
+    public function __construct($profile, ?LoggerInterface $logger = null)
     {
         if (!function_exists('oci_connect')) {
             throw new Exception('Oci extension is not installed in PHP', 405);
