@@ -1,7 +1,7 @@
 <?php
 /**
  * @author     Laurent Jouanneau
- * @copyright  2010-2020 Laurent Jouanneau
+ * @copyright  2010-2025 Laurent Jouanneau
  *
  * @see        https://jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -35,11 +35,16 @@ class Schema extends AbstractSchema
 
     public function prepareSqlColumn($col, $isPrimaryKey = false, $isSinglePrimaryKey = false)
     {
-        if ($isSinglePrimaryKey && $col->autoIncrement) {
+        if ($isSinglePrimaryKey && $col->autoIncrement && $col->autoIncrementFlavor == '') {
             $col->type = 'serial';
         }
 
-        return parent::prepareSqlColumn($col, $isPrimaryKey, $isSinglePrimaryKey);
+        $colStr = parent::prepareSqlColumn($col, $isPrimaryKey, $isSinglePrimaryKey);
+
+        if ($isSinglePrimaryKey && $col->autoIncrement && $col->autoIncrementFlavor != '') {
+            $colStr .= ' '.$col->autoIncrementFlavor;
+        }
+        return $colStr;
     }
 
     protected function _getTables()

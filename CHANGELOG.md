@@ -4,8 +4,9 @@ Changelog
 Next
 -----
 
-- support of generated column in the PostgreSQL adapter. 
-- support of JSON fields into tools
+- Support of generated column in the PostgreSQL adapter. 
+- Support of Identity column for Postgresql
+- Support of JSON fields into tools
 
 Version 1.3.2
 -------------

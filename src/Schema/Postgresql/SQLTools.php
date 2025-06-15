@@ -263,7 +263,7 @@ class SQLTools extends \Jelix\Database\Schema\AbstractSqlTools
         $adColName = ($version < 12 ? 'd.adsrc' : 'pg_get_expr(d.adbin,d.adrelid) AS adsrc');
 
         $sql_get_fields = "SELECT t.typname, a.attname, a.attnotnull, a.attnum, a.attlen, a.atttypmod, a.attgenerated,
-        a.atthasdef, $adColName
+        a.attidentity, a.atthasdef, $adColName
         FROM pg_type t, pg_attribute a LEFT JOIN pg_attrdef d ON (d.adrelid=a.attrelid AND d.adnum=a.attnum)
         WHERE
           a.attnum > 0 AND a.attrelid = ".$table->oid.' AND a.atttypid = t.oid
@@ -288,6 +288,9 @@ class SQLTools extends \Jelix\Database\Schema\AbstractSqlTools
             $field->minLength = $typeinfo[4];
 
             if ((is_string($line->adsrc) && preg_match('/^nextval\(.*\)$/', $line->adsrc)) || $typeinfo[6]) {
+                $field->autoIncrement = true;
+                $field->default = '';
+            } elseif ($line->attidentity == 'a' || $line->attidentity == 'd') {
                 $field->autoIncrement = true;
                 $field->default = '';
             }

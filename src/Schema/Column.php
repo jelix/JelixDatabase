@@ -1,7 +1,7 @@
 <?php
 /**
  * @author     Laurent Jouanneau
- * @copyright  2010-2024 Laurent Jouanneau
+ * @copyright  2010-2025 Laurent Jouanneau
  *
  * @see        https://jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -107,6 +107,12 @@ class Column
     public $comment = '';
 
     public $arrayDims = 0;
+
+    /**
+     * @var string indicate which kind of autoincremented the column is.
+     *              Content depends on the adapter.
+     */
+    public $autoIncrementFlavor = '';
 
     public function __construct(
         $name,

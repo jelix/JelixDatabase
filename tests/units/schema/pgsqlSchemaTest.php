@@ -2,7 +2,7 @@
 /**
 * @author      Laurent Jouanneau
 * @contributor Julien Issler
-* @copyright   2007-2020 Laurent Jouanneau, 2010 Julien Issler
+* @copyright   2007-2025 Laurent Jouanneau, 2010 Julien Issler
 * @link        https://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -283,6 +283,7 @@ class pgsqlSchemaTest extends \Jelix\UnitTests\UnitTestCaseDb
             'labels_test',
             'product_test',
             'products',
+            'products_with_identity',
             'generated_column_test',
         );
 
@@ -575,6 +576,113 @@ class pgsqlSchemaTest extends \Jelix\UnitTests\UnitTestCaseDb
         $this->assertFalse($table->getColumn('myintegers2')->isAutoincrementedColumn());
     }
 
+    function testTableHavingIdentity() {
+
+        $db = $this->getConnection();
+        $schema = $db->schema();
+
+        $table = $schema->getTable('products_with_identity');
+
+        $this->assertNotNull($table);
+
+        $this->assertEquals('products_with_identity', $table->getName());
+
+        $pk = $table->getPrimaryKey();
+        $this->assertEquals(array('id'), $pk->columns);
+
+        $is64bits = ( PHP_INT_SIZE*8 == 64 );
+
+        $verif='<array>
+    <object class="\\Jelix\\Database\\Schema\\Column" key="id">
+        <string property="type" value="integer" />
+        <string property="name" value="id" />
+        <boolean property="notNull" value="true"/>
+        <boolean property="autoIncrement" value="true"/>
+        <string property="default" value="" />
+        <boolean property="hasDefault" value="false"/>
+        <integer property="length" value="0"/>
+        <integer property="precision" value="0"/>
+        <integer property="scale" value="0"/>
+        <boolean property="sequence" value="false" />
+        <boolean property="unsigned" value="false" />
+        <null property="minLength"/>
+        <null property="maxLength"/>'.
+            ($is64bits ?
+                '<integer property="minValue" value="-2147483648"/>' :
+                '<double property="minValue" value="-2147483648"/>').
+            '<integer property="maxValue" value="2147483647"/>
+    </object>
+    <object class="\\Jelix\\Database\\Schema\\Column" key="name">
+        <string property="type" value="character" />
+        <string property="name" value="name" />
+        <boolean property="notNull" value="true"/>
+        <boolean property="autoIncrement" value="false"/>
+        <string property="default" value="" />
+        <boolean property="hasDefault" value="false"/>
+        <integer property="length" value="150"/>
+        <integer property="precision" value="0"/>
+        <integer property="scale" value="0"/>
+        <boolean property="sequence" value="false" />
+        <boolean property="unsigned" value="false" />
+        <integer property="minLength" value="0"/>
+        <integer property="maxLength" value="150"/>
+        <null property="minValue"/>
+        <null property="maxValue"/>
+    </object>
+    <object class="\\Jelix\\Database\\Schema\\Column" key="price">
+        <string property="type" value="real" />
+        <string property="name" value="price" />
+        <boolean property="notNull" value="false"/>
+        <boolean property="autoIncrement" value="false"/>
+        <string property="default" value="0" />
+        <boolean property="hasDefault" value="true"/>
+        <integer property="length" value="0"/>
+        <integer property="precision" value="0"/>
+        <integer property="scale" value="0"/>
+        <boolean property="sequence" value="false" />
+        <boolean property="unsigned" value="false" />
+        <null property="minLength"/>
+        <null property="maxLength"/>
+        <null property="minValue"/>
+        <null property="maxValue"/>
+    </object>
+    <object class="\\Jelix\\Database\\Schema\\Column" key="promo">
+        <string property="type" value="boolean" />
+        <string property="name" value="promo" />
+        <boolean property="notNull" value="true"/>
+        <boolean property="autoIncrement" value="false"/>
+        <string property="default" value="" />
+        <boolean property="hasDefault" value="false"/>
+        <integer property="length" value="0"/>
+        <integer property="precision" value="0"/>
+        <integer property="scale" value="0"/>
+        <boolean property="sequence" value="false" />
+        <boolean property="unsigned" value="false" />
+        <null property="minLength"/>
+        <null property="maxLength"/>
+        <integer property="minValue" value="0"/>
+        <integer property="maxValue" value="1"/>
+    </object>
+</array>';
+
+        $this->assertComplexIdenticalStr($table->getColumns(), $verif);
+
+        $verif = '<object class="\\Jelix\\Database\\Schema\\PrimaryKey">
+                <string property="name" value="products_with_identity_pkey" />
+                <array property="columns">
+                    <string value="id"/>
+                </array>
+         </object>';
+        $this->assertComplexIdenticalStr($table->getPrimaryKey(), $verif);
+        $this->assertEquals(array(), $table->getIndexes());
+        $this->assertEquals(array(), $table->getUniqueKeys());
+        $this->assertEquals(array(), $table->getReferences());
+        $this->assertTrue($table->getColumn('id')->isAutoincrementedColumn());
+        $this->assertFalse($table->getColumn('name')->isAutoincrementedColumn());
+        $this->assertFalse($table->getColumn('name')->generated);
+    }
+
+
     function testGeneratedColumn()
     {
         $db = $this->getConnection();
@@ -827,6 +935,7 @@ class pgsqlSchemaTest extends \Jelix\UnitTests\UnitTestCaseDb
             'labels_test',
             'product_test',
             'products',
+            'products_with_identity',
             'test_prod',
         );
 
@@ -1000,6 +1109,7 @@ class pgsqlSchemaTest extends \Jelix\UnitTests\UnitTestCaseDb
             'products',
             'test_prod',
             'item_array_text',
+            'products_with_identity',
         );
 
         $list = $schema->getTables();
