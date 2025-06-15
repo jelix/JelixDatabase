@@ -5,7 +5,7 @@ Next
 -----
 
 - support of generated column in the PostgreSQL adapter. 
-
+- support of JSON fields into tools
 
 Version 1.3.2
 -------------

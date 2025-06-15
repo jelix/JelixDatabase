@@ -3,7 +3,7 @@
  * @author     Gwendal Jouannic
  * @contributor Laurent Jouanneau
  *
- * @copyright  2008 Gwendal Jouannic, 2009-2020 Laurent Jouanneau
+ * @copyright  2008 Gwendal Jouannic, 2009-2025 Laurent Jouanneau
  *
  * @see      https://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -74,6 +74,10 @@ class SQLTools extends \Jelix\Database\Schema\AbstractSqlTools
         'long' => array('longtext',   'text',       null,       null,       0,     0),
         'clob' => array('longtext',   'text',       null,       null,       0,     0),
         'nclob' => array('longtext',   'text',       null,       null,       0,     0),
+
+        // native type only in oracle 21c+ (dec. 2020)
+        'json' => array('longtext', 'json',       null,       null,       0,     0),
+        'jsonb' => array('longtext', 'json',       null,       null,       0,     0),
 
         'tinyblob' => array('tinyblob',   'blob',       null,       null,       0,     255),
         'blob' => array('blob',       'blob',       null,       null,       0,     65535),
