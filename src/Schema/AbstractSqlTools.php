@@ -2,7 +2,7 @@
 /**
  * @author     Gérald Croes, Laurent Jouanneau
  * @contributor Laurent Jouanneau, Julien Issler
- * @copyright  2001-2005 CopixTeam, 2005-2023 Laurent Jouanneau, 2008 Julien Issler
+ * @copyright  2001-2005 CopixTeam, 2005-2025 Laurent Jouanneau, 2008 Julien Issler
  *
  * @see        https://jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -32,7 +32,7 @@ abstract class AbstractSqlTools implements SqlToolsInterface
     /**
      * @param ConnectionInterface $connector the connection to a database
      */
-    public function __construct(ConnectionInterface $connector = null)
+    public function __construct(?ConnectionInterface $connector = null)
     {
         $this->_conn = $connector;
     }
@@ -61,6 +61,7 @@ abstract class AbstractSqlTools implements SqlToolsInterface
         'blob' => 'string',
         'binary' => 'string',
         'varbinary' => 'string',
+        'json' => 'array',
     );
 
     protected $typesInfo = array();
@@ -71,9 +72,15 @@ abstract class AbstractSqlTools implements SqlToolsInterface
      * @param string $nativeType the SQL type
      *
      * @return array an array which contains characteristics of the type
-     *               array ( 'nativetype', 'corresponding unifiedtype', minvalue, maxvalue, minlength, maxlength, autoincrement)
+     *               array (
+     *                   0 => 'nativetype',
+     *                   1 => 'corresponding unifiedtype',
+     *                   2 => minvalue,
+     *                   3 => maxvalue,
+     *                   4 => minlength,
+     *                   5 => maxlength,
+     *                   6 => autoincrement)
      *               minvalue, maxvalue, minlength, maxlength can be null
-     *
      */
     public function getTypeInfo($nativeType)
     {
@@ -199,6 +206,10 @@ abstract class AbstractSqlTools implements SqlToolsInterface
             case 'numeric':
             case 'decimal':
                return Utilities::floatToStr($value);
+            case 'array':
+                if (!is_string($value)) {
+                    $value = json_encode($value);
+                }
             default:
                 if ($toPhpSource) {
                     if ($unifiedType == 'varbinary' || $unifiedType == 'binary') {
@@ -668,6 +679,10 @@ abstract class AbstractSqlTools implements SqlToolsInterface
                         $val = 'NULL';
                         $op = 'IS';
 
+                        break;
+                    case 'array':
+                    case 'object':
+                        $val = $this->_conn->quote(json_encode($value));
                         break;
                     default:
                         $this->_conn->rollback();

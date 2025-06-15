@@ -4,7 +4,7 @@
  * @contributor Laurent Jouanneau
  * @contributor Florian Lonqueu-Brochard
  *
- * @copyright  2001-2005 CopixTeam, 2005-2023 Laurent Jouanneau
+ * @copyright  2001-2005 CopixTeam, 2005-2025 Laurent Jouanneau
  * @copyright  2012 Florian Lonqueu-Brochard
  *
  * @see      https://jelix.org
@@ -80,6 +80,9 @@ class SQLTools extends \Jelix\Database\Schema\AbstractSqlTools
         'long' => array('longtext',   'text',       null,       null,       0,     0),
         'clob' => array('longtext',   'text',       null,       null,       0,     0),
         'nclob' => array('longtext',   'text',       null,       null,       0,     0),
+
+        'json' => array('json', 'json',       null,       null,       0,     0),
+        'jsonb' => array('json', 'json',       null,       null,       0,     0),
 
         'tinyblob' => array('tinyblob',   'varbinary',  null,       null,       0,     255),
         'blob' => array('blob',       'varbinary',  null,       null,       0,     65535),

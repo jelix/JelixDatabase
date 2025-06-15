@@ -4,7 +4,7 @@
  * @contributor Laurent Jouanneau
  * @contributor Nicolas Jeudy (patch ticket #99)
  *
- * @copyright  2005-2024 Laurent Jouanneau
+ * @copyright  2005-2025 Laurent Jouanneau
  *
  * @see     https://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -83,6 +83,9 @@ class SQLTools extends \Jelix\Database\Schema\AbstractSqlTools
         'long' => array('text',   'text',       null,       null,       0,     0),
         'clob' => array('text',   'text',       null,       null,       0,     0),
         'nclob' => array('text',   'text',       null,       null,       0,     0),
+
+        'json' => array('json', 'json',       null,       null,       0,     0),
+        'jsonb' => array('jsonb', 'json',       null,       null,       0,     0),
 
         'tinyblob' => array('bytea',   'blob',       null,       null,       0,     255),
         'blob' => array('bytea',   'blob',       null,       null,       0,     65535),
@@ -261,7 +264,7 @@ class SQLTools extends \Jelix\Database\Schema\AbstractSqlTools
         $adColName = ($version < 12 ? 'd.adsrc' : 'pg_get_expr(d.adbin,d.adrelid) AS adsrc');
 
         $sql_get_fields = "SELECT t.typname, a.attname, a.attnotnull, a.attnum, a.attlen, a.atttypmod, a.attgenerated,
-        a.atthasdef, $adColName
+        a.attidentity, a.atthasdef, $adColName
         FROM pg_type t, pg_attribute a LEFT JOIN pg_attrdef d ON (d.adrelid=a.attrelid AND d.adnum=a.attnum)
         WHERE
           a.attnum > 0 AND a.attrelid = ".$table->oid.' AND a.atttypid = t.oid
@@ -286,6 +289,9 @@ class SQLTools extends \Jelix\Database\Schema\AbstractSqlTools
             $field->minLength = $typeinfo[4];
 
             if ((is_string($line->adsrc) && preg_match('/^nextval\(.*\)$/', $line->adsrc)) || $typeinfo[6]) {
+                $field->autoIncrement = true;
+                $field->default = '';
+            } elseif ($line->attidentity == 'a' || $line->attidentity == 'd') {
                 $field->autoIncrement = true;
                 $field->default = '';
             }

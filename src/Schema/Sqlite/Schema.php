@@ -3,7 +3,7 @@
  * @author     Laurent Jouanneau
  * @contributor     Loic Mathaud
  *
- * @copyright  2006 Loic Mathaud, 2007-2024 Laurent Jouanneau
+ * @copyright  2006 Loic Mathaud, 2007-2025 Laurent Jouanneau
  *
  * @see        https://jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -210,7 +210,7 @@ class Schema extends AbstractSchema
                 $colstr .= ','.$col->scale;
             }
             $colstr .= ')';
-        } elseif ($col->length && $ti[1] != 'text' && $ti[1] != 'blob') {
+        } elseif ($col->length && $ti[1] != 'text' && $ti[1] != 'blob' && $ti[1] != 'json') {
             $colstr .= '('.$col->length.')';
         }
 

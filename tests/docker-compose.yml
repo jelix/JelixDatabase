@@ -14,7 +14,6 @@ services:
   mysql:
     image: mysql:8
     container_name: jdb_test_mysql
-    command: --mysql-native-password=ON
     environment:
       MYSQL_ROOT_PASSWORD: mysqlpass
       MYSQL_DATABASE: jelixtests
@@ -22,6 +21,8 @@ services:
       MYSQL_PASSWORD: jelixpass
     ports:
       - "8522:3306"
+    volumes:
+      - jdb_mysql_data:/var/lib/mysql
   #sqlsrv:
   #   image: mcr.microsoft.com/mssql/server:2019-CU15-ubuntu-20.04
   #   container_name: jdb_test_sqlsrv
@@ -49,3 +50,5 @@ services:
 volumes:
   jdb_pg_data:
       name: jdb_test_pg_data
+  jdb_mysql_data:
+      name: jdb_test_mysql_data

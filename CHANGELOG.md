@@ -14,6 +14,14 @@ about what to do between and after queries.
 An object `Jelix\Database\Log\QueryLogger` is provided, implementing this
 interface, and can use a `Psr\Log\LoggerInterface` object.
 
+
+1.4.0-pre
+---------
+
+- Support of generated column in the PostgreSQL adapter. 
+- Support of Identity column for Postgresql
+- Support of JSON fields into tools
+
 Version 1.3.2
 -------------
 

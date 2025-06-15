@@ -3,7 +3,7 @@
  * @author     Loic Mathaud
  * @contributor Laurent Jouanneau
  *
- * @copyright  2006 Loic Mathaud, 2007-2020 Laurent Jouanneau
+ * @copyright  2006 Loic Mathaud, 2007-2025 Laurent Jouanneau
  *
  * @see      https://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -80,6 +80,9 @@ class SQLTools extends \Jelix\Database\Schema\AbstractSqlTools
         'long' => array('text',   'text',      null,       null,       0,     0),
         'clob' => array('text',   'text',      null,       null,       0,     0),
         'nclob' => array('text',   'text',      null,       null,       0,     0),
+
+        'json' => array('text', 'json',       null,       null,       0,     0),
+        'jsonb' => array('text', 'json',       null,       null,       0,     0),
 
         'tinyblob' => array('blob',  'blob',       null,       null,       0,     null),
         'blob' => array('blob',  'blob',       null,       null,       0,     null),
