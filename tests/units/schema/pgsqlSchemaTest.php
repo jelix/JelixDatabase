@@ -1180,6 +1180,7 @@ class pgsqlSchemaTest extends \Jelix\UnitTests\UnitTestCaseDb
         $goodList = array(
             'article',
             'generated_column_test',
+            'article',
             'labels_test',
             'product_test',
             'products',

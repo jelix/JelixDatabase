@@ -1,9 +1,9 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2015-2023 Laurent Jouanneau
+ * @copyright   2015-2025 Laurent Jouanneau
  *
- * @see        http://jelix.org
+ * @see         https://jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
@@ -38,7 +38,7 @@ namespace Jelix\Database;
  *  - search_path: schema for pgsql (optional)
  *  - table_prefix: prefix to add to database table. Used by jDao (optional)
  */
-class AccessParameters
+class AccessParameters extends \jDbParameters
 {
     protected $parameters = array();
 

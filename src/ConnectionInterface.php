@@ -11,6 +11,7 @@ namespace Jelix\Database;
 
 use Jelix\Database\Schema\SchemaInterface;
 use Jelix\Database\Schema\SqlToolsInterface;
+
 use Jelix\Database\Schema\TableNameInterface;
 
 interface ConnectionInterface
@@ -29,6 +30,14 @@ interface ConnectionInterface
      * Automatically called by the destructor
      */
     public function close();
+
+    /**
+     * alias of close()
+     * @deprecated
+     */
+    public function disconnect();
+
+    public function isClosed();
 
     public function getProfileName();
 
@@ -242,7 +251,7 @@ interface ConnectionInterface
     /**
      * Indicate the default schema used for the user of the connection.
      *
-     * For connector that don't support schema, return an empty name
+     * For connectors that don't support schema, return an empty name
      *
      * @return string the schema name
      */

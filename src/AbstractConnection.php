@@ -18,6 +18,7 @@ namespace Jelix\Database;
 use Jelix\Database\Log\QueryLoggerInterface;
 use Jelix\Database\Schema\SchemaInterface;
 use Jelix\Database\Schema\SqlToolsInterface;
+
 use Jelix\Database\Schema\TableNameInterface;
 
 /**
@@ -28,7 +29,7 @@ use Jelix\Database\Schema\TableNameInterface;
  * @property $lastQuery  deprecated
  *
  */
-abstract class AbstractConnection implements ConnectionInterface, ConnectionConstInterface
+abstract class AbstractConnection extends \jDbConnection implements ConnectionInterface, ConnectionConstInterface
 {
     /**
      * profile properties used by the connector.
@@ -442,7 +443,7 @@ abstract class AbstractConnection implements ConnectionInterface, ConnectionCons
     /**
      * Indicate the default schema used for the user of the connection.
      *
-     * For connector that don't support schema, return an empty name
+     * For connectors that don't support schema, return an empty name
      *
      * @return string the schema name
      */
