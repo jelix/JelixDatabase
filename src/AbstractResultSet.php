@@ -1,9 +1,9 @@
 <?php
 /**
- * @author      Laurent Jouanneau
- * @copyright  2005-2020 Laurent Jouanneau
+ * @author     Laurent Jouanneau
+ * @copyright  2005-2025 Laurent Jouanneau
  *
- * @see      https://www.jelix.org
+ * @see        https://www.jelix.org
  * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 namespace Jelix\Database;
@@ -12,7 +12,7 @@ namespace Jelix\Database;
  * represent a statement result set or a prepared statement result set.
  *
  */
-abstract class AbstractResultSet implements ResultSetInterface, \Iterator
+abstract class AbstractResultSet extends \jDbResultSet implements ResultSetInterface, \Iterator
 {
     protected $_idResult;
     protected $_fetchMode = 0;

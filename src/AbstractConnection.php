@@ -29,7 +29,7 @@ use Jelix\Database\Schema\TableNameInterface;
  * @property $lastQuery  deprecated
  *
  */
-abstract class AbstractConnection implements ConnectionInterface, ConnectionConstInterface
+abstract class AbstractConnection extends \jDbConnection implements ConnectionInterface, ConnectionConstInterface
 {
     /**
      * profile properties used by the connector.
