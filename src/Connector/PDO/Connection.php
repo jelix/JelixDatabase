@@ -10,7 +10,6 @@
  */
 namespace Jelix\Database\Connector\PDO;
 
-use jDbPDOConnection;
 use Jelix\Database\AbstractConnection;
 use Jelix\Database\Schema\Postgresql\SQLTools;
 use Jelix\Database\Schema\SchemaInterface;
@@ -25,7 +24,7 @@ use Jelix\Database\Schema\TableNameInterface;
  * @package  jelix
  * @subpackage db
  */
-class Connection extends AbstractConnection implements jDbPDOConnection
+class Connection extends AbstractConnection
 {
 
     /**
@@ -121,7 +120,7 @@ class Connection extends AbstractConnection implements jDbPDOConnection
     {
         // for compatibility with older jelix version
         if ($parameter_type === false || $parameter_type === true) {
-            trigger_error('signature of jDbConnection::quote has changed, you should use quote2()', E_USER_WARNING);
+            trigger_error('signature of ConnectionInterface::quote() has changed, you should use quote2()', E_USER_WARNING);
         }
 
         return $this->_connection->quote($text, $parameter_type);

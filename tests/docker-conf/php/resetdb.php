@@ -79,13 +79,6 @@ while($tryAgain) {
     promo boolean NOT NULL
 )");
 
-    pg_query($cnx, "CREATE SCHEMA IF NOT EXISTS newspaper");
-
-    pg_query($cnx, "CREATE TABLE newspaper.article (
-        id serial NOT NULL,
-        title VARCHAR( 255 ) NOT NULL,
-        content TEXT NOT NULL)");
-    pg_query($cnx, "SELECT pg_catalog.setval(pg_catalog.pg_get_serial_sequence('newspaper.article', 'id'), 1, false)");
 
     pg_query($cnx, "SELECT pg_catalog.setval(pg_catalog.pg_get_serial_sequence('products', 'id'), 1, false)");
 

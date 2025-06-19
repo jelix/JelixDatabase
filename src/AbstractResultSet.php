@@ -12,7 +12,7 @@ namespace Jelix\Database;
  * represent a statement result set or a prepared statement result set.
  *
  */
-abstract class AbstractResultSet extends \jDbResultSet implements ResultSetInterface, \Iterator
+abstract class AbstractResultSet implements ResultSetInterface, \Iterator
 {
     protected $_idResult;
     protected $_fetchMode = 0;

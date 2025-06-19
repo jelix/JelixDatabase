@@ -12,7 +12,6 @@
  */
 namespace Jelix\Database\Connector\PDO;
 
-use jDbPDOResultSet;
 use Jelix\Database\AbstractResultSet;
 
 /**
@@ -21,7 +20,7 @@ use Jelix\Database\AbstractResultSet;
  * @package  jelix
  * @subpackage db
  */
-class ResultSet  extends AbstractResultSet implements jDbPDOResultSet
+class ResultSet  extends AbstractResultSet
 {
     /**
      * @var \PDOStatement

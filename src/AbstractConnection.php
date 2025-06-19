@@ -29,7 +29,7 @@ use Jelix\Database\Schema\TableNameInterface;
  * @property $lastQuery  deprecated
  *
  */
-abstract class AbstractConnection extends \jDbConnection implements ConnectionInterface, ConnectionConstInterface
+abstract class AbstractConnection implements ConnectionInterface, ConnectionConstInterface
 {
     /**
      * profile properties used by the connector.
@@ -89,6 +89,11 @@ abstract class AbstractConnection extends \jDbConnection implements ConnectionIn
             $this->_disconnect();
             $this->_connection = null;
         }
+    }
+
+    public function disconnect()
+    {
+        $this->close();
     }
 
     /**
@@ -255,7 +260,7 @@ abstract class AbstractConnection extends \jDbConnection implements ConnectionIn
     {
         // for compatibility with older jelix version
         if ($parameter_type === false || $parameter_type === true) {
-            trigger_error('signature of jDbConnection::quote has changed, you should use quote2()', E_USER_WARNING);
+            trigger_error('signature of ConnectionInterface::quote() has changed, you should use quote2()', E_USER_WARNING);
         }
 
         return "'".$this->_quote($text, false)."'";

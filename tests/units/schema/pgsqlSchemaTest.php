@@ -1178,7 +1178,6 @@ class pgsqlSchemaTest extends \Jelix\UnitTests\UnitTestCaseDb
         $schema->dropTable('bigcity');
         $schema->dropTable($schema->getTable('country'));
         $goodList = array(
-            'article',
             'generated_column_test',
             'article',
             'labels_test',

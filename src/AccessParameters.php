@@ -38,7 +38,7 @@ namespace Jelix\Database;
  *  - search_path: schema for pgsql (optional)
  *  - table_prefix: prefix to add to database table. Used by jDao (optional)
  */
-class AccessParameters extends \jDbParameters
+class AccessParameters
 {
     protected $parameters = array();
 

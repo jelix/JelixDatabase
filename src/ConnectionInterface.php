@@ -33,7 +33,6 @@ interface ConnectionInterface
 
     /**
      * alias of close()
-     * @deprecated
      */
     public function disconnect();
 

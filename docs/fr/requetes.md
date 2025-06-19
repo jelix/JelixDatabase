@@ -239,15 +239,16 @@ Les objets contenant les enregistrements sont des objets "anonymes" (ils n'ont
 pas de classe précise). Si vous voulez que ce soient des objets d'une certaine
 classe, vous devez l'indiquer via `setFetchMode()` :
 
-
 ```php
+  use Jelix\Database\ConnectionInterface;
+  
   class User {
     ...
   }
 
   $rs = $conn->query('SELECT nom, prenom FROM users');
 
-  $rs->setFetchMode(jDbConnection::FETCH_CLASS, 'User');
+  $rs->setFetchMode(ConnectionInterface::FETCH_CLASS, 'User');
 
   $result = '';
   foreach ($rs as $record) {
