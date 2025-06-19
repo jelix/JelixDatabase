@@ -12,6 +12,7 @@ namespace Jelix\Database;
 use Jelix\Database\Schema\SchemaInterface;
 use Jelix\Database\Schema\SqlToolsInterface;
 use Psr\Log\LoggerInterface;
+use Jelix\Database\Schema\TableNameInterface;
 
 interface ConnectionInterface
 {
@@ -42,6 +43,12 @@ interface ConnectionInterface
      * @return string
      */
     public function getSQLType();
+
+
+    public function getDriverName();
+
+    public function getLastQuery();
+
 
     /**
      * Launch a SQL Query which returns rows (typically, a SELECT statement).
@@ -111,14 +118,13 @@ interface ConnectionInterface
      * Prefix the given table with the prefix specified in the connection's profile
      * If there's no prefix for the connection's profile, return the table's name unchanged.
      *
-     * @param string $table      the table's name
-     * @param mixed  $table_name
+     * @param string $tableName      the table's name
      *
      * @return string the prefixed table's name
      *
      * @author Julien Issler
      */
-    public function prefixTable($table_name);
+    public function prefixTable($tableName);
 
     /**
      * Remove the prefix of the given table name.
@@ -142,6 +148,14 @@ interface ConnectionInterface
      * @return string
      */
     public function getTablePrefix();
+
+    /**
+     * Create a TableNameInterface name tied to the type of database server
+     *
+     * @param string $name
+     * @return TableNameInterface
+     */
+    public function createTableName(string $name) : TableNameInterface;
 
     /**
      * sets the autocommit state.
@@ -223,6 +237,15 @@ interface ConnectionInterface
      * @return int the maximum value
      */
     public function lastIdInTable($fieldName, $tableName);
+
+    /**
+     * Indicate the default schema used for the user of the connection.
+     *
+     * For connectors that don't support schema, return an empty name
+     *
+     * @return string the schema name
+     */
+    public function getDefaultSchemaName();
 
     /**
      * @return SqlToolsInterface

@@ -18,6 +18,9 @@
     "require-dev" : {
         "phpunit/phpunit": "8.5.*"
     },
+    "suggest": {
+        "jelix/profiles": "Ease the management of connection parameters"
+    },
     "archive": {
         "exclude": ["/tests"]
     },

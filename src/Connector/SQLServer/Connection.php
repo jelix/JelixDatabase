@@ -13,6 +13,8 @@ namespace Jelix\Database\Connector\SQLServer;
 use Jelix\Database\AbstractConnection;
 use Jelix\Database\Exception;
 use Psr\Log\LoggerInterface;
+use Jelix\Database\Schema\Sqlserver\TableName;
+use Jelix\Database\Schema\TableNameInterface;
 
 /**
  *
@@ -232,6 +234,23 @@ class Connection extends AbstractConnection
         return null;
     }
 
+    protected $defaultSchemaName = null;
+
+    public function getDefaultSchemaName()
+    {
+        if ($this->defaultSchemaName === null) {
+            $queryString = 'SELECT SCHEMA_NAME() as name';
+            $result = $this->_doQuery($queryString);
+            if ($result && $rec = $result->fetch()) {
+                $this->defaultSchemaName = $rec->name;
+            }
+            else {
+                $this->defaultSchemaName = '';
+            }
+        }
+        return $this->defaultSchemaName;
+    }
+
     /**
      * @param mixed $query
      */
@@ -287,5 +306,10 @@ class Connection extends AbstractConnection
     protected function _getSchema()
     {
         return new \Jelix\Database\Schema\Sqlserver\Schema($this);
+    }
+
+    public function createTableName(string $name) : TableNameInterface
+    {
+        return new TableName($name, $this->getDefaultSchemaName(), $this->getTablePrefix());
     }
 }

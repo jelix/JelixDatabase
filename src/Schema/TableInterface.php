@@ -11,12 +11,20 @@ namespace Jelix\Database\Schema;
 interface TableInterface
 {
     /**
-     * @param string    $name   the table name
+     * @param TableNameInterface $name   the table name
      * @param SchemaInterface $schema
      */
-    public function __construct($name, SchemaInterface $schema);
+    public function __construct(TableNameInterface $name, SchemaInterface $schema);
 
+    /**
+     * @return string the table name without schema name
+     */
     public function getName();
+
+    /**
+     * @return TableNameInterface
+     */
+    public function getTableName();
 
     /**
      * @return Column[]

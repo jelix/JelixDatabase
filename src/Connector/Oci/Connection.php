@@ -12,6 +12,8 @@ namespace Jelix\Database\Connector\Oci;
 use Jelix\Database\AbstractConnection;
 use Jelix\Database\Exception;
 use Psr\Log\LoggerInterface;
+use Jelix\Database\Schema\Oci\TableName;
+use Jelix\Database\Schema\TableNameInterface;
 
 /**
  */
@@ -173,5 +175,10 @@ class Connection extends AbstractConnection
     protected function _getSchema()
     {
         return new \Jelix\Database\Schema\Oci\Schema($this);
+    }
+
+    public function createTableName(string $name) : TableNameInterface
+    {
+        return new TableName($name, '', $this->getTablePrefix());
     }
 }

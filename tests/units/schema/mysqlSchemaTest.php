@@ -12,6 +12,7 @@ use \Jelix\Database\Schema\UniqueKey;
 use \Jelix\Database\Schema\Reference;
 use \Jelix\Database\Schema\Index;
 use \Jelix\Database\Schema\Mysql\Table as mysqlTable;
+use \Jelix\Database\Schema\Mysql\TableName as mysqlTableName;
 use \Jelix\Database\Schema\Mysql\Schema as mysqlSchema;
 
 class mysqlSchemaTest extends \Jelix\UnitTests\UnitTestCaseDb {
@@ -524,7 +525,7 @@ class mysqlSchemaTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $this->assertComplexIdenticalStr($list['product_id'], $obj);
 
 
-        $table = new mysqlTable('test_prod', $schema);
+        $table = new mysqlTable(new mysqlTableName('test_prod'), $schema);
 
         $this->assertEquals('test_prod', $table->getName());
 
@@ -644,7 +645,7 @@ class mysqlSchemaTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $reference->fColumns = array('id');
         $table->addReference($reference);
 
-        $table = new mysqlTable('test_prod', $schema);
+        $table = new mysqlTable(new mysqlTableName('test_prod'), $schema);
         $references = $table->getReferences();
         $this->assertTrue(isset($references["product_id_fkey"]));
         $ref = $references["product_id_fkey"];

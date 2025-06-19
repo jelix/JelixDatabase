@@ -65,15 +65,53 @@ else {
 }
 
 // let's use directly normalized parameters to retrieve a connection object
+/** @var ConnectionInterface $conn */
 $conn = Connection::createWithNormalizedParameters($cachedParameters);
 ```
 
-## Launching SQL queries
+## Retrieving a Connection object using JelixProfiles
+
+JelixProfiles is a library that ease the management of connection parameters, by storing them
+into a single configuration file.
+JelixDatabase provides a plugin for JelixProfiles, `Jelix\Database\ProfilePlugin\DbProfilePlugin`.
+
+To use it, first, you have to store the access parameters into an ini file (ex: `/somewhere/profiles.ini`)
+
+```ini
+[db:default]
+driver=mysqli
+host=localhost
+login= mylogin
+password=mypassword
+```
+
+Then you use this code:
+
+```php
+
+use \Jelix\Database\ConnectionInterface;
+use \Jelix\Database\ProfilePlugin\DbProfilePlugin;
+
+$iniFile = '/somewhere/profiles.ini';
+$cacheFile = '/somewhere/profiles.cache.json';
+
+$reader = new \Jelix\Profiles\ProfilesReader([ 'db' => DbProfilePlugin::class]);
+
+/** @var \Jelix\Profiles\ProfilesContainer $profiles */
+$profiles = $reader->readFromFile($iniFile, $cacheFile);
+
+/** @var ConnectionInterface $conn */
+$conn = $profiles->getConnector('db', 'default');
+
+```
+
+
+## Executing SQL queries
 
 To construct your SQL queries, you have an important method to use if you are
 not using prepared statement: `quote()`.
 It escapes all reserved characters of the database, and you should use it for
-all data you want to insert in your SQL queries. It avoid security issue like
+all data you want to insert in your SQL queries. It avoids security issue like
 SQL injection. 
 
 However, the best way to launch secured queries, is to use prepared requests. See

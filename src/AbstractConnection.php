@@ -19,6 +19,7 @@ use Jelix\Database\Schema\SchemaInterface;
 use Jelix\Database\Schema\SqlToolsInterface;
 use Psr\Log\LoggerInterface;
 use Jelix\Database\Log\QueryMessage;
+use Jelix\Database\Schema\TableNameInterface;
 
 /**
  *
@@ -344,6 +345,8 @@ abstract class AbstractConnection implements ConnectionInterface, ConnectionCons
         return $this->_profile['table_prefix'];
     }
 
+    abstract public function createTableName(string $name) : TableNameInterface;
+
     /**
      * sets the autocommit state.
      *
@@ -429,12 +432,24 @@ abstract class AbstractConnection implements ConnectionInterface, ConnectionCons
      */
     public function lastIdInTable($fieldName, $tableName)
     {
-        $rs = $this->query('SELECT MAX('.$fieldName.') as ID FROM '.$tableName);
+        $rs = $this->query('SELECT MAX('.$this->encloseName($fieldName).') as ID FROM '.$this->encloseName($tableName));
         if (($rs !== null) && $r = $rs->fetch()) {
             return $r->ID;
         }
 
         return 0;
+    }
+
+    /**
+     * Indicate the default schema used for the user of the connection.
+     *
+     * For connectors that don't support schema, return an empty name
+     *
+     * @return string the schema name
+     */
+    public function getDefaultSchemaName()
+    {
+        return '';
     }
 
     /**

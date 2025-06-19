@@ -11,11 +11,13 @@
 namespace Jelix\Database\Connector\PDO;
 
 use Jelix\Database\AbstractConnection;
+use Jelix\Database\Schema\Postgresql\SQLTools;
 use Jelix\Database\Schema\SchemaInterface;
 use Psr\Log\LoggerInterface;
 use Jelix\Database\Exception;
 
 use \Jelix\Database\Connection as ConnectionFactory;
+use Jelix\Database\Schema\TableNameInterface;
 
 /**
  * A connection object based on PDO.
@@ -401,5 +403,46 @@ class Connection extends AbstractConnection
                 throw new Exception("not implemented");
         }
         return $schema;
+    }
+
+    public function createTableName(string $name) : TableNameInterface
+    {
+        switch ($this->_profile['dbtype']) {
+            case ConnectionFactory::DB_TYPE_MYSQL:
+                $schema = new \Jelix\Database\Schema\Mysql\TableName($name, '', $this->getTablePrefix());
+                break;
+            case ConnectionFactory::DB_TYPE_PGSQL:
+                $schema = new \Jelix\Database\Schema\Postgresql\TableName($name, $this->getDefaultSchemaName(), $this->getTablePrefix());
+                break;
+            case ConnectionFactory::DB_TYPE_SQLITE:
+                $schema = new \Jelix\Database\Schema\Sqlite\TableName($name, '', $this->getTablePrefix());
+                break;
+            case ConnectionFactory::DB_TYPE_SQLSERVER:
+                $schema = new \Jelix\Database\Schema\Sqlserver\TableName($name, $this->getDefaultSchemaName(), $this->getTablePrefix());
+                break;
+            case ConnectionFactory::DB_TYPE_ORACLE:
+                $schema = new \Jelix\Database\Schema\Oci\TableName($name, '', $this->getTablePrefix());
+                break;
+            default:
+                $schema = null;
+                throw new Exception("not implemented");
+        }
+        return $schema;
+    }
+
+    public function getDefaultSchemaName()
+    {
+        if ($this->_profile['dbtype'] == ConnectionFactory::DB_TYPE_PGSQL) {
+            $tools = new SQLTools();
+            return $tools->getDefaultSchemaName($this);
+        }
+        elseif ($this->_profile['dbtype'] == ConnectionFactory::DB_TYPE_SQLSERVER) {
+            $queryString = 'SELECT SCHEMA_NAME() as name';
+            $result = $this->_doQuery($queryString);
+            if ($result && $rec = $result->fetch()) {
+                return $rec->name;
+            }
+        }
+        return '';
     }
 }

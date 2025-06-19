@@ -11,6 +11,7 @@
  */
 namespace Jelix\Database\Schema\Postgresql;
 
+use Jelix\Database\ConnectionInterface;
 use Jelix\Database\Schema\FieldProperties;
 use Jelix\Database\Schema\Exception;
 
@@ -450,5 +451,38 @@ class SQLTools extends \Jelix\Database\Schema\AbstractSqlTools
         }
 
         return $str.'}';
+    }
+
+    public function getDefaultSchemaName(ConnectionInterface $conn)
+    {
+        $defaultSchema = '';
+
+        // retrieve the search path for the current connection
+        $queryString = 'show search_path';
+        $result = $conn->query($queryString);
+        if ($result) {
+            $schemasList = preg_split('/\"?\s*,\s*\"?/', trim($result->fetch()->search_path, " \t\n\r\0\x0B\""));
+            if (count($schemasList)) {
+                // we take the first existing schema from the list indicated into the search_path
+                foreach($schemasList as $schema) {
+                    if ($schema == '$user') {
+                        $resUser = $conn->query('SELECT CURRENT_USER');
+                        if ($resUser && ($user = $resUser->fetch())) {
+                            $schema = $user->current_user;
+                        }
+                        else {
+                            continue;
+                        }
+                    }
+                    $sql = "SELECT oid FROM pg_namespace WHERE nspname ILIKE ".$conn->quote($schema);
+                    $resSchema = $conn->query($sql);
+                    if ($resSchema && ($recSchema = $resSchema->fetch())) {
+                        $defaultSchema = $schema;
+                        break;
+                    }
+                }
+            }
+        }
+        return $defaultSchema;
     }
 }
