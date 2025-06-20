@@ -432,7 +432,9 @@ abstract class AbstractConnection extends \jDbConnection implements ConnectionIn
      */
     public function lastIdInTable($fieldName, $tableName)
     {
-        $rs = $this->query('SELECT MAX('.$this->encloseName($fieldName).') as ID FROM '.$this->encloseName($tableName));
+        $tName = $this->createTableName($tableName);
+
+        $rs = $this->query('SELECT MAX('.$this->encloseName($fieldName).') as ID FROM '.$tName->getEnclosedFullName());
         if (($rs !== null) && $r = $rs->fetch()) {
             return $r->ID;
         }
