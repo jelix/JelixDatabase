@@ -13,6 +13,11 @@ Next
 - Support of Identity column for Postgresql
 - Support of JSON fields into tools
 - Brings a plugin for JelixProfiles
+- Introduce compatibility with application that used jDb API of Jelix 1.8 and lower: classes of JelixDatabase inherit
+  from some empty classes or empty interfaces having the name of old implementation, so objects can be passed to 
+  functions that have parameters typed with theses classes (`jDbConnection`, `jDbPDOConnection`, `jDbResultSet`, 
+  `jDbPDOResultSet`, `jDbParameters`, `jDbTools`, `jDbSchema`, `jDbWidget`). This feature will be removed into the
+  next major version of JelixDatabase.
 
 Version 1.3.2
 -------------
