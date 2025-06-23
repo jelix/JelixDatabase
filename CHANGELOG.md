@@ -18,9 +18,20 @@ interface, and can use a `Psr\Log\LoggerInterface` object.
 1.4.0-pre
 ---------
 
+- Support of schema names in the API that query and manipulate the structure of the database. It is mainly used 
+  internaly into objects of the object of the `Jelix\Database\Schema` namespace.
+  - supported only for databases having schemas: Postgresql and SqlServer. Schema names are ignored for other databases.  
+  - Onto object implementing `TableInterface` : new method `getTableName()` allowing to access to the schema name, the table name.
+  - On connection objects, new methods `createTableName()` and `getDefaultSchemaName()`.
 - Support of generated column in the PostgreSQL adapter. 
 - Support of Identity column for Postgresql
 - Support of JSON fields into tools
+- Brings a plugin for JelixProfiles
+- Introduce compatibility with application that used jDb API of Jelix 1.8 and lower: classes of JelixDatabase inherit
+  from some empty classes or empty interfaces having the name of old implementation, so objects can be passed to 
+  functions that have parameters typed with theses classes (`jDbConnection`, `jDbPDOConnection`, `jDbResultSet`, 
+  `jDbPDOResultSet`, `jDbParameters`, `jDbTools`, `jDbSchema`, `jDbWidget`). This feature will be removed into the
+  next major version of JelixDatabase.
 
 Version 1.3.2
 -------------
