@@ -14,6 +14,9 @@ about what to do between and after queries.
 An object `Jelix\Database\Log\QueryLogger` is provided, implementing this
 interface, and can use a `Psr\Log\LoggerInterface` object.
 
+- old deprecated classes are removed:  `jDbConnection`, `jDbPDOConnection`, `jDbResultSet`,
+  `jDbPDOResultSet`, `jDbParameters`, `jDbTools`, `jDbSchema`, `jDbWidget`.
+
 
 1.4.0-pre
 ---------
