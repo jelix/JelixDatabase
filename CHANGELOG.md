@@ -1,7 +1,7 @@
 Changelog
 =========
 
-Next
+1.4.0
 -----
 
 - Support of schema names in the API that query and manipulate the structure of the database. It is mainly used 
