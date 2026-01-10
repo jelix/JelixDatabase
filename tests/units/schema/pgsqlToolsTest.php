@@ -113,9 +113,9 @@ class pgsqlToolsTest extends \Jelix\UnitTests\UnitTestCaseDb
      */
     function testParseArrayValue($value, $expectedArray)
     {
-        /** @var \Jelix\Database\Schema\Postgresql\SQLTools $tools */
-        $tools = $this->getConnection()->tools();
-        $result = $tools->decodeArrayValue($value);
+        /** @var \Jelix\Database\Schema\Postgresql\SQLSyntaxHelpers $syntax */
+        $syntax = $this->getConnection()->sqlSyntaxHelpers();
+        $result = $syntax->decodeArrayValue($value);
         $this->assertEquals($expectedArray, $result);
     }
 
@@ -147,9 +147,9 @@ class pgsqlToolsTest extends \Jelix\UnitTests\UnitTestCaseDb
      */
     function testSerializeArrayValue($expectedString, $type, $value)
     {
-        /** @var \Jelix\Database\Schema\Postgresql\SQLTools $tools */
-        $tools = $this->getConnection()->tools();
-        $result = $tools->encodeArrayValue($value, $type);
+        /** @var \Jelix\Database\Schema\Postgresql\SQLSyntaxHelpers $syntax */
+        $syntax = $this->getConnection()->sqlSyntaxHelpers();
+        $result = $syntax->encodeArrayValue($value, $type);
         $this->assertEquals($expectedString, $result);
     }
 }

@@ -18,17 +18,6 @@ use Jelix\Database\Utilities;
  */
 abstract class AbstractSqlTools implements SqlToolsInterface
 {
-    /**
-     * @deprecated use SQLSyntaxHelpers::trueValue const instead
-     * @see Connection::getSqlSyntaxHelpers()
-     */
-    public $trueValue = '1';
-
-    /**
-     * @deprecated use SQLSyntaxHelpers::falseValue const instead
-     * @see Connection::getSqlSyntaxHelpers()
-     */
-    public $falseValue = '0';
 
     /**
      * the database connector.
@@ -39,7 +28,6 @@ abstract class AbstractSqlTools implements SqlToolsInterface
 
     /**
      * @var SQLSyntaxHelpersInterface
-     * @deprecated
      */
     protected $_syntax;
 
@@ -59,97 +47,13 @@ abstract class AbstractSqlTools implements SqlToolsInterface
     }
 
     /**
-     * @inheritDoc
-     * @deprecated
-     */
-    public function getTypeInfo($nativeType)
-    {
-        return $this->_syntax->getTypeInfo($nativeType);
-    }
-
-    /**
-     * @inheritDoc
-     * @deprecated
-     */
-    public function unifiedToPHPType($unifiedType)
-    {
-        return $this->_syntax->unifiedToPHPType($unifiedType);
-    }
-
-    /**
-     * @inheritDoc
-     * @deprecated
-     */
-    public function stringToPhpValue($unifiedType, $value, $checkNull = false)
-    {
-        return $this->_syntax->stringToPhpValue($unifiedType, $value, $checkNull);
-    }
-
-    /**
-     * @inheritDoc
-     * @deprecated
-     */
-    public function parseSQLType($type)
-    {
-        return $this->_syntax->parseSQLType($type);
-    }
-
-    /**
-     * @inheritDoc
-     * @deprecated
-     */
-    public function escapeValue($unifiedType, $value, $checkNull = false, $toPhpSource = false)
-    {
-        if ($toPhpSource) {
-            return $this->_syntax->escapeValueAsPHPSource($unifiedType, $value, $checkNull);
-        }
-        return $this->_syntax->escapeValue($unifiedType, $value, $checkNull);
-    }
-
-    /**
-     * @inheritDoc
-     * @deprecated
-     */
-    public function getBooleanValue($value)
-    {
-        return $this->_syntax->getBooleanValue($value);
-    }
-
-    /**
-     * @inheritDoc
-     * @deprecated
-     */
-    public function encloseName($fieldName)
-    {
-        return $this->_syntax->encloseName($fieldName);
-    }
-
-    /**
-     * @inheritDoc
-     * @deprecated
-     */
-    public function parseSQLFunctionAndConvert($expression)
-    {
-        return $this->_syntax->parseSQLFunctionAndConvert($expression);
-    }
-
-    /**
-     * @inheritDoc
-     * @deprecated
-     */
-    public function getNativeSQLFunction($name, $parametersString = null)
-    {
-        return $this->_syntax->getNativeSQLFunction($name, $parametersString);
-    }
-
-    /**
      * returns the list of tables.
      *
      * @throws Exception
      *
      * @return string[] list of table names
      * @deprecated use SchemaInterface::getTables() instead
-      */
+     */
     public function getTableList()
     {
         $list = $this->_conn->schema()->getTables();

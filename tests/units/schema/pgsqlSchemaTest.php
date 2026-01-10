@@ -431,7 +431,7 @@ class pgsqlSchemaTest extends \Jelix\UnitTests\UnitTestCaseDb
 
         $this->assertEquals(
             [ 'text', 0, 0, 0, '[]'],
-            $db->tools()->parseSQLType('text[]'));
+            $db->sqlSyntaxHelpers()->parseSQLType('text[]'));
 
 
         $table = $schema->getTable('item_array_text');

@@ -16,7 +16,7 @@ interface, and can use a `Psr\Log\LoggerInterface` object.
 
 - old deprecated classes are removed:  `jDbConnection`, `jDbPDOConnection`, `jDbResultSet`,
   `jDbPDOResultSet`, `jDbParameters`, `jDbTools`, `jDbSchema`, `jDbWidget`.
-
+- all deprecated methods of `SqlToolsInterface` are removed.
 
 1.4.0-pre
 ---------

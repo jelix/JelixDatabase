@@ -142,7 +142,7 @@ abstract class AbstractTable implements TableInterface
         }
 
         if (!$column->nativeType) {
-            $type = $this->schema->getConn()->tools()->getTypeInfo($column->type);
+            $type = $this->schema->getConn()->sqlSyntaxHelpers()->getTypeInfo($column->type);
             $column->nativeType = $type[0];
         }
 

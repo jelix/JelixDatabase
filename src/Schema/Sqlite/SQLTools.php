@@ -60,7 +60,7 @@ class SQLTools extends \Jelix\Database\Schema\AbstractSqlTools
                 $field->type = $line->type;
             }
 
-            $typeinfo = $this->getTypeInfo($field->type);
+            $typeinfo = $this->_syntax->getTypeInfo($field->type);
             $field->unifiedType = $typeinfo[1];
             $field->maxValue = $typeinfo[3];
             $field->minValue = $typeinfo[2];

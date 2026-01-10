@@ -28,17 +28,18 @@ class Table extends AbstractTable
         $this->columns = array();
         $conn = $this->schema->getConn();
         $tools = $conn->tools();
+        $syntax = $conn->sqlSyntaxHelpers();
 
         $rs = $conn->query('SHOW FULL FIELDS FROM '.$this->tableName->getEnclosedFullName());
         while ($line = $rs->fetch()) {
-            list($type, $length, $precision, $scale) = $tools->parseSQLType($line->Type);
-            $typeInfo = $tools->getTypeInfo($type);
+            list($type, $length, $precision, $scale) = $syntax->parseSQLType($line->Type);
+            $typeInfo = $syntax->getTypeInfo($type);
             if ($type == 'tinyint' && $precision == 1) {
                 $type = 'boolean';
-                $typeInfo = $tools->getTypeInfo($type);
+                $typeInfo = $syntax->getTypeInfo($type);
                 $precision = 0;
             }
-            else if ($tools->unifiedToPHPType($typeInfo[1]) == 'integer') {
+            else if ($syntax->unifiedToPHPType($typeInfo[1]) == 'integer') {
                 // let's ignore precision type, as in Mysql, the number in `INT(11)`
                 // is not the precision, but the size of display.
                 // Note that some PHP driver for Mysql or Mysql/MariaDb version

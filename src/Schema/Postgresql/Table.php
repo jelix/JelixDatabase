@@ -33,6 +33,7 @@ class Table extends AbstractTable
     {
         $conn = $this->schema->getConn();
         $tools = $conn->tools();
+        $syntax = $conn->sqlSyntaxHelpers();
         $version = $conn->getServerMajorVersion();
 
         $searchPath = $conn->getSearchPath();
@@ -58,7 +59,7 @@ class Table extends AbstractTable
         $rs = $conn->query($sql);
         while ($line = $rs->fetch()) {
             $name = $line->attname;
-            list($type, $length, $precision, $scale) = $tools->parseSQLType($line->type);
+            list($type, $length, $precision, $scale) = $syntax->parseSQLType($line->type);
             $notNull = ($line->attnotnull == 't');
             $default = $line->adsrc;
             $hasDefault = ($line->atthasdef == 't');
@@ -69,7 +70,7 @@ class Table extends AbstractTable
 
             $col = new Column($name, $type, $length, $hasDefault, $default, $notNull, $generated);
 
-            $typeinfo = $tools->getTypeInfo($type);
+            $typeinfo = $syntax->getTypeInfo($type);
             if (is_string($default) && preg_match('/^nextval\(([^\)]*)\)$/', $default, $m)) {
                 $col->autoIncrement = true;
                 $col->default = '';
@@ -128,7 +129,7 @@ class Table extends AbstractTable
     protected function _alterColumn(Column $old, Column $new)
     {
         $conn = $this->schema->getConn();
-        $tools = $conn->tools();
+        $syntax = $conn->sqlSyntaxHelpers();
         if ($new->name != $old->name) {
             $conn->exec('ALTER TABLE '.$this->tableName->getEnclosedFullName().
                 ' RENAME COLUMN '.$conn->encloseName($old->name).
@@ -140,7 +141,7 @@ class Table extends AbstractTable
             $new->scale != $old->scale ||
             $new->length != $old->length
         ) {
-            $typeInfo = $tools->getTypeInfo($new->type);
+            $typeInfo = $syntax->getTypeInfo($new->type);
 
             $sql = 'ALTER TABLE '.$this->tableName->getEnclosedFullName().
                 ' ALTER COLUMN '.$conn->encloseName($new->name).

@@ -20,18 +20,6 @@ use Jelix\Database\Schema\Exception;
  */
 class SQLTools extends \Jelix\Database\Schema\AbstractSqlTools
 {
-    /**
-     * @deprecated use SQLSyntaxHelpers::trueValue const instead
-     * @see Connection::getSqlSyntaxHelpers()
-     */
-    public $trueValue = 'TRUE';
-
-    /**
-     * @deprecated use SQLSyntaxHelpers::falseValue const instead
-     * @see Connection::getSqlSyntaxHelpers()
-     */
-    public $falseValue = 'FALSE';
-
 
     public function __construct(?ConnectionInterface $connector = null)
     {
@@ -142,40 +130,6 @@ class SQLTools extends \Jelix\Database\Schema\AbstractSqlTools
         $prefix = $this->_conn->getTablePrefix();
         $sqlQueries = str_replace('%%PREFIX%%', $prefix, file_get_contents($file));
         $this->_conn->query($sqlQueries);
-    }
-
-    /**
-     * @deprecated use SQLSyntaxHelpers::decodeArrayValue() instead
-     * @see Connection::getSqlSyntaxHelpers()
-     */
-    public function decodeArrayValue($value)
-    {
-        return $this->_syntax->decodeArrayValue($value);
-    }
-
-    /**
-     * @deprecated use SQLSyntaxHelpers::ARRAY_VALUE_TYPE_INT instead
-     * @see Connection::getSqlSyntaxHelpers()
-     */
-    const ARRAY_VALUE_TYPE_INT = 'int';
-    /**
-     * @deprecated use SQLSyntaxHelpers::ARRAY_VALUE_TYPE_FLOAT instead
-     * @see Connection::getSqlSyntaxHelpers()
-     */
-    const ARRAY_VALUE_TYPE_FLOAT = 'float';
-    /**
-     * @deprecated use SQLSyntaxHelpers::ARRAY_VALUE_TYPE_TEXT instead
-     * @see Connection::getSqlSyntaxHelpers()
-     */
-    const ARRAY_VALUE_TYPE_TEXT = 'text';
-
-    /**
-     * @deprecated use SQLSyntaxHelpers::encodeArrayValue() instead
-     * @see Connection::getSqlSyntaxHelpers()
-     */
-    public function encodeArrayValue(array $value, $type)
-    {
-        return $this->_syntax->encodeArrayValue($value, $type);
     }
 
     public function getDefaultSchemaName(ConnectionInterface $conn)

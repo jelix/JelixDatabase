@@ -34,7 +34,7 @@ class Table extends AbstractTable
     protected function _loadColumns()
     {
         $conn = $this->schema->getConn();
-        $tools = $conn->tools();
+        $syntax = $conn->sqlSyntaxHelpers();
 
         $sql = 'exec sp_columns @table_name = '.$conn->encloseName($this->tableName->getRealTableName());
         $rs = $conn->query($sql);
@@ -66,7 +66,7 @@ class Table extends AbstractTable
             $col = new Column($name, $type, $length, $hasDefault, $default, $notNull);
             $col->autoIncrement = $autoIncrement;
 
-            $typeinfo = $tools->getTypeInfo($type);
+            $typeinfo = $syntax->getTypeInfo($type);
             $col->nativeType = $typeinfo[0];
             $col->maxValue = $typeinfo[3];
             $col->minValue = $typeinfo[2];

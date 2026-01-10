@@ -245,7 +245,7 @@ abstract class AbstractSchema implements SchemaInterface
     {
         $this->normalizeColumn($col);
         $colstr = $this->conn->encloseName($col->name).' '.$col->nativeType;
-        $ti = $this->conn->tools()->getTypeInfo($col->type);
+        $ti = $this->conn->sqlSyntaxHelpers()->getTypeInfo($col->type);
         if ($col->precision) {
             $colstr .= '('.$col->precision;
             if ($col->scale) {
@@ -267,7 +267,7 @@ abstract class AbstractSchema implements SchemaInterface
                         $colstr .= ' DEFAULT NULL';
                     }
                 } else {
-                    $colstr .= ' DEFAULT '.$this->conn->tools()->escapeValue($ti[1], $col->default, true);
+                    $colstr .= ' DEFAULT '.$this->conn->sqlSyntaxHelpers()->escapeValue($ti[1], $col->default, true);
                 }
             }
         }
@@ -304,7 +304,7 @@ abstract class AbstractSchema implements SchemaInterface
      */
     public function normalizeColumn($col)
     {
-        $type = $this->conn->tools()->getTypeInfo($col->type);
+        $type = $this->conn->sqlSyntaxHelpers()->getTypeInfo($col->type);
 
         $col->nativeType = $type[0];
 

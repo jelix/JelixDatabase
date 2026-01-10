@@ -51,15 +51,15 @@ class Table extends AbstractTable
                     WHERE UTC.TABLE_NAME = \''.strtoupper($this->tableName->getRealTableName()).'\'';
 
         $rs = $conn->query($query);
-        $tools = new SQLTools($conn);
+        $syntax = new SQLSyntaxHelpers();
 
         while ($line = $rs->fetch()) {
             $name = strtolower($line->column_name);
             $type = strtolower($line->data_type);
             $length = intval($line->data_length);
 
-            $typeinfo = $tools->getTypeInfo($type);
-            $phpType = $tools->unifiedToPHPType($typeinfo[1]);
+            $typeinfo = $syntax->getTypeInfo($type);
+            $phpType = $syntax->unifiedToPHPType($typeinfo[1]);
             $maxLength = $typeinfo[5];
             if ($phpType == 'string') {
                 $maxLength = $length;

@@ -40,6 +40,7 @@ class Table extends AbstractTable
         $sql = 'PRAGMA table_info('.$conn->quote($this->tableName->getRealTableName()).')';
         $rs = $conn->query($sql);
         $tools = $conn->tools();
+        $syntax = $conn->sqlSyntaxHelpers();
         $this->primaryKey = false;
         while ($c = $rs->fetch()) {
             $hasDefault = false;
@@ -47,7 +48,7 @@ class Table extends AbstractTable
             $isPrimary = ($c->pk == 1);
             $notNull = ($c->notnull != 0 || $c->pk == 1);
 
-            list($type, $length, $precision, $scale, $tail) = $tools->parseSQLType($c->type);
+            list($type, $length, $precision, $scale, $tail) = $syntax->parseSQLType($c->type);
             $autoIncrement = false;
             if (strtolower($tail) == 'autoincrement'
                 || strtolower($type) == 'rowid'
@@ -65,7 +66,7 @@ class Table extends AbstractTable
                 $hasDefault = true;
                 $default = ($c->dflt_value === 'NULL' ? null : $c->dflt_value);
             }
-            $typeinfo = $tools->getTypeInfo($type);
+            $typeinfo = $syntax->getTypeInfo($type);
             if ($typeinfo[6]) {
                 $autoIncrement = true;
                 $hasDefault = true;

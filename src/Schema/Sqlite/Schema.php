@@ -203,7 +203,7 @@ class Schema extends AbstractSchema
     {
         $this->normalizeColumn($col);
         $colstr = $this->conn->encloseName($col->name).' '.$col->nativeType;
-        $ti = $this->conn->tools()->getTypeInfo($col->type);
+        $ti = $this->conn->sqlSyntaxHelpers()->getTypeInfo($col->type);
         if ($col->precision) {
             $colstr .= '('.$col->precision;
             if ($col->scale) {
@@ -223,7 +223,7 @@ class Schema extends AbstractSchema
                         $colstr .= ' DEFAULT NULL';
                     }
                 } else {
-                    $colstr .= ' DEFAULT '.$this->conn->tools()->escapeValue($ti[1], $col->default, true);
+                    $colstr .= ' DEFAULT '.$this->conn->sqlSyntaxHelpers()->escapeValue($ti[1], $col->default, true);
                 }
             }
         }
