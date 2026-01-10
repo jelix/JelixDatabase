@@ -2,24 +2,32 @@
 /**
  * @author     Gérald Croes, Laurent Jouanneau
  * @contributor Laurent Jouanneau, Julien Issler
- * @copyright  2001-2005 CopixTeam, 2005-2025 Laurent Jouanneau, 2008 Julien Issler
+ * @copyright  2001-2005 CopixTeam, 2005-2026 Laurent Jouanneau, 2008 Julien Issler
  *
  * @see        https://jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 namespace Jelix\Database\Schema;
 
+use Jelix\Database\Connection;
 use Jelix\Database\ConnectionInterface;
 use Jelix\Database\Utilities;
-use Jelix\IniFile\Util;
 
 /**
  * Provides utilities methods for SQL
  */
 abstract class AbstractSqlTools extends \jDbTools implements SqlToolsInterface
 {
+    /**
+     * @deprecated use SQLSyntaxHelpers::trueValue const instead
+     * @see Connection::getSqlSyntaxHelpers()
+     */
     public $trueValue = '1';
 
+    /**
+     * @deprecated use SQLSyntaxHelpers::falseValue const instead
+     * @see Connection::getSqlSyntaxHelpers()
+     */
     public $falseValue = '0';
 
     /**
@@ -28,6 +36,12 @@ abstract class AbstractSqlTools extends \jDbTools implements SqlToolsInterface
      * @var ConnectionInterface
      */
     protected $_conn;
+
+    /**
+     * @var SQLSyntaxHelpersInterface
+     * @deprecated
+     */
+    protected $_syntax;
 
     /**
      * @param ConnectionInterface $connector the connection to a database
@@ -44,360 +58,88 @@ abstract class AbstractSqlTools extends \jDbTools implements SqlToolsInterface
         return $this->_conn;
     }
 
-    protected $unifiedToPhp = array(
-        'boolean' => 'boolean',
-        'integer' => 'integer',
-        'float' => 'float',
-        'double' => 'float',
-        'numeric' => 'numeric',
-        'decimal' => 'decimal',
-        'date' => 'string',
-        'time' => 'string',
-        'datetime' => 'string',
-        'year' => 'string',
-        'char' => 'string',
-        'varchar' => 'string',
-        'text' => 'string',
-        'blob' => 'string',
-        'binary' => 'string',
-        'varbinary' => 'string',
-        'json' => 'array',
-    );
-
-    protected $typesInfo = array();
-
     /**
-     * Get informations about the given SQL type.
-     *
-     * @param string $nativeType the SQL type
-     *
-     * @return array an array which contains characteristics of the type
-     *               array (
-     *                   0 => 'nativetype',
-     *                   1 => 'corresponding unifiedtype',
-     *                   2 => minvalue,
-     *                   3 => maxvalue,
-     *                   4 => minlength,
-     *                   5 => maxlength,
-     *                   6 => autoincrement)
-     *               minvalue, maxvalue, minlength, maxlength can be null
+     * @inheritDoc
+     * @deprecated
      */
     public function getTypeInfo($nativeType)
     {
-        $nativeType = strtolower($nativeType);
-        if (isset($this->typesInfo[$nativeType])) {
-            $r = $this->typesInfo[$nativeType];
-        } else {
-            $r = $this->typesInfo['varchar'];
-        }
-        $r[] = ($nativeType == 'serial' || $nativeType == 'bigserial' || $nativeType == 'autoincrement' || $nativeType == 'bigautoincrement');
-
-        return $r;
+        return $this->_syntax->getTypeInfo($nativeType);
     }
 
     /**
-     * Return the PHP type corresponding to the given unified type.
-     *
-     * @param string $unifiedType
-     *
-     * @throws Exception
-     *
-     * @return string the php type
-     *
-*/
+     * @inheritDoc
+     * @deprecated
+     */
     public function unifiedToPHPType($unifiedType)
     {
-        if (isset($this->unifiedToPhp[$unifiedType])) {
-            return $this->unifiedToPhp[$unifiedType];
-        }
-
-        throw new Exception('bad unified type name:'.$unifiedType);
+        return $this->_syntax->unifiedToPHPType($unifiedType);
     }
 
     /**
-     * @param string $unifiedType the unified type name
-     * @param string $value       the value
-     * @param mixed  $checkNull
-     *
-     * @return string the php value corresponding to the type
-     *
-*/
+     * @inheritDoc
+     * @deprecated
+     */
     public function stringToPhpValue($unifiedType, $value, $checkNull = false)
     {
-        if ($checkNull && ($value === null || strtolower($value) == 'null')) {
-            return null;
-        }
-        switch ($this->unifiedToPHPType($unifiedType)) {
-            case 'boolean':
-                return $this->getBooleanValue($value) == $this->trueValue;
-            case 'integer':
-                return intval($value);
-            case 'float':
-                return floatval($value);
-            case 'numeric':
-            case 'decimal':
-                if (is_numeric($value)) {
-                    return $value;
-                }
-
-                    return floatval($value);
-            default:
-                return $value;
-        }
+        return $this->_syntax->stringToPhpValue($unifiedType, $value, $checkNull);
     }
 
     /**
-     * Parse a SQL type and gives type, length...
-     *
-     * @param string $type
-     *
-     * @return array [$realtype, $length, $precision, $scale, $otherTypeDef]
+     * @inheritDoc
+     * @deprecated
      */
     public function parseSQLType($type)
     {
-        $length = 0;
-        $scale = 0;
-        $precision = 0;
-        $tail = '';
-        if (preg_match('/^(\w+)\s*(\(\s*(\d+)(,(\d+))?\s*\))?(.*)$/', $type, $m)) {
-            $type = strtolower($m[1]);
-            if (isset($m[3])) {
-                $typeInfo = $this->getTypeInfo($type);
-                $phpType = $this->unifiedToPHPType($typeInfo[1]);
-                if ($phpType == 'string') {
-                    $length = intval($m[3]);
-                } else {
-                    $precision = intval($m[3]);
-                }
-            }
-            if (isset($m[4]) && $m[5]) {
-                $precision = $length;
-                $length = 0;
-                $scale = intval($m[5]);
-            }
-            if (isset($m[6])) {
-                $tail = $m[6];
-            }
-        }
-
-        return array($type, $length, $precision, $scale, $tail);
+        return $this->_syntax->parseSQLType($type);
     }
 
     /**
-     * @param string $unifiedType the unified type name
-     * @param mixed  $value       the value
-     * @param mixed  $checkNull
-     * @param mixed  $toPhpSource
-     *
-     * @return string the value which is ready to include a SQL query string
-     *
-*/
+     * @inheritDoc
+     * @deprecated
+     */
     public function escapeValue($unifiedType, $value, $checkNull = false, $toPhpSource = false)
     {
-        if ($checkNull && ($value === null || strtolower($value) == 'null')) {
-            return 'NULL';
+        if ($toPhpSource) {
+            return $this->_syntax->escapeValueAsPHPSource($unifiedType, $value, $checkNull);
         }
-        switch ($this->unifiedToPHPType($unifiedType)) {
-            case 'boolean':
-                return $this->getBooleanValue($value);
-            case 'integer':
-                return (string) intval($value);
-            case 'float':
-            case 'numeric':
-            case 'decimal':
-               return Utilities::floatToStr($value);
-            case 'array':
-                if (!is_string($value)) {
-                    $value = json_encode($value);
-                }
-            default:
-                if ($toPhpSource) {
-                    if ($unifiedType == 'varbinary' || $unifiedType == 'binary') {
-                        return '\'.$this->_conn->quote2(\''.str_replace('\'', '\\\'', $value).'\',true,true).\'';
-                    }
-                    if (strpos($value, "'") !== false) {
-                        return '\'.$this->_conn->quote(\''.str_replace('\'', '\\\'', $value).'\').\'';
-                    }
-
-                    return "\\'".$value."\\'";
-                } elseif ($this->_conn) {
-                    return $this->_conn->quote($value);
-                }
-
-                return "'".addslashes($value)."'";
-        }
+        return $this->_syntax->escapeValue($unifiedType, $value, $checkNull);
     }
 
     /**
-     * @param bool|string $value a value which is a boolean
-     *
-     * @return string the string value representing a boolean in SQL
-     *
+     * @inheritDoc
+     * @deprecated
      */
     public function getBooleanValue($value)
     {
-        if (is_string($value)) {
-            $value = strtolower($value);
-        }
-        if ($value === 'true' || $value === true || intval($value) === 1 || $value === 't' || $value === 'on') {
-            return $this->trueValue;
-        }
-
-        return $this->falseValue;
+        return $this->_syntax->getBooleanValue($value);
     }
 
     /**
-     * Enclose a field name or a table name.
-     *
-     * @param string $fieldName the field/table name
-     *
-     * @return string the enclosed name
-     *
+     * @inheritDoc
+     * @deprecated
      */
     public function encloseName($fieldName)
     {
-        return $fieldName;
-    }
-
-    protected $keywordNameCorrespondence = array(
-        // sqlsrv,mysql,oci,pgsql -> date+time
-        //'current_timestamp' => '',
-        // mysql,oci,pgsql -> date
-        //'current_date' => '',
-        // mysql -> time, pgsql -> time+timezone
-        //'current_time' => '',
-        // oci -> date+fractional secon + timezone
-        //'systimestamp' => '',
-        // oci -> date+time+tz
-        //'sysdate' => '',
-        // pgsql -> time
-        //'localtime' => '',
-        // pgsql -> date+time
-        //'localtimestamp' => '',
-    );
-
-    protected $functionNameCorrespondence = array(
-
-        // sqlsrv, -> date+time
-        //'sysdatetime' => '',
-        // sqlsrv, -> date+time+offset
-        //'sysdatetimeoffset' => '',
-        // sqlsrv, -> date+time at utc
-        //'sysutcdatetime' => '',
-        // sqlsrv -> date+time
-        //'getdate' => '',
-        // sqlsrv -> date+time at utc
-        //'getutcdate' => '',
-        // sqlsrv,mysql (datetime)-> integer
-        //'day' => '',
-        // sqlsrv,mysql (datetime)-> integer
-        //'month' => '',
-        // sqlsrv, mysql (datetime)-> integer
-        //'year' => '',
-        // mysql -> date
-        //'curdate' => '',
-        // mysql -> date
-        //'current_date' => '',
-        // mysql -> time
-        //'curtime' => '',
-        // mysql -> time
-        //'current_time' => '',
-        // mysql,pgsql -> date+time
-        //'now' => '',
-        // mysql date+time
-        //'current_timestamp' => '',
-        // mysql (datetime)->date, sqlite (timestring, modifier)->date
-        //'date' => '!dateConverter',
-        // mysql = day()
-        //'dayofmonth' => '',
-        // mysql -> date+time
-        //'localtime' => '',
-        // mysql -> date+time
-        //'localtimestamp' => '',
-        // mysql utc current date
-        //'utc_date' => '',
-        // mysql utc current time
-        //'utc_time' => '',
-        // mysql utc current date+time
-        //'utc_timestamp' => '',
-        // mysql (datetime)->time, , sqlite (timestring, modifier)->time
-        //'time' => '!timeConverter',
-        // mysql (datetime/time)-> hour
-        //'hour'=> '',
-        // mysql (datetime/time)-> minute
-        //'minute'=> '',
-        // mysql (datetime/time)-> second
-        //'second'=> '',
-        // sqlite (timestring, modifier)->datetime
-        //'datetime' => '',
-        // oci, mysql (year|month|day|hour|minute|second FROM <datetime>)->value ,
-        // pgsql (year|month|day|hour|minute|second <datetime>)->value
-        //'extract' => '!extractDateConverter',
-        // pgsql ('year'|'month'|'day'|'hour'|'minute'|'second', <datetime>)->value
-        //'date_part' => '!extractDateConverter',
-        // sqlsrv (year||month|day|hour|minute|second, <datetime>)->value
-        //'datepart' => '!extractDateConverter',
-    );
-
-    protected function extractDateConverter($parametersString)
-    {
-        if (preg_match("/^'?([a-z]+)'?(?:\\s*,\\s*|\\s+FROM(?:\\s+TIMESTAMP)?\\s+|\\s+)(.*)$/i", trim($parametersString), $p)) {
-            $param2 = $this->parseSQLFunctionAndConvert(strtolower($p[2]));
-
-            return 'extract('.$p[1].' FROM '.$param2.')';
-        }
-
-        // strange format
-        return 'extract('.$parametersString.')';
-    }
-
-    public function parseSQLFunctionAndConvert($expression)
-    {
-        if (preg_match('/^([a-z0-9_]+)(\\((.*)\\))?$/i', trim($expression), $func)) {
-            if (isset($func[2]) && $func[2] != '') {
-                $params = $func[3];
-            } else {
-                $params = null;
-            }
-
-            return $this->getNativeSQLFunction($func[1], $params);
-        }
-
-        return $expression;
+        return $this->_syntax->encloseName($fieldName);
     }
 
     /**
-     * Give the expression that works with the target database, corresponding
-     * to the given function name.
-     *
-     * @param string      $name             a SQL function, maybe a SQL function of another database type
-     * @param null|string $parametersString parameters given to the function. Null if no parenthesis
-     *
-     * @return string the SQL expression, possibly with a native SQL function corresponding
-     *                to the given foreign SQL function
+     * @inheritDoc
+     * @deprecated
+     */
+    public function parseSQLFunctionAndConvert($expression)
+    {
+        return $this->_syntax->parseSQLFunctionAndConvert($expression);
+    }
+
+    /**
+     * @inheritDoc
+     * @deprecated
      */
     public function getNativeSQLFunction($name, $parametersString = null)
     {
-        $index = strtolower($name);
-        if ($parametersString === null) {
-            if (isset($this->keywordNameCorrespondence[$index])) {
-                return str_replace('%!p', $parametersString, $this->keywordNameCorrespondence[$index]);
-            }
-
-            return $name;
-        }
-        if (isset($this->functionNameCorrespondence[$index])) {
-            $func = $this->functionNameCorrespondence[$index];
-            if ($func[0] == '!') {
-                $func = substr($func, 1);
-
-                return $this->{$func}($parametersString);
-            }
-
-            return str_replace('%!p', $parametersString, $this->functionNameCorrespondence[$index]);
-        }
-
-        return $name.'('.$parametersString.')';
+        return $this->_syntax->getNativeSQLFunction($name, $parametersString);
     }
 
     /**
@@ -660,7 +402,7 @@ abstract class AbstractSqlTools extends \jDbTools implements SqlToolsInterface
                 $op = '=';
                 switch (gettype($value)) {
                     case 'boolean':
-                        $val = $this->getBooleanValue($value);
+                        $val = $this->_syntax->getBooleanValue($value);
 
                         break;
                     case 'integer':

@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2020-2025 Laurent Jouanneau
+ * @copyright   2020-2026 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -9,6 +9,8 @@
 
 namespace Jelix\Database;
 
+use Jelix\Database\Schema\SQLSyntaxHelpersInterface;
+use Jelix\Database\Schema\SqlToolsInterface;
 use Psr\Log\LoggerInterface;
 
 class Connection
@@ -59,7 +61,13 @@ class Connection
     const DB_TYPE_SQLSERVER = 'sqlsrv';
     const DB_TYPE_ORACLE = 'oci';
 
-    public static function getTools($dbType, $connection = null)
+    /**
+     * @param string $dbType one of the DB_TYPE_* constants
+     * @param ConnectionInterface|null $connection
+     * @return SQLToolsInterface
+     * @throws Exception
+     */
+    public static function getTools($dbType, $connection = null) : SQLToolsInterface
     {
         switch ($dbType) {
             case self::DB_TYPE_MYSQL:
@@ -76,6 +84,35 @@ class Connection
                 break;
             case self::DB_TYPE_ORACLE:
                 $tools = new Schema\Oci\SQLTools($connection);
+                break;
+            default:
+                throw new Exception("not implemented");
+        }
+        return $tools;
+    }
+
+    /**
+     * @param string $dbType one of the DB_TYPE_* constants
+     * @return SQLSyntaxHelpersInterface
+     * @throws Exception
+     */
+    public static function getSqlSyntaxHelpers($dbType) : SQLSyntaxHelpersInterface
+    {
+        switch ($dbType) {
+            case self::DB_TYPE_MYSQL:
+                $tools = new Schema\Mysql\SQLSyntaxHelpers();
+                break;
+            case self::DB_TYPE_SQLITE:
+                $tools = new Schema\Sqlite\SQLSyntaxHelpers();
+                break;
+            case self::DB_TYPE_PGSQL:
+                $tools = new Schema\Postgresql\SQLSyntaxHelpers();
+                break;
+            case self::DB_TYPE_SQLSERVER:
+                $tools = new Schema\Sqlserver\SQLSyntaxHelpers();
+                break;
+            case self::DB_TYPE_ORACLE:
+                $tools = new Schema\Oci\SQLSyntaxHelpers();
                 break;
             default:
                 throw new Exception("not implemented");

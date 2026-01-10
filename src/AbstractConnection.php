@@ -3,7 +3,7 @@
  * @author      Laurent Jouanneau, Gerald Croes
  * @contributor Julien Issler
  *
- * @copyright   2005-2025 Laurent Jouanneau
+ * @copyright   2005-2026 Laurent Jouanneau
  * @copyright   2007-2009 Julien Issler
  * @copyright 2001-2005 CopixTeam
  * This class was get originally from the Copix project (CopixDbConnection, Copix 2.3dev20050901, http://www.copix.org)
@@ -16,6 +16,7 @@
 namespace Jelix\Database;
 
 use Jelix\Database\Schema\SchemaInterface;
+use Jelix\Database\Schema\SQLSyntaxHelpersInterface;
 use Jelix\Database\Schema\SqlToolsInterface;
 use Psr\Log\LoggerInterface;
 use Jelix\Database\Log\QueryMessage;
@@ -541,6 +542,14 @@ abstract class AbstractConnection extends \jDbConnection implements ConnectionIn
         }
 
         return $this->_schema;
+    }
+
+    /**
+     * @return SQLSyntaxHelpersInterface
+     */
+    public function sqlSyntaxHelpers()
+    {
+        return Connection::getSqlSyntaxHelpers($this->_profile['dbtype']);
     }
 
     /**
