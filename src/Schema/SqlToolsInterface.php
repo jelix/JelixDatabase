@@ -2,13 +2,14 @@
 /**
  * @author     Laurent Jouanneau
  * @contributor Laurent Jouanneau
- * @copyright  2020-2025 Laurent Jouanneau
+ * @copyright  2020-2026 Laurent Jouanneau
  *
  * @see        https://jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 namespace Jelix\Database\Schema;
 
+use Jelix\Database\Connection;
 use Jelix\Database\ConnectionInterface;
 
 /**
@@ -27,14 +28,15 @@ interface SqlToolsInterface
     public function getConnection();
 
     /**
-     * Get informations about the given SQL type.
+     * Get information about the given SQL type.
      *
      * @param string $nativeType the SQL type
      *
      * @return array an array which contains characteristics of the type
      *               array ( 'nativetype', 'corresponding unifiedtype', minvalue, maxvalue, minlength, maxlength, autoincrement)
      *               minvalue, maxvalue, minlength, maxlength can be null
-     *
+     * @deprecated use SQLSyntaxHelpersInterface::getTypeInfo() instead
+     * @see Connection::getSqlSyntaxHelpers()
      */
     public function getTypeInfo($nativeType);
 
@@ -47,7 +49,8 @@ interface SqlToolsInterface
      * @throws Exception
      *
      * @return string the php type
-     *
+     * @deprecated use SQLSyntaxHelpersInterface::unifiedToPHPType() instead
+     * @see Connection::getSqlSyntaxHelpers()
      */
     public function unifiedToPHPType($unifiedType);
 
@@ -57,7 +60,8 @@ interface SqlToolsInterface
      * @param mixed  $checkNull
      *
      * @return string the php value corresponding to the type
-     *
+     * @deprecated use SQLSyntaxHelpersInterface::stringToPhpValue() instead
+     * @see Connection::getSqlSyntaxHelpers()
      */
     public function stringToPhpValue($unifiedType, $value, $checkNull = false);
 
@@ -67,6 +71,9 @@ interface SqlToolsInterface
      * @param string $type
      *
      * @return array [$realtype, $length, $precision, $scale, $otherTypeDef]
+     *
+     * @deprecated use SQLSyntaxHelpersInterface::parseSQLType() instead
+     * @see Connection::getSqlSyntaxHelpers()
      */
     public function parseSQLType($type);
 
@@ -78,7 +85,8 @@ interface SqlToolsInterface
      * @param mixed  $toPhpSource
      *
      * @return string the value which is ready to include a SQL query string
-     *
+     * @deprecated use SQLSyntaxHelpersInterface::escapeValue() instead
+     * @see Connection::getSqlSyntaxHelpers()
      */
     public function escapeValue($unifiedType, $value, $checkNull = false, $toPhpSource = false);
 
@@ -86,7 +94,8 @@ interface SqlToolsInterface
      * @param bool|string $value a value which is a boolean
      *
      * @return string the string value representing a boolean in SQL
-     *
+     * @deprecated use SQLSyntaxHelpersInterface::getBooleanValue() instead
+     * @see Connection::getSqlSyntaxHelpers()
      */
     public function getBooleanValue($value);
 
@@ -97,10 +106,15 @@ interface SqlToolsInterface
      * @param string $fieldName the field name
      *
      * @return string the enclosed field name
-     *
+     * @deprecated use SQLSyntaxHelpersInterface::encloseName() instead
+     * @see Connection::getSqlSyntaxHelpers()
      */
     public function encloseName($fieldName);
 
+    /**
+     * @deprecated use SQLSyntaxHelpersInterface::parseSQLFunctionAndConvert() instead
+     * @see Connection::getSqlSyntaxHelpers()
+     */
     public function parseSQLFunctionAndConvert($expression);
 
 
@@ -113,6 +127,8 @@ interface SqlToolsInterface
      *
      * @return string the SQL expression, possibly with a native SQL function corresponding
      *                to the given foreign SQL function
+     * @deprecated use SQLSyntaxHelpersInterface::getNativeSQLFunction() instead
+     * @see Connection::getSqlSyntaxHelpers()
      */
     public function getNativeSQLFunction($name, $parametersString = null);
 

@@ -35,6 +35,13 @@ interface, and can use a `Psr\Log\LoggerInterface` object.
   functions that have parameters typed with theses classes (`jDbConnection`, `jDbPDOConnection`, `jDbResultSet`, 
   `jDbPDOResultSet`, `jDbParameters`, `jDbTools`, `jDbSchema`, `jDbWidget`). This feature will be removed into the
   next major version of JelixDatabase.
+- Some methods of `SqlToolsInterface` have been deprecated and declared into a new interface `SQLSyntaxHelperInterface`.
+  This interface is implemented in new objects for each database adapter.
+  These objects are accessible from `Jelix\Database\Connection::getSqlSyntaxHelpers()`
+  or from `Jelix\Database\ConnectionInterface::sqlSyntaxHelpers()`.
+  This move allows using syntax helpers without having a connection,
+  and it allows clarifying the meaning of SqlToolsInterface.
+
 
 Version 1.3.2
 -------------

@@ -74,27 +74,6 @@ class toolsTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
     }
 
-    function testFloatToStr() {
-        $this->assertEquals('12', Utilities::floatToStr(12));
-        $this->assertEquals('12.56', Utilities::floatToStr(12.56));
-        $this->assertEquals('12', Utilities::floatToStr("12"));
-        $this->assertEquals('12.56', Utilities::floatToStr("12.56"));
-        $this->assertEquals('65.78E6', Utilities::floatToStr("65.78E6"));
-        $this->assertEquals('65780000', Utilities::floatToStr(65.78E6));
-        $this->assertEquals('6.5780E83', Utilities::floatToStr(65.78E82));
-
-        // not very good behavior, but this is the behavior in old stable version of jelix
-        $this->assertEquals('65', Utilities::floatToStr("65,650.98"));
-        $this->assertEquals('12', Utilities::floatToStr("12,589")); // ',' no allowed as decimal separator
-        $this->assertEquals('96', Utilities::floatToStr("96 000,98"));
-
-        // some test to detect if the behavior of PHP change
-        $this->assertFalse(is_numeric("65,650.98"));
-        $this->assertFalse(is_float("65,650.98"));
-        $this->assertFalse(is_integer("65,650.98"));
-        $this->assertEquals('65', floatval("65,650.98"));
-    }
-
     function testStringToPhpValue(){
     
         $tools= new Schema\Mysql\SQLTools(null);

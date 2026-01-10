@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2020-2024 Laurent Jouanneau
+ * @copyright   2020-2026 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -10,6 +10,7 @@
 namespace Jelix\Database;
 
 use Jelix\Database\Schema\SchemaInterface;
+use Jelix\Database\Schema\SQLSyntaxHelpersInterface;
 use Jelix\Database\Schema\SqlToolsInterface;
 
 use Jelix\Database\Schema\TableNameInterface;
@@ -265,4 +266,10 @@ interface ConnectionInterface
      * @return SchemaInterface
      */
     public function schema();
+
+    /**
+     * @return SQLSyntaxHelpersInterface
+     */
+    public function sqlSyntaxHelpers();
+
 }
