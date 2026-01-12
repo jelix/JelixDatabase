@@ -14,6 +14,8 @@ namespace Jelix\Database\Schema\Postgresql;
  */
 class SQLSyntaxHelpers extends \Jelix\Database\Schema\AbstractSQLSyntaxHelpers
 {
+    protected const sqlType = 'pgsql';
+
     public const trueValue = 'TRUE';
     public const falseValue = 'FALSE';
 

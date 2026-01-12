@@ -29,7 +29,7 @@ Changelog
 Version 1.3.2
 -------------
 
-- Fix Sqlite3 jDb driver: it must not free results if connection is already closed
+- Fix Sqlite3 jDb driver: it must not free results if a connection is already closed
 
 
 Version 1.3.1

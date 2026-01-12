@@ -38,6 +38,25 @@ class sqlSyntaxTest extends \PHPUnit\Framework\TestCase {
 
     }
 
+    function testSqlType(){
+
+        $syntax = new \Jelix\Database\Schema\Mysql\SQLSyntaxHelpers();
+        $this->assertEquals(Connection::DB_TYPE_MYSQL, $syntax->getSQLType());
+
+        $syntax= new \Jelix\Database\Schema\Postgresql\SQLSyntaxHelpers();
+        $this->assertEquals(Connection::DB_TYPE_PGSQL, $syntax->getSQLType());
+
+        $syntax= new \Jelix\Database\Schema\Sqlite\SQLSyntaxHelpers();
+        $this->assertEquals(Connection::DB_TYPE_SQLITE, $syntax->getSQLType());
+
+        $syntax= new \Jelix\Database\Schema\Sqlserver\SQLSyntaxHelpers();
+        $this->assertEquals(Connection::DB_TYPE_SQLSERVER, $syntax->getSQLType());
+
+        $syntax= new \Jelix\Database\Schema\Oci\SQLSyntaxHelpers();
+        $this->assertEquals(Connection::DB_TYPE_ORACLE, $syntax->getSQLType());
+
+    }
+
     function testFloatToStr() {
         $this->assertEquals('12', Utilities::floatToStr(12));
         $this->assertEquals('12.56', Utilities::floatToStr(12.56));

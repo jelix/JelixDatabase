@@ -14,6 +14,8 @@ namespace Jelix\Database\Schema\Oci;
  */
 class SQLSyntaxHelpers extends \Jelix\Database\Schema\AbstractSQLSyntaxHelpers
 {
+    protected const sqlType = 'oci';
+
     protected $typesInfo = array(
         // type                  native type        unified type  minvalue     maxvalue   minlength  maxlength
         'bool' => array('number', 'boolean', 0, 1, null, null),

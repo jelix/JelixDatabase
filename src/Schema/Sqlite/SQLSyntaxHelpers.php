@@ -14,6 +14,8 @@ namespace Jelix\Database\Schema\Sqlite;
  */
 class SQLSyntaxHelpers extends \Jelix\Database\Schema\AbstractSQLSyntaxHelpers
 {
+    protected const sqlType = 'sqlite';
+
     protected $typesInfo = array(
         // type                  native type        unified type  minvalue     maxvalue   minlength  maxlength
         'bool' => array('bool',          'boolean',  0,           1,          null,     null),
