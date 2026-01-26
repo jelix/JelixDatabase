@@ -14,6 +14,8 @@ namespace Jelix\Database\Schema\Sqlserver;
  */
 class SQLSyntaxHelpers extends \Jelix\Database\Schema\AbstractSQLSyntaxHelpers
 {
+    protected const sqlType = 'sqlsrv';
+
     protected $typesInfo = array(
         // type                  native type        unified type  minvalue     maxvalue   minlength  maxlength
         'bool' => array('tinyint',          'boolean',  0,           1,          null,     null),

@@ -16,6 +16,7 @@ use Jelix\Database\Utilities;
  */
 abstract class AbstractSQLSyntaxHelpers implements SQLSyntaxHelpersInterface
 {
+    protected const sqlType = '';
     public const trueValue = '1';
     public const falseValue = '0';
 
@@ -40,6 +41,17 @@ abstract class AbstractSQLSyntaxHelpers implements SQLSyntaxHelpersInterface
     );
 
     protected $typesInfo = array();
+
+    /**
+     * The SQL language supported by the object.
+     *
+     * @return string
+     */
+    public function getSQLType()
+    {
+        return static::sqlType;
+    }
+
 
     /**
      * Get information about the given SQL type.

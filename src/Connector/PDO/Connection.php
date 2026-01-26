@@ -94,7 +94,7 @@ class Connection extends AbstractConnection
                 $pdoConn->setAttribute(\Pdo\Mysql::ATTR_USE_BUFFERED_QUERY, true);
             }
             else { // PHP < 8.4
-                $pdoConn->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
+                $pdoConn->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
             }
         }
 

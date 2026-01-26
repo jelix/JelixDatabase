@@ -15,6 +15,13 @@ namespace Jelix\Database\Schema;
 interface SQLSyntaxHelpersInterface
 {
     /**
+     * The SQL language supported by the object.
+     *
+     * @return string
+     */
+    public function getSQLType();
+
+    /**
      * Get information about the given SQL type.
      *
      * @param string $nativeType the SQL type
