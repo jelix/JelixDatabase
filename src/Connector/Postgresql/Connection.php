@@ -7,7 +7,7 @@
  * @contributor Julien Issler
  * @contributor Alexandre Zanelli
  *
- * @copyright  2001-2005 CopixTeam, 2005-2025 Laurent Jouanneau, 2007-2008 Laurent Raufaste, 2009 Julien Issler
+ * @copyright  2001-2005 CopixTeam, 2005-2026 Laurent Jouanneau, 2007-2008 Laurent Raufaste, 2009 Julien Issler
  *
  * @see      https://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -314,20 +314,6 @@ class Connection extends AbstractConnection
      */
     public function setAttribute($id, $value)
     {
-    }
-
-    protected $serverVersion = 0;
-
-    public function getServerMajorVersion()
-    {
-        if ($this->serverVersion === 0) {
-            $version = $this->getAttribute($this::ATTR_SERVER_VERSION);
-            if ($version != '') {
-                $version = explode('.', $version);
-                $this->serverVersion = intval($version[0]);
-            }
-        }
-        return $this->serverVersion;
     }
 
     protected function _getSchema()
