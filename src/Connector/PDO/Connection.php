@@ -3,7 +3,7 @@
  * @author     Laurent Jouanneau
  * @contributor Gwendal Jouannic, Thomas, Julien Issler, Vincent Herr
  *
- * @copyright  2005-2025 Laurent Jouanneau, 2008 Gwendal Jouannic, 2009 Thomas, 2009 Julien Issler, 2011 Vincent Herr
+ * @copyright  2005-2026 Laurent Jouanneau, 2008 Gwendal Jouannic, 2009 Thomas, 2009 Julien Issler, 2011 Vincent Herr
  *
  * @see      https://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -147,16 +147,15 @@ class Connection extends AbstractConnection implements jDbPDOConnection
      * @param bool   $binary    set to true if $text contains a binary string
      *
      * @return string escaped string
-     *
-     * @todo $binary parameter is not really supported, check if PDOConnection::quote supports binary strings
      */
     public function quote2($text, $checknull = true, $binary = false)
     {
+        $type = $binary ? \PDO::PARAM_LOB : \PDO::PARAM_STR;
         if ($checknull) {
-            return is_null($text) ? 'NULL' : $this->quote($text);
+            return is_null($text) ? 'NULL' : $this->quote($text, $type);
         }
 
-        return $this->quote($text);
+        return $this->quote($text, $type);
     }
 
 
