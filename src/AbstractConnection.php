@@ -401,6 +401,20 @@ abstract class AbstractConnection implements ConnectionInterface, ConnectionCons
      */
     abstract public function errorCode();
 
+    protected $serverVersion = 0;
+
+    public function getServerMajorVersion()
+    {
+        if ($this->serverVersion === 0) {
+            $version = $this->getAttribute($this::ATTR_SERVER_VERSION);
+            if ($version != '') {
+                $version = explode('.', $version);
+                $this->serverVersion = intval($version[0]);
+            }
+        }
+        return $this->serverVersion;
+    }
+
     /**
      * return the id value of the last inserted row.
      * Some driver need a sequence name, so give it at first parameter.

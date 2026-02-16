@@ -18,8 +18,15 @@ interface, and can use a `Psr\Log\LoggerInterface` object.
   `jDbPDOResultSet`, `jDbParameters`, `jDbTools`, `jDbSchema`, `jDbWidget`.
 - all deprecated methods of `SqlToolsInterface` are removed.
 
-1.4.0-pre
+1.4.1-pre
 ---------
+
+- fix(PDO) implementation of PDO\Connection::quote2 supports binary values from now.
+- fix(PDO) "undefined method getServerMajorVersion()" error when using postgresql tools with a connection made with PDO
+- fix(profileplugin) pdo connection on Postgresql may be made without pdo in some case
+
+1.4.0
+-----
 
 - Support of schema names in the API that query and manipulate the structure of the database. It is mainly used 
   internaly into objects of the object of the `Jelix\Database\Schema` namespace.
@@ -61,7 +68,6 @@ Version 1.3.0
 - Fix pgsql schema: should list only tables from the search_path
 - tests: new docker image
 - compatible with PHP 8.3
-
 
 Version 1.2.4
 -------------
