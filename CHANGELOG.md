@@ -1,6 +1,13 @@
 Changelog
 =========
 
+Next
+----
+
+- fix(PDO) implementation of PDO\Connection::quote2 supports binary values from now.
+- fix(PDO) "undefined method getServerMajorVersion()" error when using postgresql tools with a connection made with PDO
+- fix(profileplugin) pdo connection on Postgresql may be made without pdo in some case
+
 1.4.0
 -----
 
