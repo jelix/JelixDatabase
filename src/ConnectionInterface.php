@@ -32,14 +32,6 @@ interface ConnectionInterface
      */
     public function close();
 
-    /**
-     * alias of close()
-     * @deprecated
-     */
-    public function disconnect();
-
-    public function isClosed();
-
     public function getProfileName();
 
     public function getConnectionCharset();

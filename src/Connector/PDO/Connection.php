@@ -10,7 +10,6 @@
  */
 namespace Jelix\Database\Connector\PDO;
 
-use jDbPDOConnection;
 use Jelix\Database\AbstractConnection;
 use Jelix\Database\Schema\Postgresql\SQLTools;
 use Jelix\Database\Schema\SchemaInterface;
@@ -26,7 +25,7 @@ use Jelix\Database\Schema\TableNameInterface;
  * @package  jelix
  * @subpackage db
  */
-class Connection extends AbstractConnection implements jDbPDOConnection
+class Connection extends AbstractConnection
 {
 
     /**

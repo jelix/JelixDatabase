@@ -27,8 +27,7 @@
     "autoload": {
         "psr-4" : {
             "Jelix\\Database\\" : "src/"
-        },
-        "classmap": [ "src/legacy/"]
+        }
     },
     "minimum-stability": "stable"
 }

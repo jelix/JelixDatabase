@@ -16,7 +16,7 @@ use Jelix\Database\Utilities;
 /**
  * Provides utilities methods for SQL
  */
-abstract class AbstractSqlTools extends \jDbTools implements SqlToolsInterface
+abstract class AbstractSqlTools implements SqlToolsInterface
 {
     /**
      * @deprecated use SQLSyntaxHelpers::trueValue const instead
@@ -148,8 +148,8 @@ abstract class AbstractSqlTools extends \jDbTools implements SqlToolsInterface
      * @throws Exception
      *
      * @return string[] list of table names
-     * @deprecated use SchemaInterface::getTables() instead
-      */
+     * @deprecated
+     */
     public function getTableList()
     {
         $list = $this->_conn->schema()->getTables();
@@ -165,7 +165,7 @@ abstract class AbstractSqlTools extends \jDbTools implements SqlToolsInterface
      * @param string $schemaName the name of the schema (only for PostgreSQL)
      *
      * @return FieldProperties[] keys are field names
-     * @deprecated use SchemaInterface objects instead
+     * @deprecated
      */
     abstract public function getFieldList($tableName, $sequence = '', $schemaName = '');
 
