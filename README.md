@@ -8,7 +8,7 @@ It supports Mysql 8+, Postgresql 13+, Sqlite 3. It supports partially
 (Schema API not fully implemented) SQLServer 2012+ and OCI. There is a connector
 using PDO, so you can use other databases (except with the Schema API).
 
-Compatible with PHP 7.4 to 8.5.
+Compatible with PHP 8.2 to 8.5.
 
 # installation
 

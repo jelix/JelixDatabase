@@ -109,7 +109,7 @@ abstract class AbstractSQLSyntaxHelpers implements SQLSyntaxHelpersInterface
      * @return mixed the php value corresponding to the type
      *
      */
-    public function stringToPhpValue(string $unifiedType, $value, bool $checkNull = false)
+    public function stringToPhpValue(string $unifiedType, $value, bool $checkNull = false) : mixed
     {
         if ($checkNull && ($value === null || strtolower($value) == 'null')) {
             return null;

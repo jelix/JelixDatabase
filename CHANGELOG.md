@@ -5,6 +5,7 @@ Version 2.0.0 (not released yet)
 --------------------------------
 
 **API CHANGES**:
+
 - new interface `QueryLoggerInterface` to log queries
 
 Connectors and Connection methods do not accept anymore a `Psr\Log\LoggerInterface`.
@@ -14,12 +15,15 @@ about what to do between and after queries.
 An object `Jelix\Database\Log\QueryLogger` is provided, implementing this
 interface, and can use a `Psr\Log\LoggerInterface` object.
 
+
+**BREAKING CHANGES**:
+
 - old deprecated classes are removed:  `jDbConnection`, `jDbPDOConnection`, `jDbResultSet`,
   `jDbPDOResultSet`, `jDbParameters`, `jDbTools`, `jDbSchema`, `jDbWidget`.
 - all deprecated methods of `SqlToolsInterface` are removed.
+- Support of PHP 8.1 and lower is dropped.
 
-1.4.1-pre
----------
+
 
 Version 1.4.0
 -------------
