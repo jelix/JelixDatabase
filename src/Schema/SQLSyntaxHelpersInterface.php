@@ -54,7 +54,7 @@ interface SQLSyntaxHelpersInterface
      * @return mixed the php value corresponding to the type
      *
      */
-    public function stringToPhpValue(string $unifiedType, $value, bool $checkNull = false) : mixed;
+    public function stringToPhpValue(string $unifiedType, $value, bool $checkNull = false);
 
     /**
      * Parse a SQL type and gives type, length...

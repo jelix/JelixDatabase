@@ -21,25 +21,21 @@ interface, and can use a `Psr\Log\LoggerInterface` object.
 1.4.1-pre
 ---------
 
-- fix(PDO) implementation of PDO\Connection::quote2 supports binary values from now.
-- fix(PDO) "undefined method getServerMajorVersion()" error when using postgresql tools with a connection made with PDO
-- fix(profileplugin) pdo connection on Postgresql may be made without pdo in some case
+Version 1.4.0
+-------------
 
-1.4.0
------
-
-- Support of schema names in the API that query and manipulate the structure of the database. It is mainly used 
+- **Support of schema names** in the API that query and manipulate the structure of the database. It is mainly used 
   internaly into objects of the object of the `Jelix\Database\Schema` namespace.
   - supported only for databases having schemas: Postgresql and SqlServer. Schema names are ignored for other databases.  
   - Onto object implementing `TableInterface` : new method `getTableName()` allowing to access to the schema name, the table name.
   - On connection objects, new methods `createTableName()` and `getDefaultSchemaName()`.
-- Support of generated column in the PostgreSQL adapter. 
-- Support of Identity column for Postgresql
-- Support of JSON fields into tools
+- Support of **generated column in the PostgreSQL adapter**. 
+- Support of **Identity column for Postgresql**
+- Support of **JSON fields** into tools
 - Brings a plugin for JelixProfiles
 - Introduce compatibility with application that used jDb API of Jelix 1.8 and lower: classes of JelixDatabase inherit
   from some empty classes or empty interfaces having the name of old implementation, so objects can be passed to 
-  functions that have parameters typed with theses classes (`jDbConnection`, `jDbPDOConnection`, `jDbResultSet`, 
+  functions that have parameters typed with these classes (`jDbConnection`, `jDbPDOConnection`, `jDbResultSet`, 
   `jDbPDOResultSet`, `jDbParameters`, `jDbTools`, `jDbSchema`, `jDbWidget`). This feature will be removed into the
   next major version of JelixDatabase.
 - Some methods of `SqlToolsInterface` have been deprecated and declared into a new interface `SQLSyntaxHelperInterface`.
@@ -48,6 +44,11 @@ interface, and can use a `Psr\Log\LoggerInterface` object.
   or from `Jelix\Database\ConnectionInterface::sqlSyntaxHelpers()`.
   This move allows using syntax helpers without having a connection,
   and it allows clarifying the meaning of SqlToolsInterface.
+- Fix deprecation and warning with PHP 8.4 and 8.5
+- Fix `lastInsertId()` for sqlserver
+- fix(PDO) implementation of `PDO\Connection::quote2` supports binary values from now.
+- fix(PDO) "undefined method getServerMajorVersion()" error when using postgresql tools with a connection made with PDO
+- fix(profileplugin) pdo connection on Postgresql may be made without pdo in some cases
 
 
 Version 1.3.2
