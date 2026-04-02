@@ -24,6 +24,15 @@ interface, and can use a `Psr\Log\LoggerInterface` object.
 - Support of PHP 8.1 and lower is dropped.
 
 
+Version 1.5.0-pre
+-----------------
+
+- Introduce compatibility with application that used jDb API of Jelix 1.8 and lower: classes of JelixDatabase inherit
+  from some empty classes or empty interfaces having the name of old implementation, so objects can be passed to
+  functions that have parameters typed with these classes (`jDbConnection`, `jDbPDOConnection`, `jDbResultSet`,
+  `jDbPDOResultSet`, `jDbParameters`, `jDbTools`, `jDbSchema`, `jDbWidget`). This feature will be removed into the
+  next major version of JelixDatabase.
+
 
 Version 1.4.0
 -------------
@@ -37,11 +46,6 @@ Version 1.4.0
 - Support of **Identity column for Postgresql**
 - Support of **JSON fields** into tools
 - Brings a plugin for JelixProfiles
-- Introduce compatibility with application that used jDb API of Jelix 1.8 and lower: classes of JelixDatabase inherit
-  from some empty classes or empty interfaces having the name of old implementation, so objects can be passed to 
-  functions that have parameters typed with these classes (`jDbConnection`, `jDbPDOConnection`, `jDbResultSet`, 
-  `jDbPDOResultSet`, `jDbParameters`, `jDbTools`, `jDbSchema`, `jDbWidget`). This feature will be removed into the
-  next major version of JelixDatabase.
 - Some methods of `SqlToolsInterface` have been deprecated and declared into a new interface `SQLSyntaxHelperInterface`.
   This interface is implemented in new objects for each database adapter.
   These objects are accessible from `Jelix\Database\Connection::getSqlSyntaxHelpers()`
