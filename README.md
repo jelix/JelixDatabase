@@ -4,12 +4,11 @@ It uses the dedicated PHP API for each database type it supports, not PDO.
 The API of connectors and result sets are almost the same as in PDO. There is
 an API to manipulate schemas.
 
-It supports Mysql 5.6+, Postgresql 9.6+, Sqlite 3. It supports partially 
+It supports Mysql 8+, Postgresql 13+, Sqlite 3. It supports partially 
 (Schema API not fully implemented) SQLServer 2012+ and OCI. There is a connector
 using PDO, so you can use other databases (except with the Schema API).
 
-This library has been extracted from the [Jelix](https://jelix.org) framework 1.7,
-and has been modernized.
+Compatible with PHP 7.4 to 8.5.
 
 # installation
 
@@ -69,4 +68,10 @@ foreach ($resultSet as $record) {
 
 ```
 
-Full documentation : see the [docs](docs/en/index.md) directory.
+Full documentation: see the [docs](docs/en/index.md) directory.
+
+History
+-------
+
+This library has been extracted from the [Jelix](https://jelix.org) framework 1.7,
+and it has been modernized.
