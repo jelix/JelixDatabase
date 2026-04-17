@@ -35,7 +35,8 @@ RUN  curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -; \
 
 COPY database-entrypoint.sh /bin/entrypoint.d/
 COPY appctl.sh /bin/
-RUN chmod 755 /bin/entrypoint.d/database-entrypoint.sh /bin/appctl.sh
+RUN chmod 755 /bin/entrypoint.d/database-entrypoint.sh /bin/appctl.sh; \
+    git config --global --add safe.directory /src/tests;
 
 WORKDIR /src/tests/
 

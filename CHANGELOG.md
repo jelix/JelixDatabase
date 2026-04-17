@@ -4,6 +4,12 @@ Changelog
 Next
 ----
 
+
+Version 1.4.1
+-------------
+
+- fix(pgsql) fix SQL error when trying to change an identity column to serial, with the schema API
+
 Version 1.4.0
 -------------
 
