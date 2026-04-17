@@ -16,6 +16,7 @@ Version 1.4.1
 -------------
 
 - fix(pgsql) fix SQL error when trying to change an identity column to serial, with the schema API
+- fix(pgsql) fix SQL error when trying to change an autoincrement column to integer with the schema API
 
 Version 1.4.0
 -------------
