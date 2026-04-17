@@ -1578,4 +1578,71 @@ class pgsqlSchemaTest extends \Jelix\UnitTests\UnitTestCaseDb
         </object>';
         $this->assertComplexIdenticalStr($currentIdCol, $currentIdColDesc);
     }
+
+    /**
+     * @depends testChangeColumnIdentityToSerial
+     *
+     */
+    public function testChangeColumnSerialToInteger()
+    {
+        $db = $this->getConnection();
+        $db->exec('DROP TABLE IF EXISTS city');
+        $db->exec('DROP SEQUENCE IF EXISTS city_city_id_seq');
+        $db->exec('CREATE TABLE city (
+            city_id  serial PRIMARY KEY,
+            name  varchar(50) not null,
+            postcode integer DEFAULT 0,
+            latitude varchar(20),
+            longitude varchar(20))');
+
+        // check current column
+        $schema = new \Jelix\Database\Schema\Postgresql\Schema($db);
+        $cityTable = $schema->getTable('city');
+        $currentIdCol = $cityTable->getColumn('city_id');
+        $currentIdColDesc =   '<object class="\\Jelix\\Database\\Schema\\Column">
+            <string property="type" value="integer" />
+            <string property="nativeType" value="integer" />
+            <string property="name" value="city_id" />
+            <boolean property="notNull" value="true"/>
+            <boolean property="autoIncrement" value="true"/>
+            <string property="default" value="" />
+            <boolean property="hasDefault" value="true"/>
+            <integer property="length" value="0"/>
+            <string property="sequence" value="city_city_id_seq" />
+            <string property="autoIncrementFlavor" value="nextval(\'city_city_id_seq\'::regclass)" />
+        </object>';
+        $this->assertComplexIdenticalStr($currentIdCol, $currentIdColDesc);
+
+
+        // alter column
+        $col1 = new Column(
+            'city_id',
+            'integer',
+            0,
+            true,
+            '',
+            true
+        );
+        $col1->nativeType = 'integer';
+
+        $cityTable->alterColumn($col1);
+
+        // check new column
+        $schema = new \Jelix\Database\Schema\Postgresql\Schema($db);
+        $cityTable = $schema->getTable('city');
+        $currentIdCol = $cityTable->getColumn('city_id');
+        $currentIdColDesc =   '<object class="\\Jelix\\Database\\Schema\\Column">
+            <string property="type" value="integer" />
+            <string property="nativeType" value="integer" />
+            <string property="name" value="city_id" />
+            <boolean property="notNull" value="true"/>
+            <boolean property="autoIncrement" value="false"/>
+            <string property="default" value="" />
+            <boolean property="hasDefault" value="false"/>
+            <integer property="length" value="0"/>
+            <boolean property="sequence" value="false" />
+            <string property="autoIncrementFlavor" value="" />
+        </object>';
+        $this->assertComplexIdenticalStr($currentIdCol, $currentIdColDesc);
+    }
 }

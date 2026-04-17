@@ -172,6 +172,20 @@ class Table extends AbstractTable
             $conn->exec($sql);
         }
 
+        if (!$new->autoIncrement && $new->autoIncrement != $old->autoIncrement) {
+            $new->autoIncrementFlavor = '';
+
+            if ($old->sequence) {
+                $conn->exec('ALTER SEQUENCE '.$conn->encloseName($old->sequence).' OWNED BY NONE');
+                $sql = 'ALTER TABLE '.$this->tableName->getEnclosedFullName().
+                    ' ALTER COLUMN '.$conn->encloseName($new->name).
+                    ' DROP DEFAULT';
+                $conn->exec($sql);
+                $conn->exec('DROP SEQUENCE '.$conn->encloseName($old->sequence));
+            }
+            $new->sequence = '';
+        }
+
         if ($new->hasDefault !== $old->hasDefault) {
             if ($new->hasDefault && $new->default !== null) {
                 $sql = 'ALTER TABLE '.$this->tableName->getEnclosedFullName().
