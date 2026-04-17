@@ -146,7 +146,7 @@ class Table extends AbstractTable
 
             if ($typeInfo[0] == 'serial' || $typeInfo[0] == 'bigserial') {
                 // we're trying to convert an existing integer column to serial
-                $oldTypeInfo  = $tools->getTypeInfo($old->type);
+                $oldTypeInfo  = $syntax->getTypeInfo($old->type);
                 if ( ($typeInfo[0] == 'serial' && $oldTypeInfo[0] == 'integer') ||
                     ($typeInfo[0] == 'bigserial' && $oldTypeInfo[0] == 'bigint')
                 ) {
