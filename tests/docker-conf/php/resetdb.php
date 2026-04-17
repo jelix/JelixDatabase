@@ -18,6 +18,9 @@ while($tryAgain) {
     pg_query($cnx, "drop table if exists generated_column_test");
     pg_query($cnx, "drop table if exists products_with_identity");
     pg_query($cnx, "drop table if exists newspaper.article");
+    pg_query($cnx, "drop table if exists city");
+    pg_query($cnx, "drop sequence if exists city_city_id_seq");
+    pg_query($cnx, "drop sequence if exists city_city_id_seq1");
 
     pg_query($cnx, "CREATE TABLE product_test (
         id serial NOT NULL,
@@ -256,6 +259,3 @@ while($tryAgain) {
 }
 */
 echo "  tables restored\n";
-
-
-
