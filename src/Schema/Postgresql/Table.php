@@ -1,13 +1,14 @@
 <?php
 /**
  * @author     Laurent Jouanneau
- * @copyright  2010-2025 Laurent Jouanneau
+ * @copyright  2010-2026 Laurent Jouanneau
  *
  * @see        https://jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 namespace Jelix\Database\Schema\Postgresql;
 
+use Jelix\Database\ConnectionInterface;
 use Jelix\Database\Schema\AbstractConstraint;
 use Jelix\Database\Schema\AbstractTable;
 use Jelix\Database\Schema\Column;
@@ -143,6 +144,20 @@ class Table extends AbstractTable
         ) {
             $typeInfo = $syntax->getTypeInfo($new->type);
 
+            if ($typeInfo[0] == 'serial' || $typeInfo[0] == 'bigserial') {
+                // we're trying to convert an existing integer column to serial
+                $oldTypeInfo  = $tools->getTypeInfo($old->type);
+                if ( ($typeInfo[0] == 'serial' && $oldTypeInfo[0] == 'integer') ||
+                    ($typeInfo[0] == 'bigserial' && $oldTypeInfo[0] == 'bigint')
+                ) {
+                    $this->_alterToSerialColumn($conn, $old, $new);
+                }
+                else {
+                    throw new \Exception('Cannot convert column type from '.$oldTypeInfo[0]. ' to '.$typeInfo[0]);
+                }
+                return;
+            }
+
             $sql = 'ALTER TABLE '.$this->tableName->getEnclosedFullName().
                 ' ALTER COLUMN '.$conn->encloseName($new->name).
                 ' TYPE '.$typeInfo[0];
@@ -156,6 +171,20 @@ class Table extends AbstractTable
                 $sql .= '('.$new->length.')';
             }
             $conn->exec($sql);
+        }
+
+        if (!$new->autoIncrement && $new->autoIncrement != $old->autoIncrement) {
+            $new->autoIncrementFlavor = '';
+
+            if ($old->sequence) {
+                $conn->exec('ALTER SEQUENCE '.$conn->encloseName($old->sequence).' OWNED BY NONE');
+                $sql = 'ALTER TABLE '.$this->tableName->getEnclosedFullName().
+                    ' ALTER COLUMN '.$conn->encloseName($new->name).
+                    ' DROP DEFAULT';
+                $conn->exec($sql);
+                $conn->exec('DROP SEQUENCE '.$conn->encloseName($old->sequence));
+            }
+            $new->sequence = '';
         }
 
         if ($new->hasDefault !== $old->hasDefault) {
@@ -190,6 +219,61 @@ class Table extends AbstractTable
                 $conn->exec($sql);
             }
         }
+    }
+
+    /**
+     * @param ConnectionInterface $conn
+     * @param Column $old
+     * @param Column $new
+     * @return void
+     */
+    protected function _alterToSerialColumn($conn, Column $old, Column $new)
+    {
+
+        if ($old->sequence != '') {
+            $new->sequence = $old->sequence;
+            return;
+        }
+
+        if ($old->autoIncrementFlavor != '') {
+            return;
+        }
+        $tableNameStr = $this->tableName->getRealTableName();
+        $tableName = $conn->encloseName($tableNameStr);
+        $columnName = $conn->encloseName($new->name);
+        $new->sequence = $tableNameStr.'_'.$new->name.'_seq';
+        $seq = $conn->encloseName($new->sequence);
+
+        // the sequence may already exist...
+        $recSeq = $conn->query('SELECT pc.relname FROM pg_class pc JOIN pg_sequence ps ON pc.oid = ps.seqrelid WHERE pc.relname='.$conn->quote($new->sequence))->fetch();
+        if (!$recSeq) {
+
+            $max = 1;
+            $rec = $conn->query('SELECT MAX('.$columnName.') as mx FROM '.$tableName)->fetch();
+            if ($rec) {
+                $max = intval($rec->mx);
+                if ($max < 1) {
+                    $max = 1;
+                }
+            }
+            $conn->exec('CREATE SEQUENCE '.$seq);
+            $conn->exec('ALTER SEQUENCE '.$seq.' START WITH '.$max);
+        }
+
+        $conn->exec('ALTER TABLE '.$tableName.' ALTER COLUMN '.$columnName.' SET DEFAULT nextval(\''.$new->sequence.'\')');
+        if (!$old->notNull) {
+            $conn->exec('UPDATE '.$tableName.' SET '.$columnName.' = nextval(\''.$new->sequence.'\') WHERE '.$columnName.' IS NULL');
+            $conn->exec('ALTER TABLE '.$tableName.' ALTER COLUMN '.$columnName.' SET NOT NULL');
+            $new->notNull = true;
+        }
+
+        if (!$recSeq) {
+            $conn->exec('ALTER SEQUENCE ' . $seq . ' OWNED BY ' . $tableName . '.' . $columnName);
+        }
+
+        $new->hasDefault = true;
+        $new->default = '';
+        $new->autoIncrement = true;
     }
 
     protected function _addColumn(Column $new)
