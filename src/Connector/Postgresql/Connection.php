@@ -104,6 +104,12 @@ class Connection extends AbstractConnection
         return pg_last_error($this->_connection);
     }
 
+    protected function escapeConnectionValue($str)
+    {
+        $str = str_replace("\\", "\\\\", $str);
+        return str_replace("'", "\\'", $str);
+    }
+
     protected function _connect()
     {
         $funcconnect = (isset($this->_profile['persistent']) && $this->_profile['persistent'] ? 'pg_pconnect' : 'pg_connect');
@@ -138,11 +144,11 @@ class Connection extends AbstractConnection
             // we do isset instead of equality test against an empty string, to allow to specify
             // that we want to use configuration set in environment variables
             if (isset($this->_profile['user'])) {
-                $str .= ' user=\''.$this->_profile['user'].'\'';
+                $str .= ' user=\''.$this->escapeConnectionValue($this->_profile['user']).'\'';
             }
 
             if (isset($this->_profile['password'])) {
-                $str .= ' password=\''.$this->_profile['password'].'\'';
+                $str .= ' password=\''.$this->escapeConnectionValue($this->_profile['password']).'\'';
             }
         }
 
@@ -155,7 +161,7 @@ class Connection extends AbstractConnection
         }
 
         if (isset($this->_profile['pg_options']) && $this->_profile['pg_options'] != '') {
-            $str .= ' options=\''.$this->_profile['pg_options'].'\'';
+            $str .= ' options=\''.$this->escapeConnectionValue($this->_profile['pg_options']).'\'';
         }
 
         if (isset($this->_profile['force_new']) && $this->_profile['force_new']) {
