@@ -11,6 +11,10 @@ Version 1.5.0-pre
   next major version of JelixDatabase.
 
 
+Version 1.4.2
+-------------
+
+- fix(pgsql) fix connection string syntax when a password contains a quote or an anti-slash character
 
 Version 1.4.1
 -------------
